@@ -1,22 +1,58 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, User, Bookmark } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
-import { BLOG_POSTS } from "@/lib/data";
+import { BLOG_POSTS as defaultBlogPosts } from "@/lib/data";
+import { BlogPost } from "@/types";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function BlogDetailPage({ params }: PageProps) {
-  const resolvedParams = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === resolvedParams.slug);
+export default function BlogDetailPage({ params }: PageProps) {
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function resolvePost() {
+      const resolvedParams = await params;
+      const local = localStorage.getItem("yokm_blog_posts");
+      let allPosts = defaultBlogPosts;
+      if (local) {
+        allPosts = JSON.parse(local);
+      }
+      
+      const foundPost = allPosts.find((p) => p.slug === resolvedParams.slug);
+      setPost(foundPost || null);
+      setLoading(false);
+    }
+    
+    resolvePost();
+  }, [params]);
+
+  if (loading) {
+    return (
+      <div className="flex-grow flex items-center justify-center py-20 text-on-surface-variant font-bold text-sm">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+        <span>Loading story...</span>
+      </div>
+    );
+  }
 
   if (!post) {
-    notFound();
+    return (
+      <div className="flex-grow py-20 px-4 text-center space-y-md">
+        <h1 className="font-headline text-2xl font-bold">Story Not Found</h1>
+        <p className="text-on-surface-variant">The requested blog post could not be located.</p>
+        <Button variant="primary" href="/blog">
+          Back to Blog
+        </Button>
+      </div>
+    );
   }
 
   return (
@@ -62,13 +98,12 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
         {/* Author Footer Profile block */}
         <div className="mt-xl p-lg bg-surface-container-low rounded-xl border border-outline-variant/20 flex flex-col sm:flex-row items-center gap-lg">
-          <div className="flex-shrink-0 w-16 h-16 rounded-full overflow-hidden bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-lg text-primary">
+          <div className="flex-shrink-0 w-16 h-16 rounded-full overflow-hidden bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-lg text-primary relative">
             {post.author.avatarUrl ? (
               <Image
                 src={post.author.avatarUrl}
                 alt={post.author.name}
-                width={64}
-                height={64}
+                fill
                 className="object-cover"
               />
             ) : (

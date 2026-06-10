@@ -1,22 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { X, ZoomIn, Filter } from "lucide-react";
+import { X, ZoomIn } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Card } from "@/components/Card";
 import { SectionHeader } from "@/components/SectionHeader";
-import { GALLERY_IMAGES } from "@/lib/data";
+import { GALLERY_IMAGES as defaultGalleryImages } from "@/lib/data";
+import { GalleryImage } from "@/types";
 
 export default function GalleryPage() {
+  const [images, setImages] = useState<GalleryImage[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [lightboxImage, setLightboxImage] = useState<typeof GALLERY_IMAGES[0] | null>(null);
+  const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
+
+  useEffect(() => {
+    const local = localStorage.getItem("yokm_gallery_images");
+    if (local) {
+      setImages(JSON.parse(local));
+    } else {
+      setImages(defaultGalleryImages);
+      localStorage.setItem("yokm_gallery_images", JSON.stringify(defaultGalleryImages));
+    }
+  }, []);
 
   const categories = ["All", "Vocational", "Outreach", "Fellowship", "Community"];
 
   const filteredImages = activeCategory === "All"
-    ? GALLERY_IMAGES
-    : GALLERY_IMAGES.filter((img) => img.category === activeCategory);
+    ? images
+    : images.filter((img) => img.category === activeCategory);
 
   return (
     <div className="flex-grow">

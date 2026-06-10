@@ -1,21 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Search, Calendar, User } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Card } from "@/components/Card";
 import { SectionHeader } from "@/components/SectionHeader";
-import { BLOG_POSTS } from "@/lib/data";
+import { BLOG_POSTS as defaultBlogPosts } from "@/lib/data";
+import { BlogPost } from "@/types";
 
 export default function BlogListingPage() {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  useEffect(() => {
+    const local = localStorage.getItem("yokm_blog_posts");
+    if (local) {
+      setPosts(JSON.parse(local));
+    } else {
+      setPosts(defaultBlogPosts);
+      localStorage.setItem("yokm_blog_posts", JSON.stringify(defaultBlogPosts));
+    }
+  }, []);
+
   const categories = ["All", "Programs", "Success Stories", "Education"];
 
-  const filteredPosts = BLOG_POSTS.filter((post) => {
+  const filteredPosts = posts.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -81,7 +93,7 @@ export default function BlogListingPage() {
         {/* Listing Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
           {filteredPosts.map((post) => (
-            <Card key={post.id} className="flex flex-col h-full">
+            <Card key={post.id} className="flex flex-col h-full shadow-sm">
               <div className="relative h-48 w-full">
                 <Image
                   src={post.imageUrl}

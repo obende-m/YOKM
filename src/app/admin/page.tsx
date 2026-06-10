@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -19,12 +19,31 @@ import {
   DollarSign
 } from "lucide-react";
 import { Card } from "@/components/Card";
-import { BLOG_POSTS, RECENT_DONATIONS } from "@/lib/data";
+import { BLOG_POSTS as defaultBlogPosts, RECENT_DONATIONS } from "@/lib/data";
+import { BlogPost } from "@/types";
 
 export default function AdminDashboardPage() {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredPosts = BLOG_POSTS.filter((post) =>
+  useEffect(() => {
+    const local = localStorage.getItem("yokm_blog_posts");
+    if (local) {
+      setPosts(JSON.parse(local));
+    } else {
+      setPosts(defaultBlogPosts);
+    }
+  }, []);
+
+  const handleDelete = (id: string) => {
+    if (confirm("Are you sure you want to delete this story?")) {
+      const updated = posts.filter((p) => p.id !== id);
+      setPosts(updated);
+      localStorage.setItem("yokm_blog_posts", JSON.stringify(updated));
+    }
+  };
+
+  const filteredPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -156,10 +175,13 @@ export default function AdminDashboardPage() {
                   </td>
                   <td className="px-md py-4 text-right">
                     <div className="flex justify-end gap-2">
-                      <button className="p-1.5 text-on-surface-variant hover:text-primary transition-colors">
+                      <Link href="/admin/posts" className="p-1.5 text-on-surface-variant hover:text-primary transition-colors">
                         <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 text-on-surface-variant hover:text-error transition-colors">
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(post.id)}
+                        className="p-1.5 text-on-surface-variant hover:text-error transition-colors"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -180,7 +202,7 @@ export default function AdminDashboardPage() {
         {/* Pagination controls */}
         <div className="px-md py-3 border-t border-outline-variant/10 flex justify-between items-center bg-surface-container/20">
           <p className="text-xs text-on-surface-variant">
-            Showing {filteredPosts.length} of {BLOG_POSTS.length} posts
+            Showing {filteredPosts.length} of {posts.length} posts
           </p>
           <div className="flex gap-2">
             <button className="p-1.5 rounded border border-outline-variant/20 hover:bg-surface-container transition-colors disabled:opacity-40" disabled>
@@ -199,7 +221,7 @@ export default function AdminDashboardPage() {
         <div className="lg:col-span-2 bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/10">
           <div className="flex justify-between items-center mb-6">
             <h4 className="font-headline text-lg font-bold text-on-surface">Recent Donations</h4>
-            <a href="#" className="text-primary font-bold text-xs hover:underline">View All</a>
+            <Link href="/admin/donations" className="text-primary font-bold text-xs hover:underline">View All</Link>
           </div>
           
           <div className="space-y-3">
@@ -268,12 +290,12 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="flex gap-2 text-[10px] font-bold uppercase tracking-wider">
-              <button className="flex-1 py-2 bg-surface-container hover:bg-surface-container-high rounded transition-colors text-center">
+              <Link href="/admin/gallery" className="flex-1 py-2 bg-surface-container hover:bg-surface-container-high rounded transition-colors text-center">
                 Clean Up
-              </button>
-              <button className="flex-1 py-2 bg-surface-container hover:bg-surface-container-high rounded transition-colors text-center">
+              </Link>
+              <Link href="/admin/gallery" className="flex-1 py-2 bg-surface-container hover:bg-surface-container-high rounded transition-colors text-center">
                 Add Storage
-              </button>
+              </Link>
             </div>
           </div>
         </div>

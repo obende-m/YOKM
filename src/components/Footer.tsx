@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Phone, MapPin, Globe, Send, ShieldCheck } from "lucide-react";
 import { Button } from "./Button";
 
@@ -22,13 +23,24 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-xl">
           {/* Brand Info Column */}
           <div className="space-y-md">
-            <div>
-              <h3 className="font-headline text-2xl font-extrabold text-primary-fixed leading-none">
-                YOKM Ministry
-              </h3>
-              <p className="text-[10px] uppercase tracking-widest text-outline-variant mt-1.5">
-                Awake Oh Ye Widows
-              </p>
+            <div className="flex items-center gap-3">
+              <div className="relative w-10 h-10 overflow-hidden rounded-full border border-white/10 bg-white flex items-center justify-center p-0.5">
+                <Image
+                  src="/logo.png"
+                  alt="YOKM Logo"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                />
+              </div>
+              <div>
+                <h3 className="font-headline text-lg font-extrabold text-primary-fixed leading-none">
+                  YOKM Ministry
+                </h3>
+                <p className="text-[10px] uppercase tracking-widest text-outline-variant mt-1.5">
+                  Awake Oh Ye Widows
+                </p>
+              </div>
             </div>
             <p className="text-body-md opacity-80 leading-relaxed text-sm">
               Yendel Ocha Kpeling Ministry is a registered faith-based NGO dedicated to the physical, emotional, and spiritual restoration and empowerment of widows and vulnerable children.

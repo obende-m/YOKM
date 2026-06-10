@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Heart, Lock } from "lucide-react";
 import { Button } from "./Button";
@@ -32,9 +33,14 @@ export const Header: React.FC = () => {
       <nav className="flex justify-between items-center w-full px-4 md:px-margin-desktop py-4 max-w-7xl mx-auto">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10 overflow-hidden rounded-full border border-primary/20 bg-white p-1 flex items-center justify-center">
-            {/* Styled Cross/Dove Emoji or Placeholder text since it is a premium fallback */}
-            <span className="text-primary text-xl font-bold">🕊️</span>
+          <div className="relative w-10 h-10 overflow-hidden rounded-full border border-primary/20 bg-white flex items-center justify-center p-0.5">
+            <Image
+              src="/logo.png"
+              alt="YOKM Logo"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
           </div>
           <div>
             <div className="font-headline text-lg md:text-xl font-extrabold text-primary group-hover:text-surface-tint transition-colors tracking-tight leading-none">
@@ -103,33 +109,52 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-[73px] z-40 bg-background/95 backdrop-blur-md flex flex-col p-6 border-t border-outline-variant/10 shadow-xl animate-fade-in">
-          <nav className="flex flex-col gap-4 mb-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
+        <>
+          {/* Dark Backdrop */}
+          <div
+            className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          {/* Drawer Panel */}
+          <div className="lg:hidden fixed inset-y-0 right-0 z-50 w-full max-w-[280px] bg-background p-6 shadow-2xl flex flex-col border-l border-outline-variant/10 animate-slide-in">
+            <div className="flex justify-between items-center mb-6 border-b border-outline-variant/10 pb-4">
+              <span className="font-headline font-bold text-primary text-base">Navigation</span>
+              <button
                 onClick={() => setMobileMenuOpen(false)}
-                className={`text-lg py-2 border-b border-outline-variant/10 hover:text-primary transition-colors ${
-                  isActive(link.href) ? "text-primary font-bold" : "text-on-surface-variant"
-                }`}
+                className="p-1 hover:text-primary transition-colors focus:outline-none"
+                aria-label="Close menu"
               >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <nav className="flex flex-col gap-3">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`text-sm py-2 px-3 rounded-md hover:bg-surface-container-high transition-colors ${
+                    isActive(link.href) ? "text-primary font-bold bg-primary/5" : "text-on-surface-variant"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
 
-          <div className="flex flex-col gap-4 mt-auto">
-            <Link
-              href="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-3 bg-surface-container hover:bg-surface-container-high rounded-default text-on-surface font-bold text-center flex items-center justify-center gap-2 border border-outline-variant/20"
-            >
-              <Lock className="w-4 h-4" />
-              Admin Portal
-            </Link>
+            <div className="flex flex-col gap-4 mt-auto pt-6 border-t border-outline-variant/10">
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-2.5 bg-surface-container hover:bg-surface-container-high rounded-default text-on-surface font-bold text-xs text-center flex items-center justify-center gap-2 border border-outline-variant/20 transition-all"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                Admin Portal
+              </Link>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
