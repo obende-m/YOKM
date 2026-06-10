@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 
+// Trigger Vercel build redeployment
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -13,3 +14,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
