@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   HeartHandshake,
@@ -12,6 +12,7 @@ import {
   Bell,
   Plus,
   Globe,
+  LogOut,
   Menu,
   X
 } from "lucide-react";
@@ -22,7 +23,14 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
+    router.refresh();
+  };
 
   const sidebarLinks = [
     { label: "Dashboard", href: "/admin", icon: <LayoutDashboard className="w-5 h-5" /> },
@@ -35,6 +43,10 @@ export default function AdminLayout({
   const isActive = (href: string) => {
     return pathname === href;
   };
+
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen flex bg-background text-on-surface">
@@ -114,6 +126,13 @@ export default function AdminLayout({
             <Globe className="w-3.5 h-3.5" />
             View Website
           </Link>
+          <button
+            onClick={handleLogout}
+            className="w-full py-2 px-4 bg-error/10 hover:bg-error/20 text-error rounded-lg text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-all"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            Logout
+          </button>
         </div>
       </aside>
 

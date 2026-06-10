@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Heart, Lock } from "lucide-react";
+import { Menu, X, Heart } from "lucide-react";
 import { Button } from "./Button";
 
 export const Header: React.FC = () => {
@@ -71,13 +71,6 @@ export const Header: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="hidden lg:flex items-center gap-4">
-          <Link
-            href="/admin"
-            className="text-primary font-bold hover:text-surface-tint transition-all px-3 py-2 flex items-center gap-1.5 text-label-md"
-          >
-            <Lock className="w-4 h-4" />
-            Admin Login
-          </Link>
           <Button
             variant="support"
             href="/donate"
@@ -143,16 +136,6 @@ export const Header: React.FC = () => {
               ))}
             </nav>
 
-            <div className="flex flex-col gap-4 mt-auto pt-6 border-t border-outline-variant/10">
-              <Link
-                href="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2.5 bg-surface-container hover:bg-surface-container-high rounded-default text-on-surface font-bold text-xs text-center flex items-center justify-center gap-2 border border-outline-variant/20 transition-all"
-              >
-                <Lock className="w-3.5 h-3.5" />
-                Admin Portal
-              </Link>
-            </div>
           </div>
         </>
       )}

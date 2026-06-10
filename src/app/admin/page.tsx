@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   TrendingUp,
-  Users,
   Mail,
   Search,
   Filter,
@@ -50,7 +49,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-lg">
       {/* Analytics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
         {/* Card 1: Total Donations */}
         <Card variant="default" padding="md" className="relative group">
           <div className="flex justify-between items-start mb-4">
@@ -68,28 +67,7 @@ export default function AdminDashboardPage() {
           </div>
         </Card>
 
-        {/* Card 2: Monthly Visitors */}
-        <Card variant="default" padding="md">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-2 rounded-lg bg-secondary/10 text-secondary">
-              <Users className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold text-green-600 flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded-full">
-              <TrendingUp className="w-3.5 h-3.5" /> +5.2%
-            </span>
-          </div>
-          <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Monthly Visitors</p>
-          <h3 className="text-2xl md:text-3xl font-extrabold text-secondary mt-1">12,840</h3>
-          <div className="mt-4 flex gap-1 h-8 items-end">
-            <div className="h-6 w-full bg-secondary/20 rounded-sm"></div>
-            <div className="h-7 w-full bg-secondary/20 rounded-sm"></div>
-            <div className="h-8 w-full bg-secondary rounded-sm"></div>
-            <div className="h-7 w-full bg-secondary/20 rounded-sm"></div>
-            <div className="h-5 w-full bg-secondary/20 rounded-sm"></div>
-          </div>
-        </Card>
-
-        {/* Card 3: Active Subscribers */}
+        {/* Card 2: Active Subscribers */}
         <Card variant="default" padding="md">
           <div className="flex justify-between items-start mb-4">
             <div className="p-2 rounded-lg bg-tertiary/10 text-tertiary">
