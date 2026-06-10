@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Donate Now | YOKM Ministry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist:wght@600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .faith-gradient {
+            background: linear-gradient(135deg, #0055ce 0%, #a72a77 100%);
+        }
+        .progress-glow {
+            box-shadow: 0 0 15px rgba(10, 108, 255, 0.4);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#727787",
+                        "on-primary-fixed": "#001847",
+                        "tertiary-container": "#cf4901",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "outline-variant": "#c2c6d8",
+                        "tertiary-fixed": "#ffdbce",
+                        "surface-dim": "#d8d9e5",
+                        "surface-container-low": "#f2f3ff",
+                        "on-surface": "#191b24",
+                        "surface": "#faf8ff",
+                        "secondary-fixed-dim": "#ffafd5",
+                        "on-surface-variant": "#424655",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#802a00",
+                        "on-secondary-fixed": "#3d0027",
+                        "surface-container-high": "#e6e7f4",
+                        "surface-container": "#ecedf9",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#b2c5ff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#0040a0",
+                        "primary-fixed": "#dae2ff",
+                        "background": "#faf8ff",
+                        "inverse-on-surface": "#eff0fc",
+                        "on-primary-container": "#fffeff",
+                        "primary-container": "#0a6cff",
+                        "surface-container-highest": "#e1e2ee",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#72004e",
+                        "surface-tint": "#0056d1",
+                        "secondary-container": "#fd71c0",
+                        "tertiary-fixed-dim": "#ffb59a",
+                        "primary": "#0055ce",
+                        "tertiary": "#a63900",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#a72a77",
+                        "on-tertiary-fixed": "#380d00",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#88075e",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2d3039",
+                        "on-background": "#191b24",
+                        "on-tertiary-container": "#fffeff",
+                        "surface-bright": "#faf8ff",
+                        "surface-variant": "#e1e2ee",
+                        "secondary-fixed": "#ffd8e8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "lg": "40px",
+                        "margin-mobile": "16px",
+                        "sm": "16px",
+                        "xl": "64px",
+                        "xs": "8px",
+                        "base": "4px",
+                        "gutter": "24px",
+                        "margin-desktop": "80px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist"],
+                        "display-lg-mobile": ["Geist"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Geist"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Geist"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md">
+<!-- TopNavBar -->
+<header class="bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-md shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<nav class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-7xl mx-auto">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">
+                YOKM Ministry
+            </div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">About</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Programs</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Gallery</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors" href="#">Blog</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:block text-primary dark:text-inverse-primary hover:opacity-80 transition-opacity px-4 py-2">Admin Login</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-bold shadow-md hover:scale-95 transition-all duration-200">Donate Now</button>
+</div>
+</nav>
+</header>
+<main class="max-w-7xl mx-auto px-4 md:px-margin-desktop py-xl">
+<!-- Hero & Campaign Tracker Section -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-xl items-center mb-xl">
+<div class="space-y-md">
+<span class="inline-block px-4 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-md">Join Our Mission</span>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface leading-tight">Empower Lives Through Divine Compassion</h1>
+<p class="text-body-lg text-on-surface-variant max-w-lg">
+                    Your contribution helps us provide spiritual guidance, food security, and educational opportunities to the most vulnerable members of our community.
+                </p>
+<!-- Campaign Tracker -->
+<div class="p-md rounded-xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Feed 2,000 Widows 2025</h3>
+<p class="text-label-md text-on-surface-variant">Annual Empowerment Initiative</p>
+</div>
+<div class="text-right">
+<span class="font-bold text-on-surface">65%</span>
+<p class="text-label-sm text-outline">Complete</p>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-4 overflow-hidden">
+<div class="bg-primary h-full progress-glow rounded-full transition-all duration-1000" style="width: 65%;"></div>
+</div>
+<div class="flex justify-between text-label-md">
+<span class="text-on-surface-variant">Raised: <span class="font-bold text-on-surface">₦3,250,000</span></span>
+<span class="text-on-surface-variant">Goal: <span class="font-bold text-on-surface">₦5,000,000</span></span>
+</div>
+</div>
+</div>
+<div class="relative group">
+<div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-secondary/20 blur-xl opacity-50 rounded-full"></div>
+<div class="relative overflow-hidden rounded-xl shadow-xl aspect-video md:aspect-square">
+<img alt="Mission Impact" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A warm, high-quality portrait of a smiling African woman representing the community supported by the ministry. The lighting is soft and natural, emphasizing a mood of dignity and hope. The background shows a modern, bright community center with clean architectural lines, maintaining the professional NGO aesthetic with Primary Blue and Accent Magenta tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCul8xnJqBNWlldmaqd2ZayKND4q-Fm2Yi6E68SBo2PeiJ51zt5z9xI3a_3YmCUr5BzvvFbi7QIiv7uKYwlELo5Ka_gs1L4j5T0ZO8Nlf9kT_M_6x6uBnW5LIXvf1ttadrrRoQ3S63o4ol2SVxMObeFaYFzjGOxELisfYBNVus4OPjyke912ka1D_Ri1cA1czvoUTVQCen19Qn_lpNMuxZRqt7g1mfGTWO2rn-AuM3HR2ID1ueUXYOQ5_j0quFEytrVzbDeeVi95dM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-md">
+<div class="flex items-center gap-3 text-white">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+<div>
+<p class="font-bold text-lg">Every widow deserves dignity.</p>
+<p class="text-sm opacity-80">Join the movement today.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Donation Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Payment Integration Area -->
+<div class="lg:col-span-8 space-y-md">
+<div class="bg-surface-container-lowest p-md md:p-xl rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center gap-4 mb-xl">
+<div class="w-12 h-12 rounded-full faith-gradient flex items-center justify-center text-white">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg">Secure Donation</h2>
+<p class="text-on-surface-variant">Choose an amount to impact a life today.</p>
+</div>
+</div>
+<!-- Paystack Integration Simulation -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-xl">
+<button class="amount-btn border-2 border-outline-variant/30 p-4 rounded-lg font-bold text-on-surface-variant hover:border-primary hover:text-primary transition-all" onclick="selectAmount(1000)">₦1,000</button>
+<button class="amount-btn border-2 border-primary bg-primary-container/10 p-4 rounded-lg font-bold text-primary transition-all" onclick="selectAmount(5000)">₦5,000</button>
+<button class="amount-btn border-2 border-outline-variant/30 p-4 rounded-lg font-bold text-on-surface-variant hover:border-primary hover:text-primary transition-all" onclick="selectAmount(10000)">₦10,000</button>
+<button class="amount-btn border-2 border-outline-variant/30 p-4 rounded-lg font-bold text-on-surface-variant hover:border-primary hover:text-primary transition-all" onclick="selectAmount(25000)">₦25,000</button>
+<button class="amount-btn border-2 border-outline-variant/30 p-4 rounded-lg font-bold text-on-surface-variant hover:border-primary hover:text-primary transition-all" onclick="selectAmount(50000)">₦50,000</button>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-outline">₦</span>
+<input class="w-full pl-8 border-2 border-outline-variant/30 rounded-lg p-4 focus:ring-primary focus:border-primary font-bold" placeholder="Custom" type="number"/>
+</div>
+</div>
+<div class="space-y-sm mb-xl">
+<label class="font-label-md block">Personal Details</label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<input class="border border-outline-variant/30 rounded-lg p-3 w-full bg-surface-container-low focus:ring-2 focus:ring-primary/20 outline-none" placeholder="Full Name" type="text"/>
+<input class="border border-outline-variant/30 rounded-lg p-3 w-full bg-surface-container-low focus:ring-2 focus:ring-primary/20 outline-none" placeholder="Email Address" type="email"/>
+</div>
+<textarea class="border border-outline-variant/30 rounded-lg p-3 w-full bg-surface-container-low h-24 focus:ring-2 focus:ring-primary/20 outline-none" placeholder="Write a prayer or message (Optional)"></textarea>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg font-bold text-lg flex items-center justify-center gap-2 hover:bg-surface-tint shadow-lg transition-transform active:scale-95">
+<span class="material-symbols-outlined">favorite</span>
+                        Proceed to Paystack
+                    </button>
+<div class="flex items-center justify-center gap-4 mt-sm opacity-50 grayscale">
+<span class="text-label-sm">Secured by Paystack</span>
+<div class="h-4 w-px bg-outline"></div>
+<span class="material-symbols-outlined text-sm">lock</span>
+<span class="text-label-sm">256-bit SSL Encryption</span>
+</div>
+</div>
+<!-- Recent Donation Summary -->
+<div class="bg-surface-container-high/30 p-md rounded-xl">
+<h3 class="font-label-md uppercase tracking-wider text-outline mb-4">Recent Kind Hearts</h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 bg-white rounded-lg border border-outline-variant/10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold">AO</div>
+<div>
+<p class="font-bold text-on-surface">Anonymous</p>
+<p class="text-label-sm text-outline">Just now • Campaign: Feed 2000 Widows</p>
+</div>
+</div>
+<span class="font-bold text-primary">₦10,000</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-white rounded-lg border border-outline-variant/10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold">SM</div>
+<div>
+<p class="font-bold text-on-surface">Samuel M.</p>
+<p class="text-label-sm text-outline">2 hours ago</p>
+</div>
+</div>
+<span class="font-bold text-primary">₦25,000</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar: Bank Info & Call to Action -->
+<aside class="lg:col-span-4 space-y-gutter">
+<!-- Bank Info Card -->
+<div class="bg-inverse-surface text-inverse-on-surface p-md rounded-xl shadow-xl space-y-md relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl">account_balance</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary-fixed">Bank Transfer</h3>
+<p class="text-surface-variant opacity-80">Direct bank deposit or transfer</p>
+</div>
+<div class="space-y-4 pt-2">
+<div class="group cursor-pointer" onclick="copyToClipboard('5627510010')">
+<p class="text-label-sm text-outline-variant">Account Number</p>
+<div class="flex justify-between items-center">
+<p class="text-2xl font-bold tracking-widest">5627510010</p>
+<span class="material-symbols-outlined text-primary-fixed group-hover:scale-110 transition-transform">content_copy</span>
+</div>
+</div>
+<div>
+<p class="text-label-sm text-outline-variant">Bank Name</p>
+<p class="text-lg font-bold">First City Monument Bank (FCMB)</p>
+</div>
+<div>
+<p class="text-label-sm text-outline-variant">Account Name</p>
+<p class="text-lg font-bold">Yendel Ocha Kpeling Ministry</p>
+</div>
+</div>
+<div class="bg-white/10 p-3 rounded-lg text-sm italic">
+                        "Please use your name as a reference for us to acknowledge your kindness."
+                    </div>
+</div>
+<!-- Call to Action Card -->
+<div class="p-md rounded-xl border-2 border-dashed border-secondary/30 bg-secondary/5 space-y-4">
+<div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined">heart_plus</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Become a Monthly Partner</h3>
+<p class="text-on-surface-variant">Consistency creates sustainable change. Join our circle of monthly supporters and help us plan long-term impact programs.</p>
+<button class="w-full border-2 border-secondary text-secondary py-3 rounded-lg font-bold hover:bg-secondary hover:text-white transition-all">Partner With Us</button>
+</div>
+<!-- Image Feature -->
+<div class="rounded-xl overflow-hidden shadow-lg border border-outline-variant/10">
+<img alt="Community Support" class="w-full h-48 object-cover" data-alt="A close-up of hands sharing a meal or a bread loaf in a community kitchen setting. The image is warm, intimate, and focuses on the act of giving. The lighting is golden-hour soft, evoking a sense of spiritual grace and divine provision. The color palette incorporates soft neutrals with subtle blue and magenta accents in the clothing and surroundings." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3qVzAqxVRaAbJyJ2mPW95JstJOsbdG0gM0siUPgkwZrvuK8MXm7bNymG_IX3_Z1Sn6a4PmEIzv_Tof4mFQYu1nF7OAQ1NLT6-BQ4zw1BmF6qeOjpK0euZXFkYBwWwXxHb_zFs8aWKJ52kMN9MTEUsQqhGVjPJY8FDRXLG0zYUYKk3iRvq1lx50GNgxGFHBGmLcL-HeAx1z7EssvSpXrJONhzi2un2gSFDX6lwWxd4K40qesySnWUQ0OoLHTE2jA7atnUWEAHRwRI"/>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-inverse-surface dark:bg-surface-container-lowest full-width mt-xl">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-xl w-full max-w-7xl mx-auto">
+<div class="space-y-4">
+<div class="font-headline-md text-headline-md text-primary-fixed">YOKM Ministry</div>
+<p class="text-surface-variant dark:text-on-surface-variant text-body-md">Empowering the vulnerable with dignity, faith, and sustainable support since 2018.</p>
+</div>
+<div>
+<h4 class="text-surface-bright dark:text-on-surface font-bold mb-4">Quick Links</h4>
+<div class="flex flex-col gap-2">
+<a class="text-surface-variant dark:text-on-surface-variant hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="text-surface-variant dark:text-on-surface-variant hover:text-primary-fixed transition-colors" href="#">Terms of Service</a>
+<a class="text-surface-variant dark:text-on-surface-variant hover:text-primary-fixed transition-colors" href="#">Contact Us</a>
+<a class="text-surface-variant dark:text-on-surface-variant hover:text-primary-fixed transition-colors underline text-primary-fixed-dim" href="#">Partner with Us</a>
+</div>
+</div>
+<div>
+<h4 class="text-surface-bright dark:text-on-surface font-bold mb-4">Our Focus</h4>
+<ul class="text-surface-variant dark:text-on-surface-variant flex flex-col gap-2">
+<li>Widow Empowerment</li>
+<li>Youth Mentorship</li>
+<li>Community Outreach</li>
+<li>Spiritual Growth</li>
+</ul>
+</div>
+<div>
+<h4 class="text-surface-bright dark:text-on-surface font-bold mb-4">Connect</h4>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all" href="#">
+<span class="material-symbols-outlined text-surface-bright">public</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all" href="#">
+<span class="material-symbols-outlined text-surface-bright">mail</span>
+</a>
+</div>
+</div>
+</div>
+<div class="border-t border-outline-variant/20 px-margin-desktop py-8 text-center max-w-7xl mx-auto">
+<p class="text-surface-variant dark:text-on-surface-variant opacity-80">© 2024 Yendel Ocha Kpeling Ministry (YOKM). Registered NGO. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        function selectAmount(amount) {
+            // Remove active classes from all buttons
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.classList.remove('border-primary', 'bg-primary-container/10', 'text-primary');
+                btn.classList.add('border-outline-variant/30', 'text-on-surface-variant');
+            });
+            
+            // Add active class to clicked button
+            event.currentTarget.classList.add('border-primary', 'bg-primary-container/10', 'text-primary');
+            event.currentTarget.classList.remove('border-outline-variant/30', 'text-on-surface-variant');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.createElement('div');
+                toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface px-6 py-3 rounded-full shadow-lg z-[100] animate-bounce';
+                toast.innerText = 'Account Number Copied!';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 2000);
+            });
+        }
+    </script>
+</body></html>

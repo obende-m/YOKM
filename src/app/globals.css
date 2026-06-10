@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), sans-serif;
+  --font-headline: var(--font-geist), sans-serif;
+  
+  /* Colors */
+  --color-surface: #faf8ff;
+  --color-surface-dim: #d8d9e5;
+  --color-surface-bright: #faf8ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f3ff;
+  --color-surface-container: #ecedf9;
+  --color-surface-container-high: #e6e7f4;
+  --color-surface-container-highest: #e1e2ee;
+  --color-on-surface: #191b24;
+  --color-on-surface-variant: #424655;
+  --color-inverse-surface: #2d3039;
+  --color-inverse-on-surface: #eff0fc;
+  --color-outline: #727787;
+  --color-outline-variant: #c2c6d8;
+  --color-surface-tint: #0056d1;
+  --color-primary: #0055ce;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #0a6cff;
+  --color-on-primary-container: #fffeff;
+  --color-inverse-primary: #b2c5ff;
+  --color-secondary: #a72a77;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #fd71c0;
+  --color-on-secondary-container: #72004e;
+  --color-tertiary: #a63900;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #cf4901;
+  --color-on-tertiary-container: #fffeff;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  
+  --color-primary-fixed: #dae2ff;
+  --color-primary-fixed-dim: #b2c5ff;
+  --color-on-primary-fixed: #001847;
+  --color-on-primary-fixed-variant: #0040a0;
+  --color-secondary-fixed: #ffd8e8;
+  --color-secondary-fixed-dim: #ffafd5;
+  --color-on-secondary-fixed: #3d0027;
+  --color-on-secondary-fixed-variant: #88075e;
+  --color-tertiary-fixed: #ffdbce;
+  --color-tertiary-fixed-dim: #ffb59a;
+  --color-on-tertiary-fixed: #380d00;
+  --color-on-tertiary-fixed-variant: #802a00;
+  
+  --color-background: #faf8ff;
+  --color-on-background: #191b24;
+  --color-surface-variant: #e1e2ee;
+
+  /* Brand Specific colors */
+  --color-brand-blue: #0a6cff;
+  --color-brand-magenta: #9c1f6e;
+  --color-brand-navy: #0f172a;
+  --color-brand-light-gray: #f8fafc;
+  --color-brand-medium-gray: #64748b;
+
+  /* Radii */
+  --radius-sm: 0.25rem;
+  --radius-default: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.0rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-base: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 40px;
+  --spacing-xl: 64px;
+  --spacing-gutter: 24px;
+  --spacing-margin-mobile: 16px;
+  --spacing-margin-desktop: 80px;
+}
+
+:root {
+  --background: #faf8ff;
+  --foreground: #191b24;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Glassmorphism classes */
+.glass-nav {
+  background: rgba(250, 248, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(194, 198, 216, 0.2);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Gradients */
+.faith-gradient {
+  background: linear-gradient(135deg, #0055ce 0%, #a72a77 100%);
+}
+
+.scripture-gradient {
+  background: linear-gradient(135deg, #faf8ff 0%, #f2f3ff 100%);
+}
+
+/* Glow & Shadow Effects */
+.progress-glow {
+  box-shadow: 0 0 15px rgba(10, 108, 255, 0.4);
+}
+
+.soft-shadow {
+  box-shadow: 0 4px 12px rgba(10, 108, 255, 0.04);
+}
+
+.soft-shadow-hover {
+  transition: box-shadow 0.3s ease;
+}
+
+.soft-shadow-hover:hover {
+  box-shadow: 0 10px 20px rgba(10, 108, 255, 0.08);
+}
+
+/* Spiritual Accent Divider */
+.spiritual-accent {
+  background: linear-gradient(90deg, transparent, #9C1F6E 50%, transparent);
+  height: 1px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2.5rem 0;
+}
+
+.dove-icon {
+  background: #faf8ff;
+  padding: 0 1rem;
+  color: #9C1F6E;
+}
+
+/* Selection colors */
+::selection {
+  background-color: #dae2ff;
+  color: #001847;
+}

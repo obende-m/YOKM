@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>YOKM Admin | Ministry Control Panel</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#727787",
+                    "on-primary-fixed": "#001847",
+                    "tertiary-container": "#cf4901",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "outline-variant": "#c2c6d8",
+                    "tertiary-fixed": "#ffdbce",
+                    "surface-dim": "#d8d9e5",
+                    "surface-container-low": "#f2f3ff",
+                    "on-surface": "#191b24",
+                    "surface": "#faf8ff",
+                    "secondary-fixed-dim": "#ffafd5",
+                    "on-surface-variant": "#424655",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#802a00",
+                    "on-secondary-fixed": "#3d0027",
+                    "surface-container-high": "#e6e7f4",
+                    "surface-container": "#ecedf9",
+                    "on-primary": "#ffffff",
+                    "inverse-primary": "#b2c5ff",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#0040a0",
+                    "primary-fixed": "#dae2ff",
+                    "background": "#faf8ff",
+                    "inverse-on-surface": "#eff0fc",
+                    "on-primary-container": "#fffeff",
+                    "primary-container": "#0a6cff",
+                    "surface-container-highest": "#e1e2ee",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#72004e",
+                    "surface-tint": "#0056d1",
+                    "secondary-container": "#fd71c0",
+                    "tertiary-fixed-dim": "#ffb59a",
+                    "primary": "#0055ce",
+                    "tertiary": "#a63900",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#a72a77",
+                    "on-tertiary-fixed": "#380d00",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed-variant": "#88075e",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#2d3039",
+                    "on-background": "#191b24",
+                    "on-tertiary-container": "#fffeff",
+                    "surface-bright": "#faf8ff",
+                    "surface-variant": "#e1e2ee",
+                    "secondary-fixed": "#ffd8e8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "lg": "40px",
+                    "margin-mobile": "16px",
+                    "sm": "16px",
+                    "xl": "64px",
+                    "xs": "8px",
+                    "base": "4px",
+                    "gutter": "24px",
+                    "margin-desktop": "80px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Geist"],
+                    "display-lg-mobile": ["Geist"],
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Geist"],
+                    "label-sm": ["Inter"],
+                    "headline-lg": ["Geist"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .active-nav-bg {
+            background: linear-gradient(90deg, rgba(10, 108, 255, 0.1) 0%, rgba(10, 108, 255, 0) 100%);
+        }
+        body {
+            background-color: #faf8ff;
+            color: #191b24;
+        }
+        .sidebar-scrolled {
+            box-shadow: 10px 0 30px -15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- Admin SideNavBar -->
+<aside class="bg-surface-container dark:bg-inverse-surface h-screen w-64 fixed left-0 top-0 flex flex-col h-full p-4 gap-2 shadow-md transition-all duration-300 z-[60]" id="side-nav">
+<div class="flex items-center gap-3 px-2 py-4 mb-6">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="church">church</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-[1.25rem] font-bold text-on-surface dark:text-inverse-on-surface leading-tight">YOKM Admin</h1>
+<p class="font-label-sm text-on-surface-variant opacity-70">Ministry Control Panel</p>
+</div>
+</div>
+<nav class="flex-grow space-y-1">
+<!-- Dashboard (Active) -->
+<a class="bg-primary-container text-on-primary-container rounded-lg font-bold flex items-center gap-3 px-4 py-3 transition-all translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<!-- Impact Stories / Blog -->
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-lg flex items-center gap-3 px-4 py-3 transition-all hover:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-label-md">Impact Stories</span>
+</a>
+<!-- Donations -->
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-lg flex items-center gap-3 px-4 py-3 transition-all hover:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label-md">Donations</span>
+</a>
+<!-- Gallery Manager -->
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-lg flex items-center gap-3 px-4 py-3 transition-all hover:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+<span class="font-label-md">Gallery Manager</span>
+</a>
+<!-- Site Settings -->
+<a class="text-on-surface-variant hover:bg-surface-container-highest rounded-lg flex items-center gap-3 px-4 py-3 transition-all hover:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant/30 px-2 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<img alt="Admin User" class="w-10 h-10 rounded-full object-cover border-2 border-primary/20" data-alt="A professional headshot of a mature man in a formal charcoal suit, looking confidently into the camera. The lighting is soft and studio-quality, emphasizing trust and leadership. The background is a clean, neutral gray gradient that aligns with a corporate admin interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBStwtuoBcA9UQu-dYPMOIJCkqczQhY5O-BPhW7sOJarM1swyG0_M7A9dVE98bODxcWAchRssL0V-5FWgDv7BWHsGCHSQcN-Y05Offiw-358S7RObNEdmRMBzSFQ4XhQDxiuXI-v3bUYxqCfNnFrVtwgf4ZCZ-F4unDpdUCE6lQ_M_YeBv1rxJ99tGzZCXsQi2gRs1FhDTDdLkytBaIWG48_BEW1Isdik0VyxQP7PRTAgoQVRwgL-I11WMhZ1FzOmVwsgUSFybb1zs"/>
+<div>
+<p class="font-label-md text-on-surface font-bold">Admin User</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Super Administrator</p>
+</div>
+</div>
+<a class="w-full py-2 px-4 bg-outline-variant/20 hover:bg-outline-variant/40 text-on-surface rounded-lg font-label-md text-center transition-all" href="/">
+                View Website
+            </a>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="ml-64 min-h-screen transition-all duration-300">
+<!-- Top Utility Bar -->
+<header class="h-20 px-8 flex items-center justify-between sticky top-0 bg-surface/70 backdrop-blur-md z-50">
+<div>
+<h2 class="font-headline-md text-on-surface">Welcome back, Admin</h2>
+<p class="font-body-md text-on-surface-variant opacity-70">Here's what's happening with YOKM today.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant"></div>
+<button class="flex items-center gap-2 py-2 px-4 rounded-lg bg-primary text-white hover:shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span class="font-label-md">New Post</span>
+</button>
+</div>
+</header>
+<div class="p-8">
+<!-- Analytics Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-lg">
+<!-- Stat Card 1 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/10 hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<span class="text-success-600 font-label-sm flex items-center gap-1 text-green-600">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span> +12.5%
+                        </span>
+</div>
+<p class="font-label-md text-on-surface-variant">Total Donations</p>
+<h3 class="font-headline-lg text-primary mt-1">$45,280.00</h3>
+<div class="mt-4 w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-3/4"></div>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/10 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-secondary/10 text-secondary">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+</div>
+<span class="text-success-600 font-label-sm flex items-center gap-1 text-green-600">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span> +5.2%
+                        </span>
+</div>
+<p class="font-label-md text-on-surface-variant">Monthly Visitors</p>
+<h3 class="font-headline-lg text-secondary mt-1">12,840</h3>
+<div class="mt-4 flex gap-1">
+<div class="h-8 w-full bg-secondary/20 rounded-sm"></div>
+<div class="h-10 w-full bg-secondary/20 rounded-sm"></div>
+<div class="h-12 w-full bg-secondary rounded-sm"></div>
+<div class="h-10 w-full bg-secondary/20 rounded-sm"></div>
+<div class="h-8 w-full bg-secondary/20 rounded-sm"></div>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/10 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 rounded-lg bg-tertiary/10 text-tertiary">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+<span class="text-on-surface-variant font-label-sm">Total Growth</span>
+</div>
+<p class="font-label-md text-on-surface-variant">Active Subscribers</p>
+<h3 class="font-headline-lg text-tertiary mt-1">1,240</h3>
+<div class="mt-4 flex items-center gap-2">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-surface-dim border-2 border-surface-container-lowest"></div>
+<div class="w-6 h-6 rounded-full bg-surface-variant border-2 border-surface-container-lowest"></div>
+<div class="w-6 h-6 rounded-full bg-outline-variant border-2 border-surface-container-lowest"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant">+42 this week</span>
+</div>
+</div>
+</div>
+<!-- Content Management Table -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
+<div class="px-md py-4 border-b border-outline-variant/10 flex justify-between items-center">
+<h4 class="font-headline-md text-on-surface">Recent Blog Posts</h4>
+<div class="flex items-center gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-sm" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container text-label-md rounded-lg border-none focus:ring-2 focus:ring-primary/20 w-64" placeholder="Search posts..." type="text"/>
+</div>
+<button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container/50">
+<th class="px-md py-3 font-label-sm text-on-surface-variant uppercase tracking-wider">Post Title</th>
+<th class="px-md py-3 font-label-sm text-on-surface-variant uppercase tracking-wider">Author</th>
+<th class="px-md py-3 font-label-sm text-on-surface-variant uppercase tracking-wider">Category</th>
+<th class="px-md py-3 font-label-sm text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-md py-3 font-label-sm text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Post 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-md py-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-surface-dim overflow-hidden flex-shrink-0">
+<img alt="Impact Story" class="w-full h-full object-cover" data-alt="A wide shot showing a community gathering in a sunny outdoor setting in sub-Saharan Africa. Diverse groups of people are interacting warmly, with a focus on a ministry member talking with local elders. The lighting is golden and hopeful, reflecting a positive impact mission. The style is crisp and documentary-like." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwV7Vu9tDamErpEsSsy1tdKBOmk2gqwlIcc-CYP8cdMGW0Ojx8j0bGuWsdMZzNiouBOQSxGYkYIdptQ9NP76OI126aXsPOiyIRnVDw9V3vA5j2kcSlAWDDWbCUXF-jgCdX9dVyhG_6u1Pu0t5-PvprPk-_0Ftoyng-453BJI89pj4czqWhTQTSZGcMmD0uykY4UtIVsPDk2Bp1VHLyO3VRep64cJodXlew99Ot_8IzY2sKJhO_vVeUC-jNO09_9RbkpJyNkTF7eJs"/>
+</div>
+<div>
+<p class="font-label-md text-on-surface font-bold">Bringing Clean Water to Central Region</p>
+<p class="text-[12px] text-on-surface-variant">Published 2 hours ago</p>
+</div>
+</div>
+</td>
+<td class="px-md py-4 font-body-md text-on-surface-variant">John Doe</td>
+<td class="px-md py-4">
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-[11px]">Programs</span>
+</td>
+<td class="px-md py-4">
+<div class="flex items-center gap-1 text-green-600 font-label-sm">
+<span class="w-2 h-2 rounded-full bg-green-500"></span> Published
+                                    </div>
+</td>
+<td class="px-md py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined" data-icon="edit">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error"><span class="material-symbols-outlined" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Post 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-md py-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-surface-dim overflow-hidden flex-shrink-0">
+<img alt="Impact Story" class="w-full h-full object-cover" data-alt="Close-up of a child smiling while holding a new school notebook and pencil. The background is a soft-focus classroom interior with bright natural light streaming in from a window. The colors are warm and vibrant, emphasizing empowerment and the joy of education. The aesthetic is clean and modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0nO2QfnhUFMRfN-c-yhxZAaDDQz8Ei8bcGzrFxhm0aPrqhvqf9gjdOdS93n_FfL7BJu9CLPdg5IKV1igxhvsWdNqocac37MXMvNAzynPpFqrS8vMQTegtoIC9qJlrBj4ekOUORcJJIj2Hm48-5p9zZasNDRPcSb7dQbQW6oyWtDj1XagT3vq-W5OlqT_WYqtH35xHo0EZMDaxlHv_X8XsxZmiDbzK3Ry_CFIyyAMgjGOyMT_DEMW455P_H_P-8rtBxkV93zRwCSE"/>
+</div>
+<div>
+<p class="font-label-md text-on-surface font-bold">Empowering the Next Generation</p>
+<p class="text-[12px] text-on-surface-variant">Draft saved 1 day ago</p>
+</div>
+</div>
+</td>
+<td class="px-md py-4 font-body-md text-on-surface-variant">Jane Smith</td>
+<td class="px-md py-4">
+<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary font-label-sm text-[11px]">Education</span>
+</td>
+<td class="px-md py-4">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span> Draft
+                                    </div>
+</td>
+<td class="px-md py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined" data-icon="edit">edit</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error"><span class="material-symbols-outlined" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-md py-4 border-t border-outline-variant/10 flex justify-between items-center bg-surface-container/20">
+<p class="font-label-sm text-on-surface-variant">Showing 2 of 24 posts</p>
+<div class="flex gap-2">
+<button class="p-2 rounded border border-outline-variant/20 hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-2 rounded border border-outline-variant/20 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Bottom Layout: Donations & Quick Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mt-lg">
+<div class="lg:col-span-2 bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline-md text-on-surface">Recent Donations</h4>
+<a class="text-primary font-label-md hover:underline" href="#">View All</a>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 hover:bg-surface-container-low rounded-lg transition-colors border border-transparent hover:border-outline-variant/10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-primary">AM</div>
+<div>
+<p class="font-label-md font-bold">Anonymous Member</p>
+<p class="text-[12px] text-on-surface-variant">via PayPal • Education Fund</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md font-bold text-on-surface">+$250.00</p>
+<p class="text-[10px] text-on-surface-variant">June 12, 2024</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 hover:bg-surface-container-low rounded-lg transition-colors border border-transparent hover:border-outline-variant/10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-secondary">RK</div>
+<div>
+<p class="font-label-md font-bold">Robert King</p>
+<p class="text-[12px] text-on-surface-variant">One-time donation • General</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md font-bold text-on-surface">+$50.00</p>
+<p class="text-[10px] text-on-surface-variant">June 11, 2024</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Actions / Sidebar Tools -->
+<div class="space-y-gutter">
+<div class="bg-primary text-white p-md rounded-xl shadow-lg relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="font-headline-sm mb-2">Need Help?</h4>
+<p class="font-body-md opacity-80 mb-4 text-sm leading-relaxed">Access the administrator handbook or contact support for technical assistance.</p>
+<button class="w-full py-2 px-4 bg-white text-primary rounded-lg font-label-md hover:bg-opacity-90 transition-all active:scale-95">
+                                Open Help Center
+                            </button>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-white/10 text-[120px] select-none" data-icon="help_outline">help_outline</span>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/10">
+<h4 class="font-headline-sm mb-4">Gallery Status</h4>
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-md text-on-surface-variant">Storage Used</span>
+<span class="font-label-md font-bold">4.2 / 10 GB</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[42%]"></div>
+</div>
+<div class="mt-4 flex flex-wrap gap-2">
+<button class="flex-1 py-2 text-[11px] font-bold uppercase tracking-wider bg-surface-container hover:bg-surface-container-high rounded transition-colors">
+                                Clean Up
+                            </button>
+<button class="flex-1 py-2 text-[11px] font-bold uppercase tracking-wider bg-surface-container hover:bg-surface-container-high rounded transition-colors">
+                                Add Storage
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Admin Footer -->
+<footer class="mt-xl py-8 px-8 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label-sm text-on-surface-variant">
+                © 2024 Yendel Ocha Kpeling Ministry (YOKM). Registered NGO.
+            </p>
+<div class="flex items-center gap-6">
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Documentation</a>
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Security</a>
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Log Out</a>
+</div>
+</footer>
+</main>
+<script>
+        // Simple Interaction logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const sideNav = document.getElementById('side-nav');
+            
+            // Interaction: Shadow shift on scroll
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    sideNav.classList.add('sidebar-scrolled');
+                } else {
+                    sideNav.classList.remove('sidebar-scrolled');
+                }
+            });
+
+            // Active State Logic (Simulated for this demo)
+            const navLinks = document.querySelectorAll('aside nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // e.preventDefault();
+                    navLinks.forEach(l => {
+                        l.classList.remove('bg-primary-container', 'text-on-primary-container', 'font-bold', 'translate-x-1');
+                        l.classList.add('text-on-surface-variant', 'hover:bg-surface-container-highest');
+                        l.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 0";
+                    });
+                    link.classList.add('bg-primary-container', 'text-on-primary-container', 'font-bold', 'translate-x-1');
+                    link.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-highest');
+                    link.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1";
+                });
+            });
+        });
+    </script>
+</body></html>
