@@ -6,7 +6,7 @@
 
 /*
  * YOKM design system — warm ivory, deep forest, ochre, charcoal.
- * Editorial serif (Fraunces) for emotional headlines, clean sans (Work Sans) for UI.
+ * Editorial serif (Cormorant Garamond) for emotional headlines, clean sans (Manrope) for UI.
  */
 
 @theme inline {
@@ -14,8 +14,8 @@
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 2px);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-serif: "Fraunces", Georgia, serif;
-  --font-sans: "Work Sans", system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -90,7 +90,8 @@
   blockquote {
     font-family: var(--font-serif);
     font-weight: 400;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
+    line-height: 1.04;
   }
 
   ::selection {
