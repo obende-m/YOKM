@@ -5,6 +5,7 @@ import { useState } from "react";
 import community from "@/assets/community-gathering.jpg";
 import hero from "@/assets/hero-widow-portrait.jpg";
 import skills from "@/assets/skills-hands.jpg";
+import { CircularCarousel } from "@/components/site/CircularCarousel";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { GALLERY } from "@/lib/yokm";
@@ -51,6 +52,11 @@ function Gallery() {
             : undefined
         }
       />
+
+      <section className="border-b border-border bg-cream py-10">
+        <CircularCarousel items={images} onOpen={setActive} />
+        <p className="mt-2 text-center eyebrow text-muted-foreground">Drag to turn · select to open</p>
+      </section>
 
       <section className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-24">
         <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 [&>*]:mb-5">

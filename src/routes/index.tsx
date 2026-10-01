@@ -5,6 +5,8 @@ import { useRef, useState } from "react";
 import community from "@/assets/community-gathering.jpg";
 import hero from "@/assets/hero-widow-portrait.jpg";
 import skills from "@/assets/skills-hands.jpg";
+import { BounceCards } from "@/components/site/BounceCards";
+import { MorphingCardStack } from "@/components/site/MorphingCardStack";
 import { Reveal } from "@/components/site/Reveal";
 import { IMPACT_METRICS, MISSION, ORG, STORIES, VISION, WORK_AREAS } from "@/lib/yokm";
 
@@ -246,28 +248,17 @@ function HumanStory() {
   return (
     <section className="bg-ink text-ink-foreground">
       <div className="mx-auto grid max-w-[1400px] gap-12 px-5 py-24 md:px-10 md:py-32 lg:grid-cols-2 lg:items-center lg:gap-20">
-        <Reveal className="relative">
-          <div className="img-zoom">
-            <img
-              src={skills}
-              alt="A widow working at a sewing machine"
-              width={1280}
-              height={960}
-              loading="lazy"
-              className="w-full object-cover"
-            />
-          </div>
-          <div className="img-zoom absolute -bottom-10 right-4 hidden w-40 border-4 border-ink lg:block xl:w-52">
-            <img
-              src={community}
-              alt="Women praying together"
-              width={1280}
-              height={1600}
-              loading="lazy"
-              className="w-full object-cover"
-            />
-          </div>
-        </Reveal>
+        <div>
+          <BounceCards
+            images={[
+              { src: community, alt: "Women praying together" },
+              { src: skills, alt: "A widow working at a sewing machine" },
+              { src: hero, alt: "A widow in Jos in the late afternoon light" },
+              { src: skills, alt: "Hands at work on fabric" },
+              { src: community, alt: "Women gathered in encouragement" },
+            ]}
+          />
+        </div>
 
         <Reveal delay={0.12}>
           <p className="eyebrow text-ink-foreground/55">Stories</p>
@@ -298,30 +289,32 @@ function HumanStory() {
 
 function Work() {
   return (
-    <section className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-40">
+    <section className="mx-auto grid max-w-[1400px] gap-14 px-5 py-24 md:px-10 md:py-40 lg:grid-cols-[0.8fr_1.2fr]">
       <Reveal>
         <p className="eyebrow text-muted-foreground">Our work</p>
-        <h2 className="mt-4 max-w-2xl text-[clamp(1.8rem,3.6vw,3rem)] leading-[1.08]">
+        <h2 className="mt-4 max-w-md text-[clamp(2rem,4vw,3.4rem)] leading-[1.04]">
           Six areas drawn directly from the ministry&rsquo;s mission.
         </h2>
+        <Link to="/our-work" className="rule-link mt-8 inline-block eyebrow">
+          Read about our work →
+        </Link>
       </Reveal>
 
-      <div className="mt-16 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
-        {WORK_AREAS.map((w, i) => (
-          <Reveal key={w.slug} delay={Math.min(i * 0.06, 0.3)} className="bg-background">
-            <Link to="/our-work" className="group flex h-full flex-col p-8 md:p-10">
-              <span className="eyebrow text-accent">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="mt-5 text-2xl">{w.title}</h3>
-              <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">{w.text}</p>
-              <span className="mt-8 eyebrow text-muted-foreground">{w.scripture}</span>
-            </Link>
-          </Reveal>
-        ))}
-      </div>
+      <div>
+        <MorphingCardStack
+          cards={WORK_AREAS.map((w, i) => ({
+            id: w.slug,
+            no: String(i + 1).padStart(2, "0"),
+            title: w.title,
+            text: w.text,
+            meta: w.scripture,
+          }))}
+        />
       <p className="mt-8 max-w-2xl text-xs leading-relaxed text-muted-foreground">
         These areas are drawn from YOKM&rsquo;s supplied mission. They are not presented as official
         named programmes.
       </p>
+      </div>
     </section>
   );
 }
