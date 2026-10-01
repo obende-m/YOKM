@@ -314,6 +314,7 @@ function Work() {
         These areas are drawn from YOKM&rsquo;s supplied mission. They are not presented as official
         named programmes.
       </p>
+      </div>
     </section>
   );
 }
