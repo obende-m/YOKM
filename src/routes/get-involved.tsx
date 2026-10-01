@@ -19,7 +19,7 @@ export const Route = createFileRoute("/get-involved")({
       },
     ],
   }),
-  component: GetInvolved;
+  component: GetInvolved,
 });
 
 const WAYS = [
