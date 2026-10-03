@@ -38,18 +38,18 @@ function Hero() {
   const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section ref={ref} className="relative h-[100svh] min-h-[620px] overflow-hidden bg-ink">
+    <section ref={ref} className="relative h-[min(85svh,760px)] min-h-[550px] overflow-hidden bg-ink max-[380px]:min-h-[590px]">
       <motion.img
         src={hero}
         alt="A widow in Jos, Plateau State, standing in the late afternoon light"
         width={1920}
         height={1280}
         style={reduced ? undefined : { scale }}
-        className="absolute inset-0 h-full w-full object-cover object-[60%_center]"
+        className="absolute inset-0 h-full w-full object-cover object-[48%_center] md:object-[60%_center]"
       />
-      <div className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.16_0.02_80/0.82),oklch(0.16_0.02_80/0.28)_45%,oklch(0.16_0.02_80/0.45))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_top,var(--ink)_0%,transparent_78%)] opacity-90" />
 
-      <div className="relative mx-auto flex h-full max-w-[1400px] flex-col justify-end px-5 pb-20 text-ink-foreground md:px-10 md:pb-28">
+      <div className="relative mx-auto flex h-full max-w-[1400px] flex-col justify-end px-5 pb-10 text-ink-foreground md:px-10 md:pb-16">
         <motion.p
           initial={reduced ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -63,7 +63,7 @@ function Hero() {
           initial={reduced ? false : { opacity: 0, y: 26 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-5 max-w-[16ch] text-[clamp(2.6rem,8vw,6rem)] leading-[0.95]"
+          className="mt-3 max-w-[16ch] text-[clamp(2.6rem,8vw,6rem)] leading-[0.95]"
         >
           Awake, Oh Ye Widows
         </motion.h1>
@@ -72,7 +72,7 @@ function Hero() {
           initial={reduced ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-7 max-w-xl text-base leading-relaxed text-ink-foreground/85 md:text-lg"
+          className="mt-4 max-w-xl text-sm leading-relaxed text-ink-foreground/90 md:mt-6 md:text-lg"
         >
           A Christian ministry in Jos, Plateau State, reaching widows in every aspect of life — so
           that they discover God&rsquo;s purpose, develop their gifts and stand independent.
@@ -82,18 +82,18 @@ function Hero() {
           initial={reduced ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 flex flex-col gap-3 sm:flex-row"
+          className="mt-6 flex flex-wrap gap-3 sm:flex-row md:mt-8"
         >
           <Link
             to="/our-work"
-            className="group inline-flex items-center justify-center gap-3 bg-ink-foreground px-7 py-4 text-xs uppercase tracking-[0.18em] text-ink"
+            className="group inline-flex items-center justify-center gap-3 bg-accent px-5 py-3.5 text-xs uppercase tracking-[0.12em] text-accent-foreground md:px-7 md:py-4"
           >
             Discover our work
             <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
           </Link>
           <Link
             to="/donate"
-            className="inline-flex items-center justify-center border border-ink-foreground/45 px-7 py-4 text-xs uppercase tracking-[0.18em] transition-colors hover:bg-ink-foreground/10"
+            className="inline-flex items-center justify-center border border-ink-foreground/75 px-5 py-3.5 text-xs uppercase tracking-[0.12em] transition-colors hover:bg-ink-foreground/10 md:px-7 md:py-4"
           >
             Support the mission
           </Link>
@@ -113,8 +113,8 @@ function Hero() {
 
 function Philosophy() {
   return (
-    <section className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-40">
-      <div className="grid gap-12 md:grid-cols-12">
+    <section className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-24">
+      <div className="grid gap-6 md:grid-cols-12 md:gap-12">
         <Reveal className="md:col-span-4">
           <p className="eyebrow text-muted-foreground">The heart of YOKM</p>
           <p className="mt-4 font-serif text-lg text-primary">Awake. Discover. Become.</p>
@@ -142,11 +142,11 @@ function Philosophy() {
 function Vision() {
   return (
     <section className="border-y border-border bg-cream">
-      <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
+      <div className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-20">
         <Reveal>
           <p className="eyebrow text-muted-foreground">Our vision</p>
         </Reveal>
-        <div className="mt-14 grid gap-14 lg:grid-cols-[1fr_0.85fr] lg:gap-24">
+        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:gap-16">
           <div>
             <ol className="divide-y divide-border">
               {VISION.map((v, i) => (
@@ -182,7 +182,7 @@ function Mission() {
   const [open, setOpen] = useState<string | null>(MISSION[0].no);
 
   return (
-    <section className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-40">
+    <section className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-24">
       <div className="grid gap-10 md:grid-cols-12">
         <Reveal className="md:col-span-4">
           <p className="eyebrow text-muted-foreground">Our mission</p>
@@ -247,7 +247,7 @@ function Mission() {
 function HumanStory() {
   return (
     <section className="bg-ink text-ink-foreground">
-      <div className="mx-auto grid max-w-[1400px] gap-12 px-5 py-24 md:px-10 md:py-32 lg:grid-cols-2 lg:items-center lg:gap-20">
+      <div className="mx-auto grid max-w-[1400px] gap-6 px-5 py-14 md:px-10 md:py-20 lg:grid-cols-2 lg:items-center lg:gap-16">
         <div>
           <BounceCards
             images={[
@@ -289,7 +289,7 @@ function HumanStory() {
 
 function Work() {
   return (
-    <section className="mx-auto grid max-w-[1400px] gap-14 px-5 py-24 md:px-10 md:py-40 lg:grid-cols-[0.8fr_1.2fr]">
+    <section className="mx-auto grid max-w-[1400px] gap-8 px-5 py-14 md:px-10 md:py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
       <Reveal>
         <p className="eyebrow text-muted-foreground">Our work</p>
         <h2 className="mt-4 max-w-md text-[clamp(2rem,4vw,3.4rem)] leading-[1.04]">
@@ -339,7 +339,7 @@ function Impact() {
 function Give() {
   return (
     <section className="bg-primary text-primary-foreground">
-      <div className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
+      <div className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-20">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-end">
           <Reveal>
             <p className="eyebrow text-primary-foreground/60">Support YOKM</p>

@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep the shared navigation and section colors in semantic tokens and a single Header component so menu states and responsive styling remain consistent across pages.

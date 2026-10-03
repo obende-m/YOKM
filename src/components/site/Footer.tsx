@@ -6,8 +6,8 @@ import { CONTACT_CHANNELS, NAV, ORG, SOCIAL_LINKS } from "@/lib/yokm";
 export function Footer() {
   return (
     <footer className="bg-ink text-ink-foreground">
-      <div className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-24">
-        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div className="mx-auto max-w-[1400px] px-5 py-12 md:px-10 md:py-16">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-12">
           <div className="max-w-sm">
             <div className="flex items-center gap-3">
               <img src={logo.url} alt={`${ORG.abbr} logo`} width={48} height={48} className="h-12 w-12" loading="lazy" />
@@ -75,7 +75,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-ink-foreground/15 pt-8 text-xs text-ink-foreground/55 md:flex-row md:items-center md:justify-between">
+        <div className="mt-10 flex flex-col gap-4 border-t border-ink-foreground/30 pt-6 text-xs text-ink-foreground/70 md:flex-row md:items-center md:justify-between">
           <p>
             © {new Date().getFullYear()} {ORG.name}. {ORG.registration}. {ORG.registrationNumber}.
           </p>
