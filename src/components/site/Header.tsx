@@ -56,7 +56,7 @@ export function Header() {
             alt={`${ORG.abbr} logo`}
             width={44}
             height={44}
-            className="h-10 w-10 md:h-11 md:w-11"
+            className="no-photo h-10 w-10 md:h-11 md:w-11"
           />
           <span className="hidden leading-tight sm:block">
             <span className="block font-serif text-sm tracking-tight">{ORG.abbr}</span>

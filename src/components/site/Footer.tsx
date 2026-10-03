@@ -10,7 +10,7 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-12">
           <div className="max-w-sm">
             <div className="flex items-center gap-3">
-              <img src={logo.url} alt={`${ORG.abbr} logo`} width={48} height={48} className="h-12 w-12" loading="lazy" />
+              <img src={logo.url} alt={`${ORG.abbr} logo`} width={48} height={48} className="no-photo h-12 w-12" loading="lazy" />
               <span className="font-serif text-lg">{ORG.abbr}</span>
             </div>
             <p className="mt-6 font-serif text-xl leading-snug">“{ORG.motto}”</p>

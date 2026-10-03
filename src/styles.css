@@ -130,6 +130,14 @@
     outline: 2px solid var(--color-primary);
     outline-offset: 3px;
   }
+
+  /* Photographs: a slight rounding and a soft lift. The logo opts out via .no-photo. */
+  img:not(.no-photo) {
+    border-radius: calc(var(--radius) + 2px);
+    box-shadow:
+      0 1px 2px oklch(0 0 0 / 0.05),
+      0 6px 18px oklch(0 0 0 / 0.08);
+  }
 }
 
 @utility eyebrow {
