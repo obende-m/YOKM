@@ -12,6 +12,8 @@ const IMAGES = [skills, community, hero];
 export const Route = createFileRoute("/our-work")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Our Work — Yendel Ocha Kpeling Ministry" },
       {
         name: "description",

@@ -7,6 +7,8 @@ import { Reveal } from "@/components/site/Reveal";
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Privacy Policy — Yendel Ocha Kpeling Ministry" },
       {
         name: "description",

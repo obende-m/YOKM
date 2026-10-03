@@ -8,6 +8,8 @@ import { STORIES } from "@/lib/yokm";
 export const Route = createFileRoute("/stories")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Stories — Yendel Ocha Kpeling Ministry" },
       {
         name: "description",

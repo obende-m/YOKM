@@ -13,6 +13,8 @@ import { IMPACT_METRICS, MISSION, ORG, STORIES, VISION, WORK_AREAS } from "@/lib
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Yendel Ocha Kpeling Ministry (YOKM) — Awake Oh Ye Widows" },
       {
         name: "description",

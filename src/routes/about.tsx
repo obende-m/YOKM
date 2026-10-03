@@ -9,6 +9,8 @@ import { MISSION, ORG, VISION } from "@/lib/yokm";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "About YOKM — Yendel Ocha Kpeling Ministry, Jos, Nigeria" },
       {
         name: "description",
