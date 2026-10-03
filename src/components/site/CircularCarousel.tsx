@@ -59,6 +59,7 @@ export function CircularCarousel({ items, onOpen }: { items: Item[]; onOpen?: (i
               height: card * 1.25,
               left: -card / 2,
               top: (-card * 1.25) / 2,
+              borderRadius: "calc(var(--radius) + 2px)",
               transform: `rotateY(${i * step}deg) translateZ(${radius}px)`,
               backfaceVisibility: "hidden",
             }}

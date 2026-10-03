@@ -31,7 +31,7 @@ export function BounceCards({ images }: { images: { src: string; alt: string }[]
             viewport={{ once: true }}
             animate={{ x: t.x + push, rotate: hover === i ? 0 : t.r }}
             transition={{ type: "spring", stiffness: 260, damping: 14, delay: reduced ? 0 : i * 0.08 }}
-            className="absolute left-1/2 top-1/2 -ml-[95px] -mt-[95px] h-[190px] w-[190px] scale-[0.68] overflow-hidden border-[6px] border-ink-foreground shadow-[0_10px_30px_oklch(0_0_0/0.35)] sm:scale-100"
+            className="absolute left-1/2 top-1/2 -ml-[95px] -mt-[95px] h-[190px] w-[190px] scale-[0.68] overflow-hidden rounded-lg border-[6px] border-ink-foreground shadow-[0_10px_30px_oklch(0_0_0/0.35)] sm:scale-100"
             style={{ zIndex: hover === i ? 10 : i }}
           >
             <img src={img.src} alt={img.alt} loading="lazy" className="h-full w-full object-cover" />
