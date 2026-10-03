@@ -6,6 +6,8 @@ import { Reveal } from "@/components/site/Reveal";
 export const Route = createFileRoute("/get-involved")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Get Involved — Yendel Ocha Kpeling Ministry" },
       {
         name: "description",
