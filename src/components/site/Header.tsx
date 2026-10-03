@@ -42,9 +42,11 @@ export function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-        transparent
-          ? "bg-transparent text-ink-foreground"
-          : "bg-background/92 text-foreground backdrop-blur-sm border-b border-border"
+        open
+          ? "bg-primary text-primary-foreground"
+          : transparent
+            ? "bg-transparent text-ink-foreground"
+            : "bg-background/95 text-foreground border-b border-border"
       }`}
     >
       <div className="relative z-50 mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 md:px-10 lg:py-4">
@@ -109,7 +111,7 @@ export function Header() {
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
             transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 z-40 bg-primary text-primary-foreground lg:hidden"
+            className="fixed inset-x-0 top-0 z-40 h-[100dvh] overflow-hidden bg-primary text-primary-foreground lg:hidden"
           >
             <nav aria-label="Mobile navigation" className="mx-auto flex h-full max-w-[1400px] flex-col overflow-y-auto px-6 pb-8 pt-24 md:px-10">
               <p className="eyebrow mb-5 border-b border-primary-foreground/30 pb-4 text-primary-foreground/70">Explore YOKM</p>
