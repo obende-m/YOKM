@@ -23,6 +23,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as PostSlugRouteImport } from './routes/post.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
@@ -99,6 +100,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const PostSlugRoute = PostSlugRouteImport.update({
+  id: '/post/$slug',
+  path: '/post/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/post/$slug': typeof PostSlugRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/submissions': typeof AuthenticatedAdminSubmissionsRoute
@@ -167,6 +174,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
+  '/post/$slug': typeof PostSlugRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/submissions': typeof AuthenticatedAdminSubmissionsRoute
@@ -190,6 +198,7 @@ export interface FileRoutesById {
   '/stories': typeof StoriesRoute
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/post/$slug': typeof PostSlugRoute
   '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/submissions': typeof AuthenticatedAdminSubmissionsRoute
@@ -213,6 +222,7 @@ export interface FileRouteTypes {
     | '/stories'
     | '/terms'
     | '/admin'
+    | '/post/$slug'
     | '/admin/$section'
     | '/admin/settings'
     | '/admin/submissions'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/stories'
     | '/terms'
+    | '/post/$slug'
     | '/admin/$section'
     | '/admin/settings'
     | '/admin/submissions'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/stories'
     | '/terms'
     | '/_authenticated/admin'
+    | '/post/$slug'
     | '/_authenticated/admin/$section'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/submissions'
@@ -277,6 +289,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   StoriesRoute: typeof StoriesRoute
   TermsRoute: typeof TermsRoute
+  PostSlugRoute: typeof PostSlugRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
 
@@ -380,6 +393,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/post/$slug': {
+      id: '/post/$slug'
+      path: '/post/$slug'
+      fullPath: '/post/$slug'
+      preLoaderRoute: typeof PostSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/'
@@ -469,6 +489,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   StoriesRoute: StoriesRoute,
   TermsRoute: TermsRoute,
+  PostSlugRoute: PostSlugRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
 export const routeTree = rootRouteImport

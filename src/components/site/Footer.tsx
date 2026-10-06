@@ -1,9 +1,13 @@
 import { Link } from "@tanstack/react-router";
 
 import logo from "@/assets/yokm-logo.png.asset.json";
-import { CONTACT_CHANNELS, NAV, ORG, SOCIAL_LINKS } from "@/lib/yokm";
+import { contactChannels, socialLinks, useSettings } from "@/lib/cms";
+import { NAV, ORG } from "@/lib/yokm";
 
 export function Footer() {
+  const { data: settings = {} } = useSettings();
+  const CONTACT_CHANNELS = contactChannels(settings);
+  const SOCIAL_LINKS = socialLinks(settings);
   return (
     <footer className="bg-ink text-ink-foreground">
       <div className="mx-auto max-w-[1400px] px-5 py-12 md:px-10 md:py-16">
@@ -14,7 +18,7 @@ export function Footer() {
               <span className="font-serif text-lg">{ORG.abbr}</span>
             </div>
             <p className="mt-6 font-serif text-xl leading-snug">“{ORG.motto}”</p>
-            <p className="mt-4 text-sm leading-relaxed text-ink-foreground/65">{ORG.positioning}</p>
+            <p className="mt-4 text-sm leading-relaxed text-ink-foreground/65">{settings["footer_text"] ?? ORG.positioning}</p>
           </div>
 
           <div>
@@ -38,7 +42,7 @@ export function Footer() {
           <div>
             <p className="eyebrow text-ink-foreground/50">Find us</p>
             <address className="mt-5 text-sm not-italic leading-relaxed text-ink-foreground/80">
-              {ORG.address}
+              {settings["contact_address"] ?? ORG.address}
             </address>
             {CONTACT_CHANNELS.length > 0 && (
               <ul className="mt-4 space-y-2 text-sm text-ink-foreground/80">

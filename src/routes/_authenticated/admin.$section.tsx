@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/admin/$section")({
   notFoundComponent: () => <p className="text-sm">This section does not exist.</p>,
 });
 
-type Row = Record<string, any>;
+type Row = any;
 const db = (t: string) => (supabase as any).from(t);
 
 function SectionPage() {
@@ -46,7 +46,7 @@ function SectionPage() {
   async function remove(row: Row) {
     if (!window.confirm(`Delete this ${section.singular}? This cannot be undone.`)) return;
     const { error } = await db(section.table).delete().eq("id", row.id);
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     toast.success("Deleted");
     qc.invalidateQueries({ queryKey: ["admin", section.key] });
   }
@@ -55,7 +55,7 @@ function SectionPage() {
     const patch: Row = { published: !row.published };
     if (section.table === "posts" && !row.published && !row.published_at) patch.published_at = new Date().toISOString();
     const { error } = await db(section.table).update(patch).eq("id", row.id);
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     qc.invalidateQueries({ queryKey: ["admin", section.key] });
   }
 
@@ -144,11 +144,11 @@ function toInputDate(v: unknown, withTime: boolean) {
 function Editor({ section, initial, onDone }: { section: Section; initial: Row; onDone: () => void }) {
   const [row, setRow] = useState<Row>(initial);
   const [saving, setSaving] = useState(false);
-  const set = (k: string, v: unknown) => setRow((r) => ({ ...r, [k]: v }));
+  const set = (k: string, v: unknown) => setRow((r: Row) => ({ ...r, [k]: v }));
 
   async function save(publish?: boolean) {
     for (const f of section.fields) {
-      if (f.required && !String(row[f.name] ?? "").trim()) return toast.error(`${f.label} is required`);
+      if (f.required && !String(row[f.name] ?? "").trim()) return void toast.error(`${f.label} is required`);
     }
     setSaving(true);
     const payload: Row = {};
@@ -168,7 +168,7 @@ function Editor({ section, initial, onDone }: { section: Section; initial: Row; 
     const q = row.id ? db(section.table).update(payload).eq("id", row.id) : db(section.table).insert(payload);
     const { error } = await q;
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     toast.success("Saved");
     onDone();
   }

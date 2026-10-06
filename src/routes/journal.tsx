@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Pending } from "@/components/site/Placeholder";
+import { PostGrid } from "@/components/site/PostGrid";
 import { Reveal } from "@/components/site/Reveal";
 
 export const Route = createFileRoute("/journal")({
@@ -34,12 +35,17 @@ function Journal() {
         intro="Outreach reports, teachings, announcements and community updates will be published here."
       />
       <section className="mx-auto max-w-[1400px] px-5 py-20 md:px-10 md:py-28">
-        <Reveal className="max-w-2xl">
-          <Pending label="No articles have been published yet">
-            Nothing is published here until the ministry writes it. Articles will carry a cover
-            image, author, date, category and full text.
-          </Pending>
-        </Reveal>
+        <PostGrid
+          kind="journal"
+          empty={
+            <Reveal className="max-w-2xl">
+              <Pending label="No articles have been published yet">
+                Nothing is published here until the ministry writes it. Articles will carry a cover
+                image, author, date, category and full text.
+              </Pending>
+            </Reveal>
+          }
+        />
       </section>
     </>
   );

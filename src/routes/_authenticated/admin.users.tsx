@@ -21,8 +21,8 @@ function Users() {
   async function add(e: React.FormEvent) {
     e.preventDefault();
     const { data: ok, error } = await supabase.rpc("grant_admin_by_email", { _email: email.trim() });
-    if (error) return toast.error(error.message);
-    if (!ok) return toast.error("No account with that email. Ask them to create an account on the sign-in page first.");
+    if (error) return void toast.error(error.message);
+    if (!ok) return void toast.error("No account with that email. Ask them to create an account on the sign-in page first.");
     toast.success("Administrator added");
     setEmail("");
     refetch();
@@ -31,7 +31,7 @@ function Users() {
   async function remove(userId: string) {
     if (!window.confirm("Remove administrator access for this person?")) return;
     const { error } = await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", "admin");
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     refetch();
   }
 
