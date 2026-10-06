@@ -3,7 +3,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHero } from "@/components/site/PageHero";
 import { Pending } from "@/components/site/Placeholder";
 import { Reveal } from "@/components/site/Reveal";
-import { CONTACT_CHANNELS, ORG, SOCIAL_LINKS } from "@/lib/yokm";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { supabase } from "@/integrations/supabase/client";
+import { contactChannels, socialLinks, useSettings } from "@/lib/cms";
+import { ORG } from "@/lib/yokm";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -27,6 +32,26 @@ export const Route = createFileRoute("/contact")({
 });
 
 function Contact() {
+  const { data: settings = {} } = useSettings();
+  const CONTACT_CHANNELS = contactChannels(settings);
+  const SOCIAL_LINKS = socialLinks(settings);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const get = (k: string) => String(fd.get(k) ?? "").trim();
+    const row = { name: get("name").slice(0, 200), email: get("email").slice(0, 255), phone: get("phone").slice(0, 50), message: get("message").slice(0, 5000) };
+    if (!row.name || !row.email || !row.message) return toast.error("Please add your name, email and message.");
+    setSending(true);
+    const { error } = await supabase.from("submissions").insert(row);
+    setSending(false);
+    if (error) return toast.error("Your message could not be sent. Please try again.");
+    setSent(true);
+    e.currentTarget.reset();
+  }
+
   return (
     <>
       <PageHero eyebrow="Contact" title="Reach the ministry" />
@@ -36,7 +61,7 @@ function Contact() {
           <Reveal>
             <p className="eyebrow text-muted-foreground">Office</p>
             <address className="mt-4 max-w-sm text-xl not-italic leading-relaxed">
-              {ORG.address}
+              {settings["contact_address"] ?? ORG.address}
             </address>
 
             {CONTACT_CHANNELS.length > 0 ? (
@@ -77,7 +102,7 @@ function Contact() {
 
           <Reveal delay={0.1}>
             <p className="eyebrow text-muted-foreground">Send a message</p>
-            <form className="mt-6 space-y-5" onSubmit={(e) => e.preventDefault()}>
+            <form className="mt-6 space-y-5" onSubmit={onSubmit}>
               <Field label="Full name" name="name" />
               <Field label="Email" name="email" type="email" />
               <Field label="Phone" name="phone" type="tel" />
@@ -89,21 +114,19 @@ function Contact() {
                   id="message"
                   name="message"
                   rows={5}
-                  disabled
+                  required
+                  maxLength={5000}
                   className="mt-2 w-full border border-input bg-card px-4 py-3 text-sm disabled:opacity-60"
                 />
               </div>
               <button
                 type="submit"
-                disabled
+                disabled={sending}
                 className="w-full bg-primary px-6 py-4 text-xs uppercase tracking-[0.18em] text-primary-foreground disabled:opacity-50"
               >
-                Send message
+                {sending ? "Sending…" : "Send message"}
               </button>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                Message delivery is not connected yet, so this form cannot send anything. It will be
-                switched on once a destination address is confirmed.
-              </p>
+              {sent && <p className="text-sm text-primary">Thank you — your message has been received by the ministry.</p>}
             </form>
           </Reveal>
         </div>
@@ -122,7 +145,8 @@ function Field({ label, name, type = "text" }: { label: string; name: string; ty
         id={name}
         name={name}
         type={type}
-        disabled
+        required={name !== "phone"}
+        maxLength={255}
         className="mt-2 w-full border border-input bg-card px-4 py-3 text-sm disabled:opacity-60"
       />
     </div>
