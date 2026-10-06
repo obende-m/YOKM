@@ -144,7 +144,7 @@ function toInputDate(v: unknown, withTime: boolean) {
 function Editor({ section, initial, onDone }: { section: Section; initial: Row; onDone: () => void }) {
   const [row, setRow] = useState<Row>(initial);
   const [saving, setSaving] = useState(false);
-  const set = (k: string, v: unknown) => setRow((r) => ({ ...r, [k]: v }));
+  const set = (k: string, v: unknown) => setRow((r: Row) => ({ ...r, [k]: v }));
 
   async function save(publish?: boolean) {
     for (const f of section.fields) {
