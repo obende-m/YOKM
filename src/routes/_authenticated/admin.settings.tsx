@@ -34,7 +34,7 @@ function Settings() {
     const rows = SETTING_FIELDS.map((f) => ({ key: f.key, value: (vals[f.key] ?? "").trim() }));
     const { error } = await supabase.from("site_settings").upsert(rows);
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     toast.success("Settings saved");
     qc.invalidateQueries({ queryKey: ["site_settings"] });
   }

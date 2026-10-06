@@ -43,11 +43,11 @@ function Contact() {
     const fd = new FormData(e.currentTarget);
     const get = (k: string) => String(fd.get(k) ?? "").trim();
     const row = { name: get("name").slice(0, 200), email: get("email").slice(0, 255), phone: get("phone").slice(0, 50), message: get("message").slice(0, 5000) };
-    if (!row.name || !row.email || !row.message) return toast.error("Please add your name, email and message.");
+    if (!row.name || !row.email || !row.message) return void toast.error("Please add your name, email and message.");
     setSending(true);
     const { error } = await supabase.from("submissions").insert(row);
     setSending(false);
-    if (error) return toast.error("Your message could not be sent. Please try again.");
+    if (error) return void toast.error("Your message could not be sent. Please try again.");
     setSent(true);
     e.currentTarget.reset();
   }
