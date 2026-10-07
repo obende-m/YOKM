@@ -89,7 +89,7 @@ function OurWork() {
                       {p.status !== "active" && <span className="eyebrow text-muted-foreground">{p.status}</span>}
                     </div>
                     {p.short_description && <p className="mt-3 leading-relaxed text-muted-foreground">{p.short_description}</p>}
-                    {p.full_description && <div className="prose-article mt-4 text-sm" dangerouslySetInnerHTML={{ __html: renderRichText(p.full_description) }} />}
+                    {p.full_description && <div className="prose-yokm mt-4 text-sm" dangerouslySetInnerHTML={{ __html: renderRichText(p.full_description) }} />}
                     {p.donation_cta && <Link to="/donate" className="mt-5 inline-block eyebrow text-accent">{p.donation_cta} →</Link>}
                   </article>
                 </Reveal>
