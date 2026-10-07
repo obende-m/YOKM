@@ -4,6 +4,7 @@ import community from "@/assets/community-gathering.jpg";
 import { PageHero } from "@/components/site/PageHero";
 import { Pending } from "@/components/site/Placeholder";
 import { Reveal } from "@/components/site/Reveal";
+import { usePublished, type PersonRow } from "@/lib/cms";
 import { MISSION, ORG, VISION } from "@/lib/yokm";
 
 export const Route = createFileRoute("/about")({
@@ -145,6 +146,33 @@ function About() {
           </div>
         </div>
       </section>
+
+      <People />
     </>
+  );
+}
+
+function People() {
+  const { data = [] } = usePublished<PersonRow>("people");
+  if (data.length === 0) return null;
+  return (
+    <section className="border-t border-border bg-cream">
+      <div className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-24">
+        <p className="eyebrow text-muted-foreground">Our team</p>
+        <h2 className="mt-4 text-3xl md:text-4xl">The people serving with YOKM</h2>
+        <ul className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {data.map((p, i) => (
+            <Reveal key={p.id} delay={Math.min(i * 0.06, 0.3)}>
+              <li>
+                {p.photo_url && <img src={p.photo_url} alt={p.name} loading="lazy" className="aspect-[4/5] w-full object-cover" />}
+                <h3 className="mt-5 font-serif text-2xl">{p.name}</h3>
+                {p.role && <p className="mt-1 eyebrow text-accent">{p.role}</p>}
+                {p.bio && <p className="mt-3 text-sm leading-relaxed text-muted-foreground whitespace-pre-line">{p.bio}</p>}
+              </li>
+            </Reveal>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }

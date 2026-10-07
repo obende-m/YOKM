@@ -5,7 +5,8 @@ import hero from "@/assets/hero-widow-portrait.jpg";
 import skills from "@/assets/skills-hands.jpg";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
-import { EVENTS, WORK_AREAS } from "@/lib/yokm";
+import { formatDate, renderRichText, usePublished, useUpcomingEvents, type ProgramRow } from "@/lib/cms";
+import { WORK_AREAS } from "@/lib/yokm";
 
 const IMAGES = [skills, community, hero];
 
@@ -32,6 +33,8 @@ export const Route = createFileRoute("/our-work")({
 });
 
 function OurWork() {
+  const { data: programs = [] } = usePublished<ProgramRow>("programs");
+  const { data: events = [] } = useUpcomingEvents();
   return (
     <>
       <PageHero
@@ -71,15 +74,44 @@ function OurWork() {
         })}
       </div>
 
-      {EVENTS.length > 0 && (
-        <section className="mx-auto max-w-[1400px] px-5 py-20 md:px-10">
+      {programs.length > 0 && (
+        <section className="border-b border-border bg-cream">
+          <div className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-24">
+            <p className="eyebrow text-muted-foreground">Programs</p>
+            <h2 className="mt-4 text-3xl md:text-4xl">Current programs</h2>
+            <div className="mt-10 grid gap-12 md:grid-cols-2">
+              {programs.map((p) => (
+                <Reveal key={p.id}>
+                  <article>
+                    {p.cover_url && <img src={p.cover_url} alt="" loading="lazy" className="aspect-[4/3] w-full object-cover" />}
+                    <div className="mt-5 flex items-center gap-3">
+                      <h3 className="font-serif text-2xl">{p.name}</h3>
+                      {p.status !== "active" && <span className="eyebrow text-muted-foreground">{p.status}</span>}
+                    </div>
+                    {p.short_description && <p className="mt-3 leading-relaxed text-muted-foreground">{p.short_description}</p>}
+                    {p.full_description && <div className="prose-article mt-4 text-sm" dangerouslySetInnerHTML={{ __html: renderRichText(p.full_description) }} />}
+                    {p.donation_cta && <Link to="/donate" className="mt-5 inline-block eyebrow text-accent">{p.donation_cta} →</Link>}
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {events.length > 0 && (
+        <section className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-20">
           <h2 className="text-3xl">Upcoming</h2>
           <ul className="mt-8 divide-y divide-border">
-            {EVENTS.map((e) => (
-              <li key={e.title} className="flex flex-wrap gap-4 py-6">
-                <span className="eyebrow text-accent">{e.date}</span>
-                <span className="font-serif text-xl">{e.title}</span>
-                <span className="text-sm text-muted-foreground">{e.location}</span>
+            {events.map((e) => (
+              <li key={e.id} className="grid gap-4 py-6 md:grid-cols-[200px_1fr_auto] md:items-start">
+                <span className="eyebrow text-accent">{formatDate(e.event_date)}{e.event_time ? ` · ${e.event_time}` : ""}</span>
+                <div>
+                  <p className="font-serif text-xl">{e.title}</p>
+                  {e.location && <p className="mt-1 text-sm text-muted-foreground">{e.location}</p>}
+                  {e.description && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{e.description}</p>}
+                </div>
+                {e.link && <a href={e.link} target="_blank" rel="noreferrer" className="eyebrow text-primary underline-offset-4 hover:underline">Details →</a>}
               </li>
             ))}
           </ul>
