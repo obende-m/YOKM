@@ -10,3 +10,6 @@
 <!-- LOVABLE:END -->
 
 - Keep the shared navigation and section colors in semantic tokens and a single Header component so menu states and responsive styling remain consistent across pages.
+- Editable content lives in Lovable Cloud tables; admin UI is generic and driven by src/lib/admin-sections.ts — add new managed content types there rather than new admin pages.
+- Uploaded images go to the private `media` bucket and are served through /api/public/media/* — public buckets are blocked in this workspace.
+- Admin access is checked with has_role() in the database; the first signed-in account can claim admin only while none exists.
