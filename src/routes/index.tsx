@@ -8,7 +8,8 @@ import skills from "@/assets/skills-hands.jpg";
 import { BounceCards } from "@/components/site/BounceCards";
 import { MorphingCardStack } from "@/components/site/MorphingCardStack";
 import { Reveal } from "@/components/site/Reveal";
-import { IMPACT_METRICS, MISSION, ORG, STORIES, VISION, WORK_AREAS } from "@/lib/yokm";
+import { usePublished, type MetricRow } from "@/lib/cms";
+import { MISSION, ORG, STORIES, VISION, WORK_AREAS } from "@/lib/yokm";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -322,15 +323,16 @@ function Work() {
 }
 
 function Impact() {
-  if (IMPACT_METRICS.length === 0) return null;
+  const { data = [] } = usePublished<MetricRow>("impact_metrics");
+  if (data.length === 0) return null;
   return (
     <section className="border-y border-border bg-cream">
       <div className="mx-auto grid max-w-[1400px] gap-10 px-5 py-24 md:grid-cols-3 md:px-10">
-        {IMPACT_METRICS.map((m) => (
-          <Reveal key={m.label}>
+        {data.map((m) => (
+          <Reveal key={m.id}>
             <p className="font-serif text-5xl text-primary">{m.value}</p>
-            <p className="mt-3 text-sm text-foreground">{m.label}</p>
-            {m.note && <p className="mt-1 text-xs text-muted-foreground">{m.note}</p>}
+            <p className="mt-3 text-sm text-foreground">{m.title}{m.year ? ` (${m.year})` : ""}</p>
+            {m.description && <p className="mt-1 text-xs text-muted-foreground">{m.description}</p>}
           </Reveal>
         ))}
       </div>

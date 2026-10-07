@@ -146,3 +146,21 @@ export function formatDate(d: string | null) {
   if (!d) return "";
   return new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
+
+export type MediaRow = { id: string; url: string; caption: string; alt: string; category: string };
+export type EventRow = { id: string; title: string; event_date: string | null; event_time: string; location: string; description: string; cover_url: string | null; link: string };
+export type ProgramRow = { id: string; name: string; slug: string; short_description: string; full_description: string; cover_url: string | null; status: string; donation_cta: string };
+export type PersonRow = { id: string; name: string; role: string; bio: string; photo_url: string | null };
+export type MetricRow = { id: string; title: string; value: string; description: string; year: number | null };
+
+/** Published events dated today or later, soonest first. */
+export function useUpcomingEvents() {
+  return useQuery({
+    queryKey: ["public", "events", "upcoming"],
+    queryFn: async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const { data } = await supabase.from("events").select("*").eq("published", true).gte("event_date", today).order("event_date", { ascending: true });
+      return (data ?? []) as EventRow[];
+    },
+  });
+}

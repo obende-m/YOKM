@@ -8,7 +8,7 @@ import skills from "@/assets/skills-hands.jpg";
 import { CircularCarousel } from "@/components/site/CircularCarousel";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
-import { GALLERY } from "@/lib/yokm";
+import { usePublished, type MediaRow } from "@/lib/cms";
 
 /** Placeholder imagery, clearly labelled, until real YOKM photographs are supplied. */
 const PLACEHOLDERS = [
@@ -39,8 +39,10 @@ export const Route = createFileRoute("/gallery")({
 });
 
 function Gallery() {
-  const images = GALLERY.length > 0 ? GALLERY : PLACEHOLDERS;
-  const isPlaceholder = GALLERY.length === 0;
+  const { data: rows = [], isLoading } = usePublished<MediaRow>("media");
+  const real = rows.filter((r) => r.url).map((r) => ({ src: r.url, caption: r.caption || r.alt }));
+  const isPlaceholder = !isLoading && real.length === 0;
+  const images = real.length > 0 ? real : PLACEHOLDERS;
   const [active, setActive] = useState<number | null>(null);
 
   return (
