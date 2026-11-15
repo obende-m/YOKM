@@ -1,7 +1,9 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 
+import { EnquiryForm } from "@/components/site/EnquiryForm";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
+import { useSiteText } from "@/lib/cms";
 
 export const Route = createFileRoute("/get-involved")({
   head: () => ({
@@ -24,22 +26,26 @@ export const Route = createFileRoute("/get-involved")({
   component: GetInvolved,
 });
 
-const WAYS = [
+const WAYS: { title: string; text: string; action?: { label: string; to: string } }[] = [
   {
     title: "Give",
     text: "Support the ministry's work with widows in Jos.",
+    action: { label: "Ways to give", to: "/donate" },
   },
   {
     title: "Volunteer",
     text: "Offer time, teaching or practical skill alongside the ministry.",
+    action: { label: "Offer to volunteer", to: "#forms" },
   },
   {
     title: "Partner",
     text: "Churches and organisations can walk with YOKM in shared work.",
+    action: { label: "Partnership enquiry", to: "#forms" },
   },
   {
     title: "Pray",
     text: "Stand with the widows and the ministry in prayer.",
+    action: { label: "Send a prayer request", to: "/contact" },
   },
   {
     title: "Share",
@@ -48,11 +54,13 @@ const WAYS = [
 ];
 
 function GetInvolved() {
+  const t = useSiteText();
   return (
     <>
       <PageHero
         eyebrow="Get involved"
         title="There is a place for you in this work"
+        intro={t("involved_intro")}
       />
 
       <section className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-24">
@@ -64,6 +72,16 @@ function GetInvolved() {
                 <div>
                   <h2 className="text-2xl md:text-3xl">{w.title}</h2>
                   <p className="mt-3 max-w-xl leading-relaxed text-muted-foreground">{w.text}</p>
+                  {w.action &&
+                    (w.action.to.startsWith("#") ? (
+                      <a href={w.action.to} className="rule-link mt-4 inline-block eyebrow">
+                        {w.action.label} →
+                      </a>
+                    ) : (
+                      <Link to={w.action.to} className="rule-link mt-4 inline-block eyebrow">
+                        {w.action.label} →
+                      </Link>
+                    ))}
                 </div>
               </div>
             </Reveal>
@@ -72,26 +90,62 @@ function GetInvolved() {
       </section>
 
       <section className="border-t border-border bg-cream">
-        <div className="mx-auto grid max-w-[1400px] gap-14 px-5 py-20 md:px-10 lg:grid-cols-2 lg:gap-24">
+        <div
+          id="forms"
+          className="mx-auto grid max-w-[1400px] scroll-mt-24 gap-14 px-5 py-20 md:px-10 lg:grid-cols-2 lg:gap-24"
+        >
           <Reveal>
-            <h2 className="text-3xl">Volunteer interest</h2>
-            <InterestForm
+            <h2 className="text-3xl">Volunteer</h2>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
+              Tell us how you would like to help — teaching, practical skills, prayer or time.
+            </p>
+            <EnquiryForm
+              kind="volunteer"
+              submitLabel="Offer to volunteer"
+              successText="Thank you for offering to volunteer. The ministry will be in touch."
+              variant="outline"
+              messageLabel="How would you like to help?"
               fields={[
-                { label: "Full name", name: "v-name" },
-                { label: "Email", name: "v-email", type: "email" },
-                { label: "Phone", name: "v-phone", type: "tel" },
-                { label: "Area of interest", name: "v-area" },
+                { label: "Full name", name: "name", required: true, autoComplete: "name" },
+                {
+                  label: "Email",
+                  name: "email",
+                  type: "email",
+                  required: true,
+                  autoComplete: "email",
+                },
+                { label: "Phone", name: "phone", type: "tel", autoComplete: "tel" },
+                { label: "Area of interest", name: "subject" },
               ]}
             />
           </Reveal>
           <Reveal delay={0.1}>
             <h2 className="text-3xl">Partner enquiry</h2>
-            <InterestForm
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
+              Churches and organisations who would like to walk with YOKM in shared work.
+            </p>
+            <EnquiryForm
+              kind="partner"
+              submitLabel="Send enquiry"
+              successText="Thank you for your enquiry. The ministry will be in touch."
+              variant="outline"
+              messageLabel="Tell us about the partnership"
               fields={[
-                { label: "Organisation", name: "p-org" },
-                { label: "Contact name", name: "p-name" },
-                { label: "Email", name: "p-email", type: "email" },
-                { label: "Phone", name: "p-phone", type: "tel" },
+                {
+                  label: "Organisation",
+                  name: "organisation",
+                  required: true,
+                  autoComplete: "organization",
+                },
+                { label: "Contact name", name: "name", required: true, autoComplete: "name" },
+                {
+                  label: "Email",
+                  name: "email",
+                  type: "email",
+                  required: true,
+                  autoComplete: "email",
+                },
+                { label: "Phone", name: "phone", type: "tel", autoComplete: "tel" },
               ]}
             />
           </Reveal>
@@ -113,52 +167,5 @@ function GetInvolved() {
         </div>
       </section>
     </>
-  );
-}
-
-function InterestForm({
-  fields,
-}: {
-  fields: { label: string; name: string; type?: string }[];
-}) {
-  return (
-    <form className="mt-8 space-y-5" onSubmit={(e) => e.preventDefault()}>
-      {fields.map((f) => (
-        <div key={f.name}>
-          <label htmlFor={f.name} className="eyebrow text-muted-foreground">
-            {f.label}
-          </label>
-          <input
-            id={f.name}
-            name={f.name}
-            type={f.type ?? "text"}
-            disabled
-            className="mt-2 w-full border border-input bg-card px-4 py-3 text-sm disabled:opacity-60"
-          />
-        </div>
-      ))}
-      <div>
-        <label htmlFor={`${fields[0]?.name}-msg`} className="eyebrow text-muted-foreground">
-          Message
-        </label>
-        <textarea
-          id={`${fields[0]?.name}-msg`}
-          rows={4}
-          disabled
-          className="mt-2 w-full border border-input bg-card px-4 py-3 text-sm disabled:opacity-60"
-        />
-      </div>
-      <button
-        type="submit"
-        disabled
-        className="w-full border border-primary px-6 py-4 text-xs uppercase tracking-[0.18em] text-primary disabled:opacity-50"
-      >
-        Submit
-      </button>
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        Submissions are not connected yet — this form cannot send anything until a destination is
-        confirmed.
-      </p>
-    </form>
   );
 }

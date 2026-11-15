@@ -4,7 +4,13 @@ import { useEffect, useRef, useState } from "react";
 type Item = { src: string; caption: string };
 
 /** A slowly turning 3D ring of photographs. Drag to turn; click a card to open it. */
-export function CircularCarousel({ items, onOpen }: { items: Item[]; onOpen?: (i: number) => void }) {
+export function CircularCarousel({
+  items,
+  onOpen,
+}: {
+  items: Item[];
+  onOpen?: (i: number) => void;
+}) {
   const reduced = useReducedMotion();
   const [angle, setAngle] = useState(0);
   const drag = useRef<{ x: number; a: number; moved: boolean } | null>(null);
@@ -65,7 +71,12 @@ export function CircularCarousel({ items, onOpen }: { items: Item[]; onOpen?: (i
             }}
             aria-label={`Open photograph ${it.idx + 1}`}
           >
-            <img src={it.src} alt={it.caption} draggable={false} className="h-full w-full object-cover" />
+            <img
+              src={it.src}
+              alt={it.caption}
+              draggable={false}
+              className="h-full w-full object-cover"
+            />
           </button>
         ))}
       </div>

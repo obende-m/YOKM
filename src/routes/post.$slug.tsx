@@ -1,27 +1,21 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
-import type { Database } from "@/integrations/supabase/types";
+import { createPublicServerClient } from "@/integrations/supabase/client";
 import { formatDate, renderRichText, type Post } from "@/lib/cms";
 
 const getPost = createServerFn({ method: "GET" })
-  .inputValidator((d) => z.object({ slug: z.string().max(200) }).parse(d))
+  .validator((d) => z.object({ slug: z.string().max(200) }).parse(d))
   .handler(async ({ data }) => {
-    const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-    const sb = createClient<Database>(process.env["SUPABASE_URL"]!, key, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      global: {
-        fetch: (input, init) => {
-          const h = new Headers(init?.headers);
-          if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
-          h.set("apikey", key);
-          return fetch(input, { ...init, headers: h });
-        },
-      },
-    });
-    const { data: post } = await sb.from("posts").select("*").eq("slug", data.slug).eq("published", true).maybeSingle();
+    const sb = createPublicServerClient();
+    const { data: post, error } = await sb
+      .from("posts")
+      .select("*")
+      .eq("slug", data.slug)
+      .eq("published", true)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
     return (post ?? null) as Post | null;
   });
 
@@ -42,6 +36,9 @@ export const Route = createFileRoute("/post/$slug")({
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
+        ...(p?.cover_url && /^https?:/.test(p.cover_url)
+          ? [{ property: "og:image", content: p.cover_url }]
+          : []),
       ],
     };
   },
@@ -50,11 +47,16 @@ export const Route = createFileRoute("/post/$slug")({
     <div className="mx-auto max-w-2xl px-5 pt-40 pb-24">
       <h1 className="text-4xl">Not found</h1>
       <p className="mt-4 text-muted-foreground">This page is not published.</p>
+      <Link to="/journal" className="rule-link mt-6 inline-block eyebrow">
+        Back to the Journal →
+      </Link>
     </div>
   ),
   errorComponent: () => (
     <div className="mx-auto max-w-2xl px-5 pt-40 pb-24">
-      <p className="text-muted-foreground">This page could not be loaded. Please try again.</p>
+      <p className="text-muted-foreground">
+        This page could not be loaded. Please refresh to try again.
+      </p>
     </div>
   ),
 });
@@ -66,12 +68,21 @@ function PostPage() {
     <article className="pb-24">
       <header className="bg-secondary px-5 pt-32 pb-12 md:px-10 md:pt-40">
         <div className="mx-auto max-w-3xl">
-          <Link to={isStory ? "/stories" : "/journal"} className="eyebrow text-muted-foreground hover:text-foreground">
+          <Link
+            to={isStory ? "/stories" : "/journal"}
+            className="eyebrow text-muted-foreground hover:text-foreground"
+          >
             ← {isStory ? "Stories" : "Journal"}
           </Link>
           <h1 className="mt-6 text-4xl md:text-6xl">{p.title}</h1>
           <p className="eyebrow mt-6 text-accent">
-            {[isStory ? p.person : p.author, isStory ? p.location : p.category, formatDate(p.published_at)].filter(Boolean).join(" · ")}
+            {[
+              isStory ? p.person : p.author,
+              isStory ? p.location : p.category,
+              formatDate(p.published_at),
+            ]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
         </div>
       </header>
@@ -80,7 +91,10 @@ function PostPage() {
           <img src={p.cover_url} alt={p.title} className="w-full object-cover" />
         </div>
       )}
-      <div className="prose-yokm mx-auto mt-12 max-w-2xl px-5" dangerouslySetInnerHTML={{ __html: renderRichText(p.body) }} />
+      <div
+        className="prose-yokm mx-auto mt-12 max-w-2xl px-5"
+        dangerouslySetInnerHTML={{ __html: renderRichText(p.body) }}
+      />
     </article>
   );
 }

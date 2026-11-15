@@ -1,1 +1,8 @@
-project_id = "yxijsjcpuzgnhwjzmidx"
+# Supabase CLI settings for local development (`npx supabase start`).
+# Link to your hosted project with: npx supabase link --project-ref <your-project-ref>
+project_id = "yokm"
+
+[auth]
+# Used for email confirmation links during local development.
+site_url = "http://localhost:8080"
+additional_redirect_urls = ["http://localhost:8080/admin"]

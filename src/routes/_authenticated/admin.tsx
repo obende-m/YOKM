@@ -21,12 +21,31 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
 });
 
-const NAV = [
-  { to: "/admin", label: "Dashboard" },
-  ...SECTIONS.map((s) => ({ to: `/admin/${s.key}`, label: s.title })),
-  { to: "/admin/submissions", label: "Messages" },
-  { to: "/admin/settings", label: "Site Settings" },
-  { to: "/admin/users", label: "Administrators" },
+const sectionLinks = (nav: "Content" | "Website pages") =>
+  SECTIONS.filter((s) => s.nav === nav).map((s) => ({ to: `/admin/${s.key}`, label: s.title }));
+
+const NAV: { heading?: string; links: { to: string; label: string }[] }[] = [
+  {
+    links: [
+      { to: "/admin", label: "Dashboard" },
+      { to: "/admin/submissions", label: "Messages" },
+    ],
+  },
+  {
+    heading: "Content",
+    links: [...sectionLinks("Content"), { to: "/admin/gallery", label: "Gallery" }],
+  },
+  {
+    heading: "Website pages",
+    links: [{ to: "/admin/page-text", label: "Page Text" }, ...sectionLinks("Website pages")],
+  },
+  {
+    heading: "Settings",
+    links: [
+      { to: "/admin/settings", label: "Site Settings" },
+      { to: "/admin/users", label: "Administrators" },
+    ],
+  },
 ];
 
 function AdminLayout() {
@@ -59,22 +78,19 @@ function AdminLayout() {
         <h1 className="text-3xl">Administrator access</h1>
         {role.data?.exists ? (
           <p className="text-sm text-muted-foreground">
-            You are signed in as {user.email}, but this account is not an administrator. Ask an existing administrator to add
-            you under Administrators.
+            You are signed in as {user.email}, but this account is not an administrator. Ask an
+            existing administrator to add you under Administrators.
           </p>
         ) : (
-          <>
-            <p className="text-sm text-muted-foreground">No administrator has been set up yet. Make {user.email} the main administrator?</p>
-            <Button
-              onClick={async () => {
-                await supabase.rpc("claim_first_admin");
-                role.refetch();
-              }}
-            >
-              Become administrator
-            </Button>
-          </>
+          <p className="text-sm text-muted-foreground">
+            You are signed in as {user.email}. No administrator has been set up yet. The person
+            responsible for the website&rsquo;s Supabase project must grant the first administrator
+            once (see the setup guide). After that, administrators can add each other here.
+          </p>
         )}
+        <Button variant="outline" onClick={() => role.refetch()}>
+          Check again
+        </Button>
         <Button variant="outline" onClick={signOut}>
           Sign out
         </Button>
@@ -84,7 +100,7 @@ function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-muted/40 font-sans md:flex">
-      <aside className="border-b border-border bg-card md:sticky md:top-0 md:h-screen md:w-60 md:shrink-0 md:border-b-0 md:border-r">
+      <aside className="border-b border-border bg-card md:sticky md:top-0 md:h-screen md:w-60 md:shrink-0 md:overflow-y-auto md:border-b-0 md:border-r">
         <div className="flex items-center justify-between px-5 py-4">
           <Link to="/admin" className="font-serif text-xl">
             YOKM Admin
@@ -94,17 +110,26 @@ function AdminLayout() {
           </button>
         </div>
         <nav className={`${open ? "block" : "hidden"} px-3 pb-4 md:block`}>
-          {NAV.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              onClick={() => setOpen(false)}
-              activeOptions={{ exact: n.to === "/admin" }}
-              className="block rounded px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-              activeProps={{ className: "bg-secondary text-foreground font-medium" }}
-            >
-              {n.label}
-            </Link>
+          {NAV.map((group, gi) => (
+            <div key={gi} className={gi ? "mt-4" : ""}>
+              {group.heading && (
+                <p className="px-3 pb-1 text-[11px] uppercase tracking-[0.14em] text-muted-foreground/80">
+                  {group.heading}
+                </p>
+              )}
+              {group.links.map((n) => (
+                <Link
+                  key={n.to}
+                  to={n.to}
+                  onClick={() => setOpen(false)}
+                  activeOptions={{ exact: n.to === "/admin" }}
+                  className="block rounded px-3 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                  activeProps={{ className: "bg-secondary text-foreground font-medium" }}
+                >
+                  {n.label}
+                </Link>
+              ))}
+            </div>
           ))}
           <div className="mt-4 space-y-1 border-t border-border px-3 pt-4 text-sm">
             <Link to="/" className="block text-muted-foreground hover:text-foreground">

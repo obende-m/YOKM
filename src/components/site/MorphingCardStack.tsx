@@ -72,20 +72,23 @@ export function MorphingCardStack({ cards }: { cards: StackCard[] }) {
                         zIndex: cards.length - c.pos,
                         top: c.pos * 10,
                         left: c.pos * 10,
-                        rotate: c.pos === 0 ? 0 : (c.pos % 2 ? 1.5 : -1.5),
+                        rotate: c.pos === 0 ? 0 : c.pos % 2 ? 1.5 : -1.5,
                       }
                     : undefined
                 }
                 className={cn(
                   "flex flex-col bg-background p-8 md:p-10",
-                  mode === "stack" && "border border-border bg-card shadow-[0_8px_30px_oklch(0_0_0/0.06)]",
+                  mode === "stack" &&
+                    "border border-border bg-card shadow-[0_8px_30px_oklch(0_0_0/0.06)]",
                   top && "cursor-grab active:cursor-grabbing",
                   mode === "list" && "border-b border-border px-0 py-7 md:px-0 md:py-8",
                 )}
               >
                 <span className="eyebrow text-accent">{c.no}</span>
                 <h3 className="mt-4 text-3xl">{c.title}</h3>
-                <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">{c.text}</p>
+                <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">
+                  {c.text}
+                </p>
                 {c.meta && <span className="mt-6 eyebrow text-muted-foreground">{c.meta}</span>}
               </motion.article>
             );

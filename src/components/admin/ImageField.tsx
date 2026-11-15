@@ -12,7 +12,9 @@ export function ImageField({ value, onChange }: { value: string; onChange: (v: s
       {value ? (
         <img src={value} alt="" className="h-24 w-32 object-cover" />
       ) : (
-        <div className="flex h-24 w-32 items-center justify-center border border-dashed border-border text-xs text-muted-foreground">No image</div>
+        <div className="flex h-24 w-32 items-center justify-center border border-dashed border-border text-xs text-muted-foreground">
+          No image
+        </div>
       )}
       <div className="flex flex-col gap-2">
         <input
@@ -34,7 +36,13 @@ export function ImageField({ value, onChange }: { value: string; onChange: (v: s
             }
           }}
         />
-        <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => ref.current?.click()}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={busy}
+          onClick={() => ref.current?.click()}
+        >
           {busy ? "Uploading…" : value ? "Replace image" : "Upload image"}
         </Button>
         {value && (

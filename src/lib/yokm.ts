@@ -98,7 +98,10 @@ export const MISSION = [
   },
 ];
 
-/** Thematic areas derived from the supplied mission — not official programme names. */
+/**
+ * Thematic areas derived from the supplied mission. These, VISION and MISSION are the
+ * defaults: once the database is set up they are edited in the CMS (page_items).
+ */
 export const WORK_AREAS = [
   {
     slug: "spiritual-growth",
@@ -142,41 +145,8 @@ export const NAV = [
   { to: "/about", label: "About" },
   { to: "/our-work", label: "Our Work" },
   { to: "/stories", label: "Stories" },
+  { to: "/journal", label: "Journal" },
   { to: "/gallery", label: "Gallery" },
   { to: "/get-involved", label: "Get Involved" },
   { to: "/contact", label: "Contact" },
 ] as const;
-
-/**
- * Contact channels and social accounts are intentionally empty until YOKM
- * supplies verified details. Nothing is displayed while these are empty.
- */
-export const CONTACT_CHANNELS: { label: string; value: string; href?: string }[] = [];
-export const SOCIAL_LINKS: { label: string; href: string }[] = [];
-
-/** No verified impact numbers supplied — the section stays hidden while empty. */
-export const IMPACT_METRICS: { value: string; label: string; note?: string }[] = [];
-
-/** No verified stories supplied — the section stays hidden while empty. */
-export const STORIES: {
-  slug: string;
-  title: string;
-  person: string;
-  location: string;
-  excerpt: string;
-}[] = [];
-
-/** No events supplied — the section stays hidden while empty. */
-export const EVENTS: { title: string; date: string; location: string }[] = [];
-
-/** No gallery photographs supplied yet. */
-export const GALLERY: { src: string; caption: string }[] = [];
-
-/** Donation configuration is supplied by YOKM later; nothing is invented here. */
-export const DONATION = {
-  configured: false,
-  url: "",
-  provider: "",
-  bankDetails: "",
-  instructions: "",
-};

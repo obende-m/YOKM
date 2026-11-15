@@ -11,7 +11,10 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Admin sign in — YOKM" },
-      { name: "description", content: "Private sign in for Yendel Ocha Kpeling Ministry website administrators." },
+      {
+        name: "description",
+        content: "Private sign in for Yendel Ocha Kpeling Ministry website administrators.",
+      },
       { property: "og:title", content: "Admin sign in — YOKM" },
       { property: "og:description", content: "Private sign in for YOKM website administrators." },
       { property: "og:type", content: "website" },
@@ -56,27 +59,48 @@ function AuthPage() {
 
   return (
     <section className="flex min-h-[80svh] items-center justify-center bg-secondary px-5 pt-24 pb-16">
-      <form onSubmit={submit} className="w-full max-w-sm space-y-5 border border-border bg-card p-8 shadow-sm">
+      <form
+        onSubmit={submit}
+        className="w-full max-w-sm space-y-5 border border-border bg-card p-8 shadow-sm"
+      >
         <div>
           <p className="eyebrow text-muted-foreground">Administration</p>
           <h1 className="mt-2 text-3xl">{mode === "in" ? "Sign in" : "Create an account"}</h1>
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            id="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input
+            id="password"
+            type="password"
+            required
+            minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
         <Button type="submit" className="w-full" disabled={busy}>
           {busy ? "Please wait…" : mode === "in" ? "Sign in" : "Create account"}
         </Button>
-        <button type="button" className="text-sm text-muted-foreground underline" onClick={() => setMode(mode === "in" ? "up" : "in")}>
+        <button
+          type="button"
+          className="text-sm text-muted-foreground underline"
+          onClick={() => setMode(mode === "in" ? "up" : "in")}
+        >
           {mode === "in" ? "No account yet? Create one" : "Already have an account? Sign in"}
         </button>
         <p className="text-xs text-muted-foreground">
-          Only approved administrators can manage content. The very first account becomes the main administrator.
+          Only approved administrators can manage content. After creating an account, ask an
+          existing administrator to give you access.
         </p>
       </form>
     </section>

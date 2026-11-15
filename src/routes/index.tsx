@@ -8,8 +8,16 @@ import skills from "@/assets/skills-hands.jpg";
 import { BounceCards } from "@/components/site/BounceCards";
 import { MorphingCardStack } from "@/components/site/MorphingCardStack";
 import { Reveal } from "@/components/site/Reveal";
-import { usePublished, type MetricRow } from "@/lib/cms";
-import { MISSION, ORG, STORIES, VISION, WORK_AREAS } from "@/lib/yokm";
+import {
+  formatDate,
+  usePageItems,
+  usePosts,
+  usePublished,
+  useSiteText,
+  useUpcomingEvents,
+  type MetricRow,
+} from "@/lib/cms";
+import { ORG } from "@/lib/yokm";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -34,6 +42,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Hero() {
+  const t = useSiteText();
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -41,12 +50,16 @@ function Hero() {
   const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section ref={ref} className="relative h-[min(85svh,760px)] min-h-[550px] overflow-hidden bg-ink max-[380px]:min-h-[590px]">
+    <section
+      ref={ref}
+      className="relative h-[min(85svh,760px)] min-h-[550px] overflow-hidden bg-ink max-[380px]:min-h-[590px]"
+    >
       <motion.img
-        src={hero}
+        src={t("home_hero_image") || hero}
         alt="A widow in Jos, Plateau State, standing in the late afternoon light"
         width={1920}
         height={1280}
+        fetchPriority="high"
         style={reduced ? undefined : { scale }}
         className="absolute inset-0 h-full w-full object-cover object-[48%_center] md:object-[60%_center]"
       />
@@ -68,7 +81,7 @@ function Hero() {
           transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="mt-3 max-w-[16ch] text-[clamp(2.6rem,8vw,6rem)] leading-[0.95]"
         >
-          Awake, Oh Ye Widows
+          {t("home_hero_title")}
         </motion.h1>
 
         <motion.p
@@ -77,8 +90,7 @@ function Hero() {
           transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="mt-4 max-w-xl text-sm leading-relaxed text-ink-foreground/90 md:mt-6 md:text-lg"
         >
-          A Christian ministry in Jos, Plateau State, reaching widows in every aspect of life — so
-          that they discover God&rsquo;s purpose, develop their gifts and stand independent.
+          {t("home_hero_intro")}
         </motion.p>
 
         <motion.div
@@ -115,27 +127,23 @@ function Hero() {
 }
 
 function Philosophy() {
+  const t = useSiteText();
   return (
     <section className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-24">
       <div className="grid gap-6 md:grid-cols-12 md:gap-12">
         <Reveal className="md:col-span-4">
           <p className="eyebrow text-muted-foreground">The heart of YOKM</p>
-          <p className="mt-4 font-serif text-lg text-primary">Awake. Discover. Become.</p>
+          <p className="mt-4 font-serif text-lg text-primary">{t("home_heart_tagline")}</p>
         </Reveal>
         <Reveal delay={0.1} className="md:col-span-8">
           <h2 className="text-[clamp(1.9rem,4.4vw,3.6rem)] leading-[1.06]">
-            No woman should have to carry loss alone, and no widow should live below the purpose God
-            placed in her.
+            {t("home_heart_heading")}
           </h2>
           <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             {ORG.positioning}
           </p>
-          <p className="mt-8 font-serif text-base text-foreground">
-            &ldquo;{ORG.motto}&rdquo;
-          </p>
-          <p className="mt-2 eyebrow text-muted-foreground">
-            {ORG.coverScriptures.join(" · ")}
-          </p>
+          <p className="mt-8 font-serif text-base text-foreground">&ldquo;{ORG.motto}&rdquo;</p>
+          <p className="mt-2 eyebrow text-muted-foreground">{ORG.coverScriptures.join(" · ")}</p>
         </Reveal>
       </div>
     </section>
@@ -143,6 +151,8 @@ function Philosophy() {
 }
 
 function Vision() {
+  const vision = usePageItems("vision");
+  if (vision.length === 0) return null;
   return (
     <section className="border-y border-border bg-cream">
       <div className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-20">
@@ -152,13 +162,17 @@ function Vision() {
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:gap-16">
           <div>
             <ol className="divide-y divide-border">
-              {VISION.map((v, i) => (
-                <Reveal as="li" key={v.key} delay={i * 0.08}>
+              {vision.map((v, i) => (
+                <Reveal as="li" key={v.id} delay={i * 0.08}>
                   <div className="grid grid-cols-[auto_1fr] gap-6 py-8 md:gap-10">
-                    <span className="eyebrow pt-2 text-accent">0{i + 1}</span>
+                    <span className="eyebrow pt-2 text-accent">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     <div>
-                      <h3 className="text-2xl md:text-3xl">{v.key}</h3>
-                      <p className="mt-3 max-w-xl leading-relaxed text-muted-foreground">{v.text}</p>
+                      <h3 className="text-2xl md:text-3xl">{v.label}</h3>
+                      <p className="mt-3 max-w-xl leading-relaxed text-muted-foreground">
+                        {v.body}
+                      </p>
                     </div>
                   </div>
                 </Reveal>
@@ -182,7 +196,9 @@ function Vision() {
 }
 
 function Mission() {
-  const [open, setOpen] = useState<string | null>(MISSION[0].no);
+  const mission = usePageItems("mission");
+  const [open, setOpen] = useState<number | null>(0);
+  if (mission.length === 0) return null;
 
   return (
     <section className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-24">
@@ -190,7 +206,7 @@ function Mission() {
         <Reveal className="md:col-span-4">
           <p className="eyebrow text-muted-foreground">Our mission</p>
           <h2 className="mt-4 text-[clamp(1.8rem,3.6vw,3rem)] leading-[1.08]">
-            Ten commitments, held in Scripture.
+            {mission.length === 10 ? "Ten commitments" : "Our commitments"}, held in Scripture.
           </h2>
           <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">
             These are the ministry&rsquo;s own words. Select any commitment to read it in full with
@@ -200,23 +216,21 @@ function Mission() {
 
         <div className="md:col-span-8">
           <ul className="border-t border-border">
-            {MISSION.map((m, i) => {
-              const active = open === m.no;
+            {mission.map((m, i) => {
+              const active = open === i;
               return (
-                <Reveal as="li" key={m.no} delay={Math.min(i * 0.04, 0.24)}>
+                <Reveal as="li" key={m.id} delay={Math.min(i * 0.04, 0.24)}>
                   <div className="border-b border-border">
                     <button
                       type="button"
-                      onClick={() => setOpen(active ? null : m.no)}
+                      onClick={() => setOpen(active ? null : i)}
                       aria-expanded={active}
                       className="group flex w-full items-baseline gap-5 py-6 text-left md:gap-8"
                     >
-                      <span className="eyebrow text-accent">{m.no}</span>
+                      <span className="eyebrow text-accent">{String(i + 1).padStart(2, "0")}</span>
                       <span className="flex-1 font-serif text-xl md:text-2xl">{m.label}</span>
                       <span
-                        className={`text-muted-foreground transition-transform duration-500 ${
-                          active ? "rotate-45" : ""
-                        }`}
+                        className={`text-muted-foreground transition-transform duration-500 ${active ? "rotate-45" : ""}`}
                         aria-hidden
                       >
                         +
@@ -230,9 +244,11 @@ function Mission() {
                       <div className="overflow-hidden">
                         <div className="pb-8 pl-[3.1rem] md:pl-[4.4rem]">
                           <p className="max-w-2xl text-base leading-relaxed text-foreground md:text-lg">
-                            {m.text}
+                            {m.body}
                           </p>
-                          <p className="mt-3 eyebrow text-muted-foreground">{m.scripture}</p>
+                          {m.scripture && (
+                            <p className="mt-3 eyebrow text-muted-foreground">{m.scripture}</p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -248,34 +264,60 @@ function Mission() {
 }
 
 function HumanStory() {
+  const t = useSiteText();
+  const { data: stories = [], isSuccess } = usePosts("story", 3);
+  const covers = stories
+    .filter((s) => s.cover_url)
+    .map((s) => ({ src: s.cover_url!, alt: s.title }));
+  const images =
+    covers.length >= 3
+      ? covers
+      : [
+          { src: community, alt: "Women praying together" },
+          { src: skills, alt: "A widow working at a sewing machine" },
+          { src: hero, alt: "A widow in Jos in the late afternoon light" },
+          { src: skills, alt: "Hands at work on fabric" },
+          { src: community, alt: "Women gathered in encouragement" },
+        ];
+
   return (
     <section className="bg-ink text-ink-foreground">
       <div className="mx-auto grid max-w-[1400px] gap-6 px-5 py-14 md:px-10 md:py-20 lg:grid-cols-2 lg:items-center lg:gap-16">
         <div>
-          <BounceCards
-            images={[
-              { src: community, alt: "Women praying together" },
-              { src: skills, alt: "A widow working at a sewing machine" },
-              { src: hero, alt: "A widow in Jos in the late afternoon light" },
-              { src: skills, alt: "Hands at work on fabric" },
-              { src: community, alt: "Women gathered in encouragement" },
-            ]}
-          />
+          <BounceCards images={images} />
         </div>
 
         <Reveal delay={0.12}>
           <p className="eyebrow text-ink-foreground/55">Stories</p>
           <h2 className="mt-5 text-[clamp(1.9rem,4vw,3.4rem)] leading-[1.06]">
-            Behind every widow is a woman, a family, a story.
+            {t("home_stories_heading")}
           </h2>
           <p className="mt-7 max-w-xl leading-relaxed text-ink-foreground/70">
-            YOKM tells stories only as the women themselves choose to share them. As accounts are
-            gathered and approved, they will be published here in the widows&rsquo; own words.
+            {t("home_stories_intro")}
           </p>
-          {STORIES.length === 0 && (
-            <p className="mt-6 text-sm text-ink-foreground/50">
-              No stories have been published yet.
-            </p>
+          {stories.length > 0 ? (
+            <ul className="mt-8 divide-y divide-ink-foreground/20 border-y border-ink-foreground/20">
+              {stories.map((s) => (
+                <li key={s.id}>
+                  <Link to="/post/$slug" params={{ slug: s.slug }} className="group block py-4">
+                    <p className="font-serif text-xl transition-colors group-hover:text-accent">
+                      {s.title}
+                    </p>
+                    {(s.person || s.location) && (
+                      <p className="mt-1 eyebrow text-ink-foreground/55">
+                        {[s.person, s.location].filter(Boolean).join(" · ")}
+                      </p>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            isSuccess && (
+              <p className="mt-6 text-sm text-ink-foreground/50">
+                No stories have been published yet.
+              </p>
+            )
           )}
           <Link
             to="/stories"
@@ -291,12 +333,15 @@ function HumanStory() {
 }
 
 function Work() {
+  const t = useSiteText();
+  const areas = usePageItems("work_area");
+  if (areas.length === 0) return null;
   return (
     <section className="mx-auto grid max-w-[1400px] gap-8 px-5 py-14 md:px-10 md:py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
       <Reveal>
         <p className="eyebrow text-muted-foreground">Our work</p>
         <h2 className="mt-4 max-w-md text-[clamp(2rem,4vw,3.4rem)] leading-[1.04]">
-          Six areas drawn directly from the ministry&rsquo;s mission.
+          {t("home_work_heading")}
         </h2>
         <Link to="/our-work" className="rule-link mt-8 inline-block eyebrow">
           Read about our work →
@@ -305,18 +350,14 @@ function Work() {
 
       <div>
         <MorphingCardStack
-          cards={WORK_AREAS.map((w, i) => ({
-            id: w.slug,
+          cards={areas.map((w, i) => ({
+            id: w.id,
             no: String(i + 1).padStart(2, "0"),
-            title: w.title,
-            text: w.text,
+            title: w.label,
+            text: w.body,
             meta: w.scripture,
           }))}
         />
-      <p className="mt-8 max-w-2xl text-xs leading-relaxed text-muted-foreground">
-        These areas are drawn from YOKM&rsquo;s supplied mission. They are not presented as official
-        named programmes.
-      </p>
       </div>
     </section>
   );
@@ -327,11 +368,14 @@ function Impact() {
   if (data.length === 0) return null;
   return (
     <section className="border-y border-border bg-cream">
-      <div className="mx-auto grid max-w-[1400px] gap-10 px-5 py-24 md:grid-cols-3 md:px-10">
+      <div className="mx-auto grid max-w-[1400px] gap-10 px-5 py-14 sm:grid-cols-2 md:px-10 md:py-24 lg:grid-cols-3">
         {data.map((m) => (
           <Reveal key={m.id}>
             <p className="font-serif text-5xl text-primary">{m.value}</p>
-            <p className="mt-3 text-sm text-foreground">{m.title}{m.year ? ` (${m.year})` : ""}</p>
+            <p className="mt-3 text-sm text-foreground">
+              {m.title}
+              {m.year ? ` (${m.year})` : ""}
+            </p>
             {m.description && <p className="mt-1 text-xs text-muted-foreground">{m.description}</p>}
           </Reveal>
         ))}
@@ -340,7 +384,42 @@ function Impact() {
   );
 }
 
+function Events() {
+  const { data = [] } = useUpcomingEvents(3);
+  if (data.length === 0) return null;
+  return (
+    <section className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-20">
+      <Reveal>
+        <p className="eyebrow text-muted-foreground">Upcoming</p>
+        <h2 className="mt-4 text-[clamp(1.8rem,3.6vw,3rem)] leading-[1.08]">
+          Gatherings and events
+        </h2>
+      </Reveal>
+      <ul className="mt-8 divide-y divide-border border-y border-border">
+        {data.map((e) => (
+          <Reveal as="li" key={e.id}>
+            <div className="grid gap-3 py-6 md:grid-cols-[220px_1fr_auto] md:items-baseline">
+              <span className="eyebrow text-accent">
+                {formatDate(e.event_date)}
+                {e.event_time ? ` · ${e.event_time}` : ""}
+              </span>
+              <div>
+                <p className="font-serif text-2xl">{e.title}</p>
+                {e.location && <p className="mt-1 text-sm text-muted-foreground">{e.location}</p>}
+              </div>
+              <Link to="/our-work" hash="events" className="eyebrow rule-link self-start">
+                Details →
+              </Link>
+            </div>
+          </Reveal>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 function Give() {
+  const t = useSiteText();
   return (
     <section className="bg-primary text-primary-foreground">
       <div className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-20">
@@ -348,13 +427,12 @@ function Give() {
           <Reveal>
             <p className="eyebrow text-primary-foreground/60">Support YOKM</p>
             <h2 className="mt-5 max-w-[14ch] text-[clamp(2rem,4.6vw,4rem)] leading-[1.02]">
-              Help carry hope further.
+              {t("home_give_heading")}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="max-w-md leading-relaxed text-primary-foreground/75">
-              Giving to YOKM is participation in the mission — standing with widows as they grow in
-              faith, discover their gifts and become independent.
+              {t("home_give_text")}
             </p>
             <Link
               to="/donate"
@@ -380,6 +458,7 @@ function Home() {
       <HumanStory />
       <Work />
       <Impact />
+      <Events />
       <Give />
     </>
   );

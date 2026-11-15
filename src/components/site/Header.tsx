@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-import logo from "@/assets/yokm-logo.png.asset.json";
+import logo from "@/assets/yokm-logo.png";
 import { Button } from "@/components/ui/button";
 import { NAV, ORG } from "@/lib/yokm";
 
@@ -52,7 +52,7 @@ export function Header() {
       <div className="relative z-50 mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 md:px-10 lg:py-4">
         <Link to="/" className="flex items-center gap-3" aria-label={`${ORG.name} home`}>
           <img
-            src={logo.url}
+            src={logo}
             alt={`${ORG.abbr} logo`}
             width={44}
             height={44}
@@ -64,7 +64,7 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
           {NAV.map((item) => (
             <Link
               key={item.to}
@@ -98,7 +98,9 @@ export function Header() {
           className="menu-trigger relative z-50 h-11 w-11 shrink-0 rounded-none border border-current/45 bg-transparent text-current hover:bg-current/10 hover:text-current lg:hidden"
         >
           <span className={`menu-icon ${open ? "is-open" : ""}`} aria-hidden="true">
-            <span /><span /><span />
+            <span />
+            <span />
+            <span />
           </span>
         </Button>
       </div>
@@ -113,18 +115,31 @@ export function Header() {
             transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
             className="fixed inset-x-0 top-0 z-40 h-[100dvh] overflow-hidden bg-primary text-primary-foreground lg:hidden"
           >
-            <nav aria-label="Mobile navigation" className="mx-auto flex h-full max-w-[1400px] flex-col overflow-y-auto px-6 pb-8 pt-24 md:px-10">
-              <p className="eyebrow mb-5 border-b border-primary-foreground/30 pb-4 text-primary-foreground/70">Explore YOKM</p>
+            <nav
+              aria-label="Mobile navigation"
+              className="mx-auto flex h-full max-w-[1400px] flex-col overflow-y-auto px-6 pb-8 pt-24 md:px-10"
+            >
+              <p className="eyebrow mb-5 border-b border-primary-foreground/30 pb-4 text-primary-foreground/70">
+                Explore YOKM
+              </p>
               <ul className="flex-1">
                 {NAV.map((item, i) => (
                   <motion.li
                     key={item.to}
                     initial={{ opacity: 0, x: -24 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.12 + 0.055 * i, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{
+                      delay: 0.12 + 0.055 * i,
+                      duration: 0.45,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
                     className="border-b border-primary-foreground/25"
                   >
-                    <Link to={item.to} onClick={() => setOpen(false)} className="block py-3 font-serif text-[clamp(1.75rem,5vh,2.8rem)] leading-none transition-colors hover:text-accent">
+                    <Link
+                      to={item.to}
+                      onClick={() => setOpen(false)}
+                      className="block py-3 font-serif text-[clamp(1.75rem,5vh,2.8rem)] leading-none transition-colors hover:text-accent"
+                    >
                       {item.label}
                     </Link>
                   </motion.li>

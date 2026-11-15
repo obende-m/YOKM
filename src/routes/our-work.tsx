@@ -5,8 +5,15 @@ import hero from "@/assets/hero-widow-portrait.jpg";
 import skills from "@/assets/skills-hands.jpg";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
-import { formatDate, renderRichText, usePublished, useUpcomingEvents, type ProgramRow } from "@/lib/cms";
-import { WORK_AREAS } from "@/lib/yokm";
+import {
+  formatDate,
+  renderRichText,
+  usePageItems,
+  usePublished,
+  useSiteText,
+  useUpcomingEvents,
+  type ProgramRow,
+} from "@/lib/cms";
 
 const IMAGES = [skills, community, hero];
 
@@ -33,30 +40,37 @@ export const Route = createFileRoute("/our-work")({
 });
 
 function OurWork() {
-  const { data: programs = [] } = usePublished<ProgramRow>("programs");
+  const t = useSiteText();
+  const areas = usePageItems("work_area");
+  const { data: rawPrograms = [] } = usePublished<ProgramRow>("programs");
+  const programs = [...rawPrograms].sort((a, b) => Number(b.featured) - Number(a.featured));
   const { data: events = [] } = useUpcomingEvents();
   return (
     <>
       <PageHero
         eyebrow="Our work"
         title="Reaching widows in all aspects of life"
-        intro="The areas below are drawn directly from YOKM's supplied mission. They describe the ministry's thematic focus rather than officially named programmes."
+        intro={t("work_intro")}
       />
 
       <div>
-        {WORK_AREAS.map((w, i) => {
+        {areas.map((w, i) => {
           const flip = i % 2 === 1;
           return (
             <section
-              key={w.slug}
+              key={w.id}
               className={`border-b border-border ${i % 3 === 1 ? "bg-cream" : ""}`}
             >
               <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-5 py-16 md:px-10 md:py-24 lg:grid-cols-2 lg:gap-20">
                 <Reveal className={flip ? "lg:order-2" : ""}>
                   <span className="eyebrow text-accent">{String(i + 1).padStart(2, "0")}</span>
-                  <h2 className="mt-5 text-[clamp(1.7rem,3.4vw,2.8rem)] leading-tight">{w.title}</h2>
-                  <p className="mt-5 max-w-lg leading-relaxed text-muted-foreground">{w.text}</p>
-                  <p className="mt-6 eyebrow text-muted-foreground">{w.scripture}</p>
+                  <h2 className="mt-5 text-[clamp(1.7rem,3.4vw,2.8rem)] leading-tight">
+                    {w.label}
+                  </h2>
+                  <p className="mt-5 max-w-lg leading-relaxed text-muted-foreground">{w.body}</p>
+                  {w.scripture && (
+                    <p className="mt-6 eyebrow text-muted-foreground">{w.scripture}</p>
+                  )}
                 </Reveal>
                 {i < 3 && (
                   <Reveal delay={0.1} className={`img-zoom ${flip ? "lg:order-1" : ""}`}>
@@ -75,7 +89,7 @@ function OurWork() {
       </div>
 
       {programs.length > 0 && (
-        <section className="border-b border-border bg-cream">
+        <section id="programs" className="scroll-mt-24 border-b border-border bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-24">
             <p className="eyebrow text-muted-foreground">Programs</p>
             <h2 className="mt-4 text-3xl md:text-4xl">Current programs</h2>
@@ -83,14 +97,36 @@ function OurWork() {
               {programs.map((p) => (
                 <Reveal key={p.id}>
                   <article>
-                    {p.cover_url && <img src={p.cover_url} alt="" loading="lazy" className="aspect-[4/3] w-full object-cover" />}
+                    {p.cover_url && (
+                      <img
+                        src={p.cover_url}
+                        alt=""
+                        loading="lazy"
+                        className="aspect-[4/3] w-full object-cover"
+                      />
+                    )}
                     <div className="mt-5 flex items-center gap-3">
                       <h3 className="font-serif text-2xl">{p.name}</h3>
-                      {p.status !== "active" && <span className="eyebrow text-muted-foreground">{p.status}</span>}
+                      {p.status !== "active" && (
+                        <span className="eyebrow text-muted-foreground">{p.status}</span>
+                      )}
                     </div>
-                    {p.short_description && <p className="mt-3 leading-relaxed text-muted-foreground">{p.short_description}</p>}
-                    {p.full_description && <div className="prose-yokm mt-4 text-sm" dangerouslySetInnerHTML={{ __html: renderRichText(p.full_description) }} />}
-                    {p.donation_cta && <Link to="/donate" className="mt-5 inline-block eyebrow text-accent">{p.donation_cta} →</Link>}
+                    {p.short_description && (
+                      <p className="mt-3 leading-relaxed text-muted-foreground">
+                        {p.short_description}
+                      </p>
+                    )}
+                    {p.full_description && (
+                      <div
+                        className="prose-yokm mt-4 text-sm"
+                        dangerouslySetInnerHTML={{ __html: renderRichText(p.full_description) }}
+                      />
+                    )}
+                    {p.donation_cta && (
+                      <Link to="/donate" className="mt-5 inline-block eyebrow text-accent">
+                        {p.donation_cta} →
+                      </Link>
+                    )}
                   </article>
                 </Reveal>
               ))}
@@ -100,18 +136,41 @@ function OurWork() {
       )}
 
       {events.length > 0 && (
-        <section className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-20">
-          <h2 className="text-3xl">Upcoming</h2>
+        <section
+          id="events"
+          className="mx-auto max-w-[1400px] scroll-mt-24 px-5 py-16 md:px-10 md:py-20"
+        >
+          <p className="eyebrow text-muted-foreground">Events</p>
+          <h2 className="mt-4 text-3xl md:text-4xl">Upcoming gatherings</h2>
           <ul className="mt-8 divide-y divide-border">
             {events.map((e) => (
-              <li key={e.id} className="grid gap-4 py-6 md:grid-cols-[200px_1fr_auto] md:items-start">
-                <span className="eyebrow text-accent">{formatDate(e.event_date)}{e.event_time ? ` · ${e.event_time}` : ""}</span>
+              <li
+                key={e.id}
+                className="grid gap-4 py-6 md:grid-cols-[200px_1fr_auto] md:items-start"
+              >
+                <span className="eyebrow text-accent">
+                  {formatDate(e.event_date)}
+                  {e.event_time ? ` · ${e.event_time}` : ""}
+                </span>
                 <div>
                   <p className="font-serif text-xl">{e.title}</p>
                   {e.location && <p className="mt-1 text-sm text-muted-foreground">{e.location}</p>}
-                  {e.description && <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{e.description}</p>}
+                  {e.description && (
+                    <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                      {e.description}
+                    </p>
+                  )}
                 </div>
-                {e.link && <a href={e.link} target="_blank" rel="noreferrer" className="eyebrow text-primary underline-offset-4 hover:underline">Details →</a>}
+                {e.link && /^(https?:\/\/|mailto:|tel:)/i.test(e.link) && (
+                  <a
+                    href={e.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="eyebrow text-primary underline-offset-4 hover:underline"
+                  >
+                    Details →
+                  </a>
+                )}
               </li>
             ))}
           </ul>

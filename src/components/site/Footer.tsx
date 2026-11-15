@@ -1,11 +1,12 @@
 import { Link } from "@tanstack/react-router";
 
-import logo from "@/assets/yokm-logo.png.asset.json";
-import { contactChannels, socialLinks, useSettings } from "@/lib/cms";
+import logo from "@/assets/yokm-logo.png";
+import { contactChannels, socialLinks, useSettings, useSiteText } from "@/lib/cms";
 import { NAV, ORG } from "@/lib/yokm";
 
 export function Footer() {
   const { data: settings = {} } = useSettings();
+  const t = useSiteText();
   const CONTACT_CHANNELS = contactChannels(settings);
   const SOCIAL_LINKS = socialLinks(settings);
   return (
@@ -14,11 +15,20 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-12">
           <div className="max-w-sm">
             <div className="flex items-center gap-3">
-              <img src={logo.url} alt={`${ORG.abbr} logo`} width={48} height={48} className="no-photo h-12 w-12" loading="lazy" />
+              <img
+                src={logo}
+                alt={`${ORG.abbr} logo`}
+                width={48}
+                height={48}
+                className="no-photo h-12 w-12"
+                loading="lazy"
+              />
               <span className="font-serif text-lg">{ORG.abbr}</span>
             </div>
             <p className="mt-6 font-serif text-xl leading-snug">“{ORG.motto}”</p>
-            <p className="mt-4 text-sm leading-relaxed text-ink-foreground/65">{settings["footer_text"] ?? ORG.positioning}</p>
+            <p className="mt-4 text-sm leading-relaxed text-ink-foreground/65">
+              {t("footer_text")}
+            </p>
           </div>
 
           <div>
@@ -26,23 +36,21 @@ export function Footer() {
             <ul className="mt-5 space-y-2.5 text-sm">
               {NAV.map((item) => (
                 <li key={item.to}>
-                  <Link to={item.to} className="rule-link text-ink-foreground/80 hover:text-ink-foreground">
+                  <Link
+                    to={item.to}
+                    className="rule-link text-ink-foreground/80 hover:text-ink-foreground"
+                  >
                     {item.label}
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link to="/journal" className="rule-link text-ink-foreground/80 hover:text-ink-foreground">
-                  Journal
-                </Link>
-              </li>
             </ul>
           </div>
 
           <div>
             <p className="eyebrow text-ink-foreground/50">Find us</p>
-            <address className="mt-5 text-sm not-italic leading-relaxed text-ink-foreground/80">
-              {settings["contact_address"] ?? ORG.address}
+            <address className="mt-5 whitespace-pre-line text-sm not-italic leading-relaxed text-ink-foreground/80">
+              {t("contact_address")}
             </address>
             {CONTACT_CHANNELS.length > 0 && (
               <ul className="mt-4 space-y-2 text-sm text-ink-foreground/80">
@@ -63,7 +71,12 @@ export function Footer() {
               <ul className="mt-6 flex flex-wrap gap-4 text-sm">
                 {SOCIAL_LINKS.map((s) => (
                   <li key={s.label}>
-                    <a href={s.href} className="rule-link text-ink-foreground/80">
+                    <a
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rule-link text-ink-foreground/80"
+                    >
                       {s.label}
                     </a>
                   </li>

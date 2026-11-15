@@ -6,7 +6,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { renderRichText, uploadImage } from "@/lib/cms";
 
 /** Plain textarea with simple formatting buttons and a preview tab. */
-export function RichTextField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+export function RichTextField({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
   const ta = useRef<HTMLTextAreaElement>(null);
   const file = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState(false);
@@ -75,12 +81,21 @@ export function RichTextField({ value, onChange }: { value: string; onChange: (v
             e.target.value = "";
           }}
         />
-        <Button type="button" size="sm" variant={preview ? "secondary" : "ghost"} className="ml-auto" onClick={() => setPreview(!preview)}>
+        <Button
+          type="button"
+          size="sm"
+          variant={preview ? "secondary" : "ghost"}
+          className="ml-auto"
+          onClick={() => setPreview(!preview)}
+        >
           {preview ? "Edit" : "Preview"}
         </Button>
       </div>
       {preview ? (
-        <div className="prose-yokm min-h-[240px] p-4" dangerouslySetInnerHTML={{ __html: renderRichText(value) }} />
+        <div
+          className="prose-yokm min-h-[240px] p-4"
+          dangerouslySetInnerHTML={{ __html: renderRichText(value) }}
+        />
       ) : (
         <Textarea
           ref={ta}

@@ -1,10 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Pending } from "@/components/site/Placeholder";
 import { Reveal } from "@/components/site/Reveal";
-import { DONATION, ORG } from "@/lib/yokm";
+import { isHttpUrl, useSettings, useSiteText } from "@/lib/cms";
+import { ORG } from "@/lib/yokm";
 
 export const Route = createFileRoute("/donate")({
   head: () => ({
@@ -27,108 +29,110 @@ export const Route = createFileRoute("/donate")({
   component: Donate,
 });
 
-const FREQUENCIES = ["One-time", "Monthly"] as const;
-const AMOUNTS = ["5,000", "20,000", "50,000"];
-
 function Donate() {
-  const [freq, setFreq] = useState<string>(FREQUENCIES[0]);
-  const [amount, setAmount] = useState<string>(AMOUNTS[1] ?? "");
-  const [other, setOther] = useState("");
+  const t = useSiteText();
+  const { data: s = {}, isLoading } = useSettings();
+  const url = s["donation_url"] && isHttpUrl(s["donation_url"]) ? s["donation_url"] : "";
+  const bank = s["donation_bank"] ?? "";
+  const instructions = s["donation_instructions"] ?? "";
+  const configured = !!(url || bank);
 
   return (
     <>
-      <PageHero
-        eyebrow="Support YOKM"
-        title="Help carry hope further"
-        intro="Giving to YOKM is participation in the mission — standing with widows as they grow in faith, discover their gifts and become independent."
-      />
+      <PageHero eyebrow="Support YOKM" title="Help carry hope further" intro={t("donate_intro")} />
 
       <section className="mx-auto max-w-[1400px] px-5 py-20 md:px-10 md:py-28">
         <div className="grid gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-24">
-          <Reveal>
-            <fieldset>
-              <legend className="eyebrow text-muted-foreground">Giving</legend>
-              <div className="mt-4 flex gap-px bg-border">
-                {FREQUENCIES.map((f) => (
-                  <button
-                    key={f}
-                    type="button"
-                    onClick={() => setFreq(f)}
-                    aria-pressed={freq === f}
-                    className={`flex-1 px-6 py-4 text-xs uppercase tracking-[0.18em] transition-colors ${
-                      freq === f
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-background text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {f}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-
-            <fieldset className="mt-10">
-              <legend className="eyebrow text-muted-foreground">Amount (₦)</legend>
-              <div className="mt-4 grid gap-px bg-border sm:grid-cols-3">
-                {AMOUNTS.map((a) => (
-                  <button
-                    key={a}
-                    type="button"
-                    onClick={() => {
-                      setAmount(a);
-                      setOther("");
-                    }}
-                    aria-pressed={amount === a && !other}
-                    className={`px-6 py-5 font-serif text-xl transition-colors ${
-                      amount === a && !other
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-background hover:bg-secondary"
-                    }`}
-                  >
-                    ₦{a}
-                  </button>
-                ))}
-              </div>
-              <label htmlFor="other" className="eyebrow mt-6 block text-muted-foreground">
-                Other amount
-              </label>
-              <input
-                id="other"
-                inputMode="numeric"
-                value={other}
-                onChange={(e) => setOther(e.target.value)}
-                className="mt-2 w-full border border-input bg-card px-4 py-3 text-sm"
-              />
-            </fieldset>
-
-            <button
-              type="button"
-              disabled={!DONATION.configured}
-              className="mt-10 w-full bg-primary px-6 py-5 text-xs uppercase tracking-[0.18em] text-primary-foreground disabled:opacity-50"
-            >
-              {DONATION.configured ? "Continue to payment" : "Giving not yet available online"}
-            </button>
-            {!DONATION.configured && (
-              <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-                Online giving is not connected yet. No payment provider, bank account or giving link
-                has been supplied, so none is shown here.
-              </p>
+          <Reveal className="space-y-10">
+            {isLoading ? (
+              <div className="h-40" aria-busy="true" />
+            ) : configured ? (
+              <>
+                {url && (
+                  <div>
+                    <p className="eyebrow text-muted-foreground">Give online</p>
+                    <p className="mt-3 max-w-md leading-relaxed text-muted-foreground">
+                      You will be taken to the ministry&rsquo;s secure giving page to complete your
+                      gift.
+                    </p>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group mt-6 inline-flex items-center gap-3 bg-primary px-7 py-5 text-xs uppercase tracking-[0.18em] text-primary-foreground"
+                    >
+                      Give online
+                      <span className="transition-transform duration-500 group-hover:translate-x-1">
+                        ↗
+                      </span>
+                    </a>
+                  </div>
+                )}
+                {bank && <BankDetails text={bank} />}
+                {instructions && (
+                  <div>
+                    <p className="eyebrow text-muted-foreground">How to give</p>
+                    <p className="mt-3 max-w-xl whitespace-pre-line leading-relaxed">
+                      {instructions}
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <Pending label="Giving details">
+                Bank account details or an online giving link will be published here once the
+                ministry provides them. In the meantime, please{" "}
+                <Link to="/contact" className="underline">
+                  contact the ministry
+                </Link>{" "}
+                to arrange a gift.
+              </Pending>
             )}
           </Reveal>
 
           <Reveal delay={0.1} className="space-y-8">
-            <Pending label="Giving details">
-              Bank account details, a payment provider or a giving link will be published here once
-              YOKM supplies them officially.
-            </Pending>
             <div>
               <p className="eyebrow text-muted-foreground">Give in person</p>
-              <address className="mt-3 not-italic leading-relaxed">{ORG.address}</address>
+              <address className="mt-3 not-italic leading-relaxed">{t("contact_address")}</address>
+            </div>
+            <div>
+              <p className="eyebrow text-muted-foreground">Other ways to help</p>
+              <p className="mt-3 max-w-md leading-relaxed text-muted-foreground">
+                Volunteer your time, partner with the ministry, or stand with the widows in prayer.
+              </p>
+              <Link to="/get-involved" className="rule-link mt-4 inline-block eyebrow">
+                Get involved →
+              </Link>
             </div>
             <p className="font-serif text-xl">&ldquo;{ORG.motto}&rdquo;</p>
           </Reveal>
         </div>
       </section>
     </>
+  );
+}
+
+function BankDetails({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="border border-border bg-cream p-6 md:p-8">
+      <p className="eyebrow text-muted-foreground">Bank transfer</p>
+      <p className="mt-4 whitespace-pre-line font-serif text-xl leading-relaxed">{text}</p>
+      <button
+        type="button"
+        className="mt-5 text-xs uppercase tracking-[0.16em] text-primary underline-offset-4 hover:underline"
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          } catch {
+            toast.error("Could not copy — please select the details instead.");
+          }
+        }}
+      >
+        {copied ? "Copied" : "Copy details"}
+      </button>
+    </div>
   );
 }
