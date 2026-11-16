@@ -85,7 +85,7 @@ export const SECTIONS: Section[] = [
     order: { column: "created_at", ascending: false },
     previewPath: (r) => `/post/${r["slug"]}`,
     intro:
-      "Real accounts from widows, volunteers and community members — only with their permission.",
+      "Real accounts from widows, volunteers and community members, only with their permission.",
     fields: [
       { name: "title", label: "Title", type: "text", required: true },
       { name: "person", label: "Name (or chosen anonymous label)", type: "text" },

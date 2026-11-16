@@ -1,4 +1,3 @@
-import { Clock } from "lucide-react";
 import type { ReactNode } from "react";
 
 /**
@@ -23,15 +22,12 @@ export function Pending({
         dark ? "bg-paper/6 ring-1 ring-paper/12" : "card"
       }`}
     >
-      <span
-        className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl ${
-          dark ? "bg-paper/10 text-sky" : "bg-blush text-wine"
-        }`}
-      >
-        <Clock aria-hidden className="h-6 w-6" strokeWidth={1.6} />
-      </span>
       <div>
-        <p className={`eyebrow ${dark ? "text-sky" : "text-plum"}`}>Coming soon</p>
+        <span
+          aria-hidden
+          className={`block h-1 w-10 rounded-full ${dark ? "bg-sky" : "bg-plum"}`}
+        />
+        <p className={`eyebrow mt-5 ${dark ? "text-sky" : "text-plum"}`}>Coming soon</p>
         <p className="h-sub mt-3 max-w-[30ch]">{label}</p>
         {children && (
           <div

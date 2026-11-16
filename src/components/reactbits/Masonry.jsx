@@ -1,40 +1,40 @@
 // Masonry from React Bits (reactbits.dev), MIT licence. Adapted: lucide-react icons in
 // place of Hugeicons, so the site carries a single icon set.
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { ArrowLeft, ArrowRight, ArrowUpRight, X } from 'lucide-react';
-import './Masonry.css';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
+import "./Masonry.css";
 
-const ROOT = 'masonry';
-const ITEM = 'masonry__item';
-const CARD = 'masonry__card';
-const MEDIA = 'masonry__media';
-const PARALLAX = 'masonry__parallax';
-const IMAGE = 'masonry__image';
-const CAPTION = 'masonry__caption';
-const TITLE = 'masonry__title';
-const TEXT = 'masonry__text';
-const GHOST = 'masonry__ghost';
-const BOX = 'masonry-lightbox';
-const BOX_BACKDROP = 'masonry-lightbox__backdrop';
-const BOX_IMAGE = 'masonry-lightbox__image';
-const BOX_CAPTION = 'masonry-lightbox__caption';
-const BOX_MUTED = 'masonry-lightbox__muted';
-const BOX_CLOSE = 'masonry-lightbox__button masonry-lightbox__close';
-const BOX_PREV = 'masonry-lightbox__button masonry-lightbox__prev';
-const BOX_NEXT = 'masonry-lightbox__button masonry-lightbox__next';
+const ROOT = "masonry";
+const ITEM = "masonry__item";
+const CARD = "masonry__card";
+const MEDIA = "masonry__media";
+const PARALLAX = "masonry__parallax";
+const IMAGE = "masonry__image";
+const CAPTION = "masonry__caption";
+const TITLE = "masonry__title";
+const TEXT = "masonry__text";
+const GHOST = "masonry__ghost";
+const BOX = "masonry-lightbox";
+const BOX_BACKDROP = "masonry-lightbox__backdrop";
+const BOX_IMAGE = "masonry-lightbox__image";
+const BOX_CAPTION = "masonry-lightbox__caption";
+const BOX_MUTED = "masonry-lightbox__muted";
+const BOX_CLOSE = "masonry-lightbox__button masonry-lightbox__close";
+const BOX_PREV = "masonry-lightbox__button masonry-lightbox__prev";
+const BOX_NEXT = "masonry-lightbox__button masonry-lightbox__next";
 
-const DIRECTIONS = ['bottom', 'top', 'left', 'right'];
-const ANIMATE_FROM = ['bottom', 'top', 'left', 'right', 'center', 'random', 'none'];
-const HOVER_EFFECTS = ['zoom', 'lift', 'tilt', 'none'];
-const CAPTION_MODES = ['hover', 'always', 'none'];
-const EASE = 'cubic-bezier(0.2, 0.9, 0.2, 1)';
+const DIRECTIONS = ["bottom", "top", "left", "right"];
+const ANIMATE_FROM = ["bottom", "top", "left", "right", "center", "random", "none"];
+const HOVER_EFFECTS = ["zoom", "lift", "tilt", "none"];
+const CAPTION_MODES = ["hover", "always", "none"];
+const EASE = "cubic-bezier(0.2, 0.9, 0.2, 1)";
 
-const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
-const keyOf = item => String(item.id);
+const keyOf = (item) => String(item.id);
 
 const aspectOf = (item, measured) => {
   const width = item.width ?? 0;
@@ -45,12 +45,12 @@ const aspectOf = (item, measured) => {
   return 1;
 };
 
-const needsMeasure = item => !((item.height ?? 0) > 0);
+const needsMeasure = (item) => !((item.height ?? 0) > 0);
 
 const gridOf = (width, columns, columnWidth, gap) => {
   const fixed = Number(columns);
   const count =
-    columns !== 'auto' && fixed > 0
+    columns !== "auto" && fixed > 0
       ? Math.max(1, Math.round(fixed))
       : Math.max(1, Math.floor((width + gap) / (Math.max(40, columnWidth) + gap)));
   return { count, size: Math.max(1, (width - gap * (count - 1)) / count) };
@@ -75,11 +75,14 @@ const place = (heights, item, grid, gap, measured, commit) => {
   return { x: Math.round(column * (size + gap)), y: Math.round(top), w, h };
 };
 
-const scrollerOf = element => {
+const scrollerOf = (element) => {
   let node = element?.parentElement;
   while (node && node !== document.body && node !== document.documentElement) {
     const overflow = getComputedStyle(node).overflowY;
-    if ((overflow === 'auto' || overflow === 'scroll' || overflow === 'overlay') && node.scrollHeight > node.clientHeight) {
+    if (
+      (overflow === "auto" || overflow === "scroll" || overflow === "overlay") &&
+      node.scrollHeight > node.clientHeight
+    ) {
       return node;
     }
     node = node.parentElement;
@@ -90,7 +93,11 @@ const scrollerOf = element => {
 const layoutOf = (list, width, columns, columnWidth, gap, measured) => {
   const grid = gridOf(width, columns, columnWidth, gap);
   const heights = new Array(grid.count).fill(0);
-  const tiles = list.map(item => ({ item, id: keyOf(item), ...place(heights, item, grid, gap, measured, true) }));
+  const tiles = list.map((item) => ({
+    item,
+    id: keyOf(item),
+    ...place(heights, item, grid, gap, measured, true),
+  }));
   return { tiles, height: Math.max(0, Math.max(...heights) - gap) };
 };
 
@@ -108,26 +115,26 @@ const slotsFor = (others, dragged, width, columns, columnWidth, gap, measured) =
 
 const Masonry = ({
   items = [],
-  columns = 'auto',
+  columns = "auto",
   columnWidth = 240,
   gap = 12,
   radius = 12,
-  animateFrom = 'bottom',
+  animateFrom = "bottom",
   stagger = 0.05,
   duration = 0.6,
   bounce = 0.15,
   blurToFocus = true,
   revealOnScroll = true,
-  hoverEffect = 'zoom',
+  hoverEffect = "zoom",
   focusOnHover = false,
-  captions = 'hover',
+  captions = "hover",
   parallax = 0,
   lightbox = true,
   draggable = true,
   onItemClick,
   onReorder,
-  className = '',
-  style
+  className = "",
+  style,
 }) => {
   const rootRef = useRef(null);
   const nodes = useRef(new Map());
@@ -153,38 +160,41 @@ const Masonry = ({
 
   const settings = {
     gap: Math.max(0, gap),
-    animateFrom: ANIMATE_FROM.includes(animateFrom) ? animateFrom : 'bottom',
+    animateFrom: ANIMATE_FROM.includes(animateFrom) ? animateFrom : "bottom",
     stagger: Math.max(0, stagger),
     duration: Math.max(0.05, duration),
     bounce: clamp(bounce, 0, 0.9),
     blurToFocus,
     revealOnScroll,
-    hoverEffect: HOVER_EFFECTS.includes(hoverEffect) ? hoverEffect : 'zoom',
+    hoverEffect: HOVER_EFFECTS.includes(hoverEffect) ? hoverEffect : "zoom",
     focusOnHover,
     parallax: clamp(parallax, 0, 1),
     lightbox,
     draggable,
     onItemClick,
-    onReorder
+    onReorder,
   };
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
 
-  const itemsKey = items.map(keyOf).join('\u0000');
+  const itemsKey = items.map(keyOf).join("\u0000");
 
   const ordered = useMemo(() => {
     if (!order) return items;
-    const byId = new Map(items.map(item => [keyOf(item), item]));
-    const list = order.filter(id => byId.has(id)).map(id => byId.get(id));
-    items.forEach(item => {
+    const byId = new Map(items.map((item) => [keyOf(item), item]));
+    const list = order.filter((id) => byId.has(id)).map((id) => byId.get(id));
+    items.forEach((item) => {
       if (!order.includes(keyOf(item))) list.push(item);
     });
     return list;
   }, [items, order]);
 
   const layout = useMemo(
-    () => (width && ready ? layoutOf(ordered, width, columns, columnWidth, settings.gap, measured) : null),
-    [ordered, width, ready, columns, columnWidth, settings.gap, measured]
+    () =>
+      width && ready
+        ? layoutOf(ordered, width, columns, columnWidth, settings.gap, measured)
+        : null,
+    [ordered, width, ready, columns, columnWidth, settings.gap, measured],
   );
   const layoutRef = useRef(layout);
   layoutRef.current = layout;
@@ -210,7 +220,7 @@ const Masonry = ({
 
   useEffect(() => {
     const known = measuredRef.current;
-    const missing = itemsRef.current.filter(item => needsMeasure(item) && !known[keyOf(item)]);
+    const missing = itemsRef.current.filter((item) => needsMeasure(item) && !known[keyOf(item)]);
     if (!missing.length) {
       setReady(true);
       return undefined;
@@ -219,11 +229,14 @@ const Masonry = ({
     const timer = setTimeout(() => {
       if (!cancelled) setReady(true);
     }, 2500);
-    missing.forEach(item => {
+    missing.forEach((item) => {
       const image = new Image();
       image.onload = () => {
         if (cancelled || !image.naturalWidth) return;
-        setMeasured(current => ({ ...current, [keyOf(item)]: image.naturalHeight / image.naturalWidth }));
+        setMeasured((current) => ({
+          ...current,
+          [keyOf(item)]: image.naturalHeight / image.naturalWidth,
+        }));
       };
       image.src = item.img;
     });
@@ -235,11 +248,12 @@ const Masonry = ({
 
   useEffect(() => {
     if (ready) return;
-    if (items.every(item => !needsMeasure(item) || measured[keyOf(item)])) setReady(true);
+    if (items.every((item) => !needsMeasure(item) || measured[keyOf(item)])) setReady(true);
   }, [measured, ready, items]);
 
   const reduced = () =>
-    typeof window !== 'undefined' && (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
+    typeof window !== "undefined" &&
+    (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
 
   const paint = (id, spring) => {
     const node = nodes.current.get(id);
@@ -248,14 +262,14 @@ const Masonry = ({
     if (spring.reveal < 1) {
       const eased = 1 - Math.pow(1 - Math.max(0, spring.reveal), 3);
       node.style.opacity = String(eased);
-      node.style.filter = spring.blur ? `blur(${((1 - eased) * 12).toFixed(2)}px)` : '';
-    } else if (node.style.opacity !== '') {
-      node.style.opacity = '';
-      node.style.filter = '';
+      node.style.filter = spring.blur ? `blur(${((1 - eased) * 12).toFixed(2)}px)` : "";
+    } else if (node.style.opacity !== "") {
+      node.style.opacity = "";
+      node.style.filter = "";
     }
   };
 
-  const frame = now => {
+  const frame = (now) => {
     const state = engine.current;
     state.raf = 0;
     const s = settingsRef.current;
@@ -307,7 +321,7 @@ const Masonry = ({
 
   const kick = () => {
     const state = engine.current;
-    if (state.raf || typeof window === 'undefined') return;
+    if (state.raf || typeof window === "undefined") return;
     state.last = performance.now();
     state.raf = requestAnimationFrame(frame);
   };
@@ -325,7 +339,7 @@ const Masonry = ({
     engine.current.flush = 0;
     const s = settingsRef.current;
     const batch = [];
-    pending.current.forEach(id => {
+    pending.current.forEach((id) => {
       const spring = springs.current.get(id);
       if (spring && !spring.shown) batch.push({ id, spring });
     });
@@ -333,7 +347,7 @@ const Masonry = ({
     if (!batch.length) return;
     batch.sort((a, b) => a.spring.ty - b.spring.ty || a.spring.tx - b.spring.tx);
     const now = performance.now();
-    const still = reduced() || s.animateFrom === 'none';
+    const still = reduced() || s.animateFrom === "none";
     const rootWidth = rootRef.current?.clientWidth ?? 0;
     const centerY = visibleCenter();
     batch.forEach(({ id, spring }, rank) => {
@@ -349,19 +363,21 @@ const Masonry = ({
         return;
       }
       const direction =
-        s.animateFrom === 'random' ? DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)] : s.animateFrom;
+        s.animateFrom === "random"
+          ? DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)]
+          : s.animateFrom;
       const distance = 60 + Math.min(spring.h, 280) * 0.35;
       spring.x = spring.tx;
       spring.y = spring.ty;
       spring.s = 0.96;
-      if (direction === 'center') {
+      if (direction === "center") {
         spring.x = rootWidth / 2 - spring.w / 2;
         spring.y = centerY - spring.h / 2;
         spring.s = 0.55;
-      } else if (direction === 'bottom') spring.y += distance;
-      else if (direction === 'top') spring.y -= distance;
-      else if (direction === 'left') spring.x -= distance;
-      else if (direction === 'right') spring.x += distance;
+      } else if (direction === "bottom") spring.y += distance;
+      else if (direction === "top") spring.y -= distance;
+      else if (direction === "left") spring.x -= distance;
+      else if (direction === "right") spring.x += distance;
       spring.vx = spring.vy = spring.vs = 0;
       spring.reveal = 0;
       spring.start = now + rank * s.stagger * 1000;
@@ -370,7 +386,7 @@ const Masonry = ({
     kick();
   };
 
-  const requestReveal = id => {
+  const requestReveal = (id) => {
     const spring = springs.current.get(id);
     if (!spring || spring.shown) return;
     if (!loaded.current.has(id)) {
@@ -385,10 +401,10 @@ const Masonry = ({
   const revealRef = useRef(requestReveal);
   revealRef.current = requestReveal;
 
-  const markLoaded = id => {
+  const markLoaded = (id) => {
     loaded.current.add(id);
     const node = nodes.current.get(id);
-    node?.querySelector('img')?.setAttribute('data-loaded', '');
+    node?.querySelector("img")?.setAttribute("data-loaded", "");
     if (waiting.current.has(id)) requestReveal(id);
   };
 
@@ -401,10 +417,19 @@ const Masonry = ({
       const spring = springs.current.get(id);
       previous.delete(id);
       if (!spring?.shown) return;
-      leaving.push({ id, item: entry.item, x: spring.x, y: spring.y, s: spring.s, w: entry.w, h: entry.h });
+      leaving.push({
+        id,
+        item: entry.item,
+        x: spring.x,
+        y: spring.y,
+        s: spring.s,
+        w: entry.w,
+        h: entry.h,
+      });
       springs.current.delete(id);
     });
-    if (leaving.length) setGhosts(current => [...current.filter(ghost => !live.has(ghost.id)), ...leaving]);
+    if (leaving.length)
+      setGhosts((current) => [...current.filter((ghost) => !live.has(ghost.id)), ...leaving]);
     setOrder(null);
   }, [itemsKey]);
 
@@ -412,7 +437,7 @@ const Masonry = ({
     if (!layout) return;
     const root = rootRef.current;
     const instant = reduced();
-    layout.tiles.forEach(tile => {
+    layout.tiles.forEach((tile) => {
       const node = nodes.current.get(tile.id);
       let spring = springs.current.get(tile.id);
       if (!spring) {
@@ -431,11 +456,11 @@ const Masonry = ({
           dragging: false,
           blur: false,
           reveal: 0,
-          start: 0
+          start: 0,
         };
         springs.current.set(tile.id, spring);
         if (node) {
-          node.style.opacity = '0';
+          node.style.opacity = "0";
           node.style.transform = `translate3d(${tile.x}px, ${tile.y}px, 0)`;
         }
       } else if (spring.shown && Math.abs(spring.w - tile.w) > 0.5 && !instant) {
@@ -463,24 +488,24 @@ const Masonry = ({
 
   useEffect(() => {
     if (!layout) return undefined;
-    const ids = layout.tiles.map(tile => tile.id);
+    const ids = layout.tiles.map((tile) => tile.id);
     const reveal = revealRef.current;
-    if (!settingsRef.current.revealOnScroll || typeof IntersectionObserver === 'undefined') {
+    if (!settingsRef.current.revealOnScroll || typeof IntersectionObserver === "undefined") {
       ids.forEach(reveal);
       return undefined;
     }
     const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
+      (entries) => {
+        entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          const id = entry.target.getAttribute('data-id');
+          const id = entry.target.getAttribute("data-id");
           if (id) reveal(id);
           observer.unobserve(entry.target);
         });
       },
-      { rootMargin: '0px 0px -6% 0px' }
+      { rootMargin: "0px 0px -6% 0px" },
     );
-    ids.forEach(id => {
+    ids.forEach((id) => {
       const node = nodes.current.get(id);
       if (node && !springs.current.get(id)?.shown) observer.observe(node);
     });
@@ -489,42 +514,45 @@ const Masonry = ({
 
   useEffect(() => {
     const timers = [];
-    waiting.current.forEach(id => {
+    waiting.current.forEach((id) => {
       timers.push(
         setTimeout(() => {
           if (!waiting.current.has(id)) return;
           loaded.current.add(id);
           revealRef.current(id);
-        }, 2500)
+        }, 2500),
       );
     });
     return () => timers.forEach(clearTimeout);
   }, [layout]);
 
   useEffect(() => {
-    ghosts.forEach(ghost => {
+    ghosts.forEach((ghost) => {
       const node = ghostsRef.current.get(ghost.id);
-      if (!node || node.getAttribute('data-leaving')) return;
-      node.setAttribute('data-leaving', '');
+      if (!node || node.getAttribute("data-leaving")) return;
+      node.setAttribute("data-leaving", "");
       const from = `translate3d(${ghost.x}px, ${ghost.y}px, 0) scale(${ghost.s})`;
       const to = `translate3d(${ghost.x + ghost.w * 0.04}px, ${ghost.y + ghost.h * 0.04}px, 0) scale(${ghost.s * 0.92})`;
       const animation = node.animate(
         [
           { transform: from, opacity: 1 },
-          { transform: to, opacity: 0 }
+          { transform: to, opacity: 0 },
         ],
-        { duration: reduced() ? 1 : 320, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' }
+        { duration: reduced() ? 1 : 320, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" },
       );
-      animation.finished.then(() => setGhosts(current => current.filter(entry => entry.id !== ghost.id))).catch(() => {});
+      animation.finished
+        .then(() => setGhosts((current) => current.filter((entry) => entry.id !== ghost.id)))
+        .catch(() => {});
     });
   }, [ghosts]);
 
   useEffect(() => {
     const strength = settingsRef.current.parallax;
-    const layers = () => [...nodes.current.values()].map(node => node.querySelector('[data-parallax]'));
+    const layers = () =>
+      [...nodes.current.values()].map((node) => node.querySelector("[data-parallax]"));
     if (!strength || !layout) {
-      layers().forEach(layer => {
-        if (layer) layer.style.transform = '';
+      layers().forEach((layer) => {
+        if (layer) layer.style.transform = "";
       });
       return undefined;
     }
@@ -532,17 +560,23 @@ const Masonry = ({
     const scroller = scrollerOf(rootRef.current);
     const update = () => {
       raf = 0;
-      const frame = scroller ? scroller.getBoundingClientRect() : { top: 0, bottom: window.innerHeight };
+      const frame = scroller
+        ? scroller.getBoundingClientRect()
+        : { top: 0, bottom: window.innerHeight };
       const top = Math.max(frame.top, 0);
       const bottom = Math.min(frame.bottom, window.innerHeight);
       const center = (top + bottom) / 2;
-      nodes.current.forEach(node => {
-        const layer = node.querySelector('[data-parallax]');
+      nodes.current.forEach((node) => {
+        const layer = node.querySelector("[data-parallax]");
         if (!layer) return;
         const rect = node.getBoundingClientRect();
         if (rect.bottom < top - 200 || rect.top > bottom + 200) return;
         const reach = strength * 0.2 * rect.height;
-        const shift = clamp(-(rect.top + rect.height / 2 - center) * strength * 0.25, -reach, reach);
+        const shift = clamp(
+          -(rect.top + rect.height / 2 - center) * strength * 0.25,
+          -reach,
+          reach,
+        );
         layer.style.transform = `translate3d(0, ${shift.toFixed(2)}px, 0) scale(${(1 + strength * 0.4 + 0.002).toFixed(3)})`;
       });
     };
@@ -550,12 +584,12 @@ const Masonry = ({
       if (!raf) raf = requestAnimationFrame(update);
     };
     update();
-    window.addEventListener('scroll', schedule, { capture: true, passive: true });
-    window.addEventListener('resize', schedule, { passive: true });
+    window.addEventListener("scroll", schedule, { capture: true, passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', schedule, { capture: true });
-      window.removeEventListener('resize', schedule);
+      window.removeEventListener("scroll", schedule, { capture: true });
+      window.removeEventListener("resize", schedule);
     };
   }, [layout, parallax]);
 
@@ -567,45 +601,45 @@ const Masonry = ({
     };
   }, []);
 
-  const setDimmed = activeId => {
+  const setDimmed = (activeId) => {
     nodes.current.forEach((node, id) => {
-      if (activeId && id !== activeId) node.setAttribute('data-dimmed', '');
-      else node.removeAttribute('data-dimmed');
+      if (activeId && id !== activeId) node.setAttribute("data-dimmed", "");
+      else node.removeAttribute("data-dimmed");
     });
   };
 
-  const onEnter = id => {
+  const onEnter = (id) => {
     if (settingsRef.current.focusOnHover && !dragRef.current?.active) setDimmed(id);
   };
 
-  const onLeave = event => {
+  const onLeave = (event) => {
     if (settingsRef.current.focusOnHover) setDimmed(null);
-    event.currentTarget.style.removeProperty('--masonry-tilt-x');
-    event.currentTarget.style.removeProperty('--masonry-tilt-y');
+    event.currentTarget.style.removeProperty("--masonry-tilt-x");
+    event.currentTarget.style.removeProperty("--masonry-tilt-y");
   };
 
-  const onTilt = event => {
-    if (settingsRef.current.hoverEffect !== 'tilt' || dragRef.current?.active) return;
+  const onTilt = (event) => {
+    if (settingsRef.current.hoverEffect !== "tilt" || dragRef.current?.active) return;
     const card = event.currentTarget;
     const rect = card.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width - 0.5;
     const py = (event.clientY - rect.top) / rect.height - 0.5;
-    card.style.setProperty('--masonry-tilt-x', `${(-py * 10).toFixed(2)}deg`);
-    card.style.setProperty('--masonry-tilt-y', `${(px * 10).toFixed(2)}deg`);
+    card.style.setProperty("--masonry-tilt-x", `${(-py * 10).toFixed(2)}deg`);
+    card.style.setProperty("--masonry-tilt-y", `${(px * 10).toFixed(2)}deg`);
   };
 
   const finishDrag = () => {
     const drag = dragRef.current;
-    window.removeEventListener('pointermove', moveDrag);
-    window.removeEventListener('pointerup', finishDrag);
-    window.removeEventListener('pointercancel', finishDrag);
+    window.removeEventListener("pointermove", moveDrag);
+    window.removeEventListener("pointerup", finishDrag);
+    window.removeEventListener("pointercancel", finishDrag);
     dragRef.current = null;
     if (!drag?.active) return;
     const spring = springs.current.get(drag.id);
     const node = nodes.current.get(drag.id);
     if (spring) spring.dragging = false;
-    node?.removeAttribute('data-dragging');
-    rootRef.current?.removeAttribute('data-dragging');
+    node?.removeAttribute("data-dragging");
+    rootRef.current?.removeAttribute("data-dragging");
     suppressRef.current = true;
     setTimeout(() => {
       suppressRef.current = false;
@@ -614,7 +648,7 @@ const Masonry = ({
     if (drag.moved) settingsRef.current.onReorder?.(orderedRef.current);
   };
 
-  const moveDrag = event => {
+  const moveDrag = (event) => {
     const drag = dragRef.current;
     const root = rootRef.current;
     if (!drag || !root || event.pointerId !== drag.pointerId) return;
@@ -625,8 +659,8 @@ const Masonry = ({
       drag.active = true;
       spring.dragging = true;
       spring.vx = spring.vy = spring.vs = 0;
-      nodes.current.get(drag.id)?.setAttribute('data-dragging', '');
-      root.setAttribute('data-dragging', '');
+      nodes.current.get(drag.id)?.setAttribute("data-dragging", "");
+      root.setAttribute("data-dragging", "");
       setDimmed(null);
     }
     const rect = root.getBoundingClientRect();
@@ -638,11 +672,19 @@ const Masonry = ({
     paint(drag.id, spring);
     kick();
     const list = orderedRef.current;
-    const dragged = list.find(item => keyOf(item) === drag.id);
+    const dragged = list.find((item) => keyOf(item) === drag.id);
     const grid = paramsRef.current;
     if (!dragged || !grid.width) return;
-    const others = list.filter(item => keyOf(item) !== drag.id);
-    const slots = slotsFor(others, dragged, grid.width, grid.columns, grid.columnWidth, grid.gap, grid.measured);
+    const others = list.filter((item) => keyOf(item) !== drag.id);
+    const slots = slotsFor(
+      others,
+      dragged,
+      grid.width,
+      grid.columns,
+      grid.columnWidth,
+      grid.gap,
+      grid.measured,
+    );
     const cx = spring.x + spring.w / 2;
     const cy = spring.y + spring.h / 2;
     const current = list.indexOf(dragged);
@@ -665,7 +707,7 @@ const Masonry = ({
 
   const startDrag = (event, id) => {
     const s = settingsRef.current;
-    if (!s.draggable || event.button !== 0 || event.pointerType === 'touch' || openId) return;
+    if (!s.draggable || event.button !== 0 || event.pointerType === "touch" || openId) return;
     const root = rootRef.current;
     const spring = springs.current.get(id);
     if (!root || !spring) return;
@@ -678,11 +720,11 @@ const Masonry = ({
       offsetX: event.clientX - rect.left - spring.x,
       offsetY: event.clientY - rect.top - spring.y,
       active: false,
-      moved: false
+      moved: false,
     };
-    window.addEventListener('pointermove', moveDrag);
-    window.addEventListener('pointerup', finishDrag);
-    window.addEventListener('pointercancel', finishDrag);
+    window.addEventListener("pointermove", moveDrag);
+    window.addEventListener("pointerup", finishDrag);
+    window.addEventListener("pointercancel", finishDrag);
   };
 
   const onCardClick = (event, item, index) => {
@@ -701,12 +743,13 @@ const Masonry = ({
     }
   };
 
-  const openIndex = openId ? ordered.findIndex(item => keyOf(item) === openId) : -1;
+  const openIndex = openId ? ordered.findIndex((item) => keyOf(item) === openId) : -1;
   const openItem = openIndex >= 0 ? ordered[openIndex] : null;
 
-  const mediaRect = id => nodes.current.get(id)?.querySelector('[data-media]')?.getBoundingClientRect() ?? null;
+  const mediaRect = (id) =>
+    nodes.current.get(id)?.querySelector("[data-media]")?.getBoundingClientRect() ?? null;
 
-  const frameFor = item => {
+  const frameFor = (item) => {
     const aspect = aspectOf(item, measured);
     const pad = window.innerWidth < 640 ? 16 : 72;
     const room = item.title || item.description || item.url ? 64 : 0;
@@ -728,8 +771,8 @@ const Masonry = ({
     tokenRef.current += 1;
     const token = tokenRef.current;
     const box = boxRef.current;
-    const image = box?.querySelector('[data-box-image]');
-    const backdrop = box?.querySelector('[data-box-backdrop]');
+    const image = box?.querySelector("[data-box-image]");
+    const backdrop = box?.querySelector("[data-box-backdrop]");
     const rect = mediaRect(openId);
     setClosing(true);
     if (!image || !rect || reduced()) {
@@ -739,21 +782,27 @@ const Masonry = ({
     }
     const current = image.getBoundingClientRect();
     const scale = rect.width / current.width;
-    image.getAnimations().forEach(animation => animation.cancel());
+    image.getAnimations().forEach((animation) => animation.cancel());
     const animation = image.animate(
       [
-        { transform: 'none', borderRadius: '6px' },
+        { transform: "none", borderRadius: "6px" },
         {
           transform: `translate(${rect.left - current.left}px, ${rect.top - current.top}px) scale(${scale})`,
-          borderRadius: `${radius / Math.max(scale, 0.01)}px`
-        }
+          borderRadius: `${radius / Math.max(scale, 0.01)}px`,
+        },
       ],
-      { duration: 380, easing: EASE, fill: 'forwards' }
+      { duration: 380, easing: EASE, fill: "forwards" },
     );
-    backdrop?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'ease', fill: 'forwards' });
+    backdrop?.animate([{ opacity: 1 }, { opacity: 0 }], {
+      duration: 300,
+      easing: "ease",
+      fill: "forwards",
+    });
     box
-      ?.querySelectorAll('[data-box-fade]')
-      .forEach(node => node.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' }));
+      ?.querySelectorAll("[data-box-fade]")
+      .forEach((node) =>
+        node.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: "forwards" }),
+      );
     animation.finished
       .then(() => {
         if (token !== tokenRef.current) return;
@@ -763,7 +812,7 @@ const Masonry = ({
       .catch(() => {});
   };
 
-  const stepBox = direction => {
+  const stepBox = (direction) => {
     if (!openItem || closing || ordered.length < 2) return;
     const next = ordered[(openIndex + direction + ordered.length) % ordered.length];
     setOpenId(keyOf(next));
@@ -772,8 +821,8 @@ const Masonry = ({
   useIsoLayoutEffect(() => {
     if (!openId) return undefined;
     const node = nodes.current.get(openId);
-    node?.setAttribute('data-hidden', '');
-    return () => node?.removeAttribute('data-hidden');
+    node?.setAttribute("data-hidden", "");
+    return () => node?.removeAttribute("data-hidden");
   }, [openId]);
 
   const openedRef = useRef(null);
@@ -783,17 +832,17 @@ const Masonry = ({
       openedRef.current = null;
       return;
     }
-    const image = box.querySelector('[data-box-image]');
-    const backdrop = box.querySelector('[data-box-backdrop]');
-    const fades = box.querySelectorAll('[data-box-fade]');
+    const image = box.querySelector("[data-box-image]");
+    const backdrop = box.querySelector("[data-box-backdrop]");
+    const fades = box.querySelectorAll("[data-box-fade]");
     if (!image) return;
     if (openedRef.current) {
       image.animate(
         [
-          { opacity: 0, transform: 'scale(0.97)' },
-          { opacity: 1, transform: 'none' }
+          { opacity: 0, transform: "scale(0.97)" },
+          { opacity: 1, transform: "none" },
         ],
-        { duration: reduced() ? 1 : 320, easing: EASE }
+        { duration: reduced() ? 1 : 320, easing: EASE },
       );
       openedRef.current = openId;
       return;
@@ -807,15 +856,18 @@ const Masonry = ({
         [
           {
             transform: `translate(${rect.left - target.left}px, ${rect.top - target.top}px) scale(${scale})`,
-            borderRadius: `${radius / Math.max(scale, 0.01)}px`
+            borderRadius: `${radius / Math.max(scale, 0.01)}px`,
           },
-          { transform: 'none', borderRadius: '6px' }
+          { transform: "none", borderRadius: "6px" },
         ],
-        { duration: 520, easing: EASE }
+        { duration: 520, easing: EASE },
       );
-      backdrop?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 360, easing: 'ease' });
-      fades.forEach(fade =>
-        fade.animate([{ opacity: 0 }, { opacity: 0, offset: 0.5 }, { opacity: 1 }], { duration: 560, easing: 'ease' })
+      backdrop?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 360, easing: "ease" });
+      fades.forEach((fade) =>
+        fade.animate([{ opacity: 0 }, { opacity: 0, offset: 0.5 }, { opacity: 1 }], {
+          duration: 560,
+          easing: "ease",
+        }),
       );
     }
   }, [openId]);
@@ -825,35 +877,35 @@ const Masonry = ({
   useEffect(() => {
     if (!isOpen) return undefined;
     const previous = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = 'hidden';
-    boxRef.current?.querySelector('[data-box-close]')?.focus({ preventScroll: true });
+    document.documentElement.style.overflow = "hidden";
+    boxRef.current?.querySelector("[data-box-close]")?.focus({ preventScroll: true });
     const map = nodes.current;
     return () => {
       document.documentElement.style.overflow = previous;
-      map.get(lastShownRef.current)?.querySelector('[data-card]')?.focus({ preventScroll: true });
+      map.get(lastShownRef.current)?.querySelector("[data-card]")?.focus({ preventScroll: true });
     };
   }, [isOpen]);
 
   useEffect(() => {
     if (!openId) return undefined;
-    const onKey = event => {
-      if (event.key === 'Escape') closeBox();
-      else if (event.key === 'ArrowRight') stepBox(1);
-      else if (event.key === 'ArrowLeft') stepBox(-1);
+    const onKey = (event) => {
+      if (event.key === "Escape") closeBox();
+      else if (event.key === "ArrowRight") stepBox(1);
+      else if (event.key === "ArrowLeft") stepBox(-1);
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   });
 
-  const captionMode = CAPTION_MODES.includes(captions) ? captions : 'hover';
+  const captionMode = CAPTION_MODES.includes(captions) ? captions : "hover";
   const mode = settings.hoverEffect;
-  const box = openItem && typeof document !== 'undefined' ? frameFor(openItem) : null;
+  const box = openItem && typeof document !== "undefined" ? frameFor(openItem) : null;
 
   return (
     <div
       ref={rootRef}
-      className={[ROOT, className].filter(Boolean).join(' ')}
-      style={{ '--masonry-radius': `${Math.max(0, radius)}px`, ...style }}
+      className={[ROOT, className].filter(Boolean).join(" ")}
+      style={{ "--masonry-radius": `${Math.max(0, radius)}px`, ...style }}
       data-hover={mode}
       role="list"
     >
@@ -863,12 +915,12 @@ const Masonry = ({
         const label = item.title || item.alt || undefined;
         const shared = {
           className: CARD,
-          'data-card': '',
-          onClick: event => onCardClick(event, item, index),
-          onPointerDown: event => startDrag(event, id),
+          "data-card": "",
+          onClick: (event) => onCardClick(event, item, index),
+          onPointerDown: (event) => startDrag(event, id),
           onPointerEnter: () => onEnter(id),
           onPointerLeave: onLeave,
-          onPointerMove: onTilt
+          onPointerMove: onTilt,
         };
         const content = (
           <span className={MEDIA} data-media="">
@@ -876,19 +928,20 @@ const Masonry = ({
               <img
                 className={IMAGE}
                 src={item.img}
-                alt={item.alt ?? item.title ?? ''}
+                alt={item.alt ?? item.title ?? ""}
                 draggable={false}
                 loading="lazy"
                 decoding="async"
-                data-loaded={loaded.current.has(id) ? '' : undefined}
-                ref={image => {
-                  if (image?.complete && image.naturalWidth && !loaded.current.has(id)) markLoaded(id);
+                data-loaded={loaded.current.has(id) ? "" : undefined}
+                ref={(image) => {
+                  if (image?.complete && image.naturalWidth && !loaded.current.has(id))
+                    markLoaded(id);
                 }}
                 onLoad={() => markLoaded(id)}
                 onError={() => markLoaded(id)}
               />
             </span>
-            {captionMode !== 'none' && (item.title || item.description) && (
+            {captionMode !== "none" && (item.title || item.description) && (
               <span className={CAPTION} data-mode={captionMode}>
                 {item.title && <span className={TITLE}>{item.title}</span>}
                 {item.description && <span className={TEXT}>{item.description}</span>}
@@ -899,7 +952,7 @@ const Masonry = ({
         return (
           <div
             key={id}
-            ref={node => {
+            ref={(node) => {
               if (node) nodes.current.set(id, node);
               else nodes.current.delete(id);
             }}
@@ -909,11 +962,22 @@ const Masonry = ({
             role="listitem"
           >
             {!lightbox && item.url ? (
-              <a {...shared} href={item.url} target="_blank" rel="noopener noreferrer" draggable={false} aria-label={label}>
+              <a
+                {...shared}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                draggable={false}
+                aria-label={label}
+              >
                 {content}
               </a>
             ) : lightbox || onItemClick ? (
-              <button {...shared} type="button" aria-label={label ? `Open photograph: ${label}` : 'Open photograph'}>
+              <button
+                {...shared}
+                type="button"
+                aria-label={label ? `Open photograph: ${label}` : "Open photograph"}
+              >
                 {content}
               </button>
             ) : (
@@ -922,10 +986,10 @@ const Masonry = ({
           </div>
         );
       })}
-      {ghosts.map(ghost => (
+      {ghosts.map((ghost) => (
         <div
           key={`ghost-${ghost.id}`}
-          ref={node => {
+          ref={(node) => {
             if (node) ghostsRef.current.set(ghost.id, node);
             else ghostsRef.current.delete(ghost.id);
           }}
@@ -933,7 +997,7 @@ const Masonry = ({
           style={{
             width: ghost.w,
             height: ghost.h,
-            transform: `translate3d(${ghost.x}px, ${ghost.y}px, 0) scale(${ghost.s})`
+            transform: `translate3d(${ghost.x}px, ${ghost.y}px, 0) scale(${ghost.s})`,
           }}
           aria-hidden="true"
         >
@@ -945,19 +1009,35 @@ const Masonry = ({
       {openItem &&
         box &&
         createPortal(
-          <div ref={boxRef} className={BOX} role="dialog" aria-modal="true" aria-label={openItem.title || openItem.alt || 'Photograph'}>
+          <div
+            ref={boxRef}
+            className={BOX}
+            role="dialog"
+            aria-modal="true"
+            aria-label={openItem.title || openItem.alt || "Photograph"}
+          >
             <div className={BOX_BACKDROP} data-box-backdrop="" onClick={closeBox} />
             <img
               className={BOX_IMAGE}
               data-box-image=""
               src={openItem.img}
-              alt={openItem.alt ?? openItem.title ?? ''}
+              alt={openItem.alt ?? openItem.title ?? ""}
               draggable={false}
-              style={{ width: box.width, height: box.height, left: box.left, top: box.top, borderRadius: 6 }}
+              style={{
+                width: box.width,
+                height: box.height,
+                left: box.left,
+                top: box.top,
+                borderRadius: 6,
+              }}
               onClick={closeBox}
             />
             {box.room > 0 && (
-              <div className={BOX_CAPTION} data-box-fade="" style={{ top: box.top + box.height + 18 }}>
+              <div
+                className={BOX_CAPTION}
+                data-box-fade=""
+                style={{ top: box.top + box.height + 18 }}
+              >
                 {openItem.title && <span>{openItem.title}</span>}
                 {openItem.description && <span className={BOX_MUTED}>{openItem.description}</span>}
                 {openItem.url && (
@@ -968,21 +1048,40 @@ const Masonry = ({
                 )}
               </div>
             )}
-            <button type="button" className={BOX_CLOSE} data-box-fade="" data-box-close="" aria-label="Close" onClick={closeBox}>
+            <button
+              type="button"
+              className={BOX_CLOSE}
+              data-box-fade=""
+              data-box-close=""
+              aria-label="Close"
+              onClick={closeBox}
+            >
               <X size={20} strokeWidth={2} aria-hidden="true" />
             </button>
             {ordered.length > 1 && (
               <>
-                <button type="button" className={BOX_PREV} data-box-fade="" aria-label="Previous photograph" onClick={() => stepBox(-1)}>
+                <button
+                  type="button"
+                  className={BOX_PREV}
+                  data-box-fade=""
+                  aria-label="Previous photograph"
+                  onClick={() => stepBox(-1)}
+                >
                   <ArrowLeft size={20} strokeWidth={2} aria-hidden="true" />
                 </button>
-                <button type="button" className={BOX_NEXT} data-box-fade="" aria-label="Next photograph" onClick={() => stepBox(1)}>
+                <button
+                  type="button"
+                  className={BOX_NEXT}
+                  data-box-fade=""
+                  aria-label="Next photograph"
+                  onClick={() => stepBox(1)}
+                >
                   <ArrowRight size={20} strokeWidth={2} aria-hidden="true" />
                 </button>
               </>
             )}
           </div>,
-          document.body
+          document.body,
         )}
     </div>
   );

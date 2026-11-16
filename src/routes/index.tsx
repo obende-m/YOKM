@@ -1,15 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  BookOpen,
-  HandHeart,
-  Mail,
-  MapPin,
-  Pause,
-  Phone,
-  Play,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Pause, Play } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
 
@@ -38,13 +28,13 @@ export const Route = createFileRoute("/")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Yendel Ocha Kpeling Ministry (YOKM) — Awake Oh Ye Widows" },
+      { title: "Yendel Ocha Kpeling Ministry (YOKM) | Awake Oh Ye Widows" },
       {
         name: "description",
         content:
           "YOKM is a Christian ministry in Jos, Plateau State, Nigeria, reaching widows in all aspects of life and equipping them to discover purpose, develop their gifts and become independent.",
       },
-      { property: "og:title", content: "Yendel Ocha Kpeling Ministry — Awake Oh Ye Widows" },
+      { property: "og:title", content: "Yendel Ocha Kpeling Ministry | Awake Oh Ye Widows" },
       {
         property: "og:description",
         content:
@@ -54,8 +44,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Home,
 });
-
-const pad2 = (n: number) => String(n).padStart(2, "0");
 
 /* 1. Hero: a full-bleed slideshow of the ministry's own photographs. */
 function Hero() {
@@ -126,9 +114,6 @@ function Hero() {
       <div className="wrap relative pb-44 pt-36 md:pb-52 md:pt-44">
         <div className="max-w-3xl">
           <p className="pill enter-fade bg-paper/12 text-paper backdrop-blur-sm">
-            <span className="grid h-5 w-5 place-items-center rounded-full bg-sky text-wine-deep">
-              <MapPin aria-hidden className="h-3 w-3" strokeWidth={2.4} />
-            </span>
             {ORG.shortLocation}
           </p>
           <SplitText
@@ -175,11 +160,8 @@ function Hero() {
                   />
                 ))}
               </span>
-              <span className="text-sm leading-tight text-paper/85">
-                <span className="block font-serif text-xl text-paper">{media.length}</span>
-                <span className="group-hover:underline">
-                  photographs from the ministry&rsquo;s work
-                </span>
+              <span className="text-[0.95rem] leading-snug text-paper/90 group-hover:underline">
+                Photographs from the ministry&rsquo;s work
               </span>
             </Link>
           )}
@@ -277,7 +259,7 @@ function Doors() {
   return (
     <section className="relative z-10 bg-paper">
       <div className="wrap">
-        <div className="-mt-24 grid gap-4 md:-mt-32 md:grid-cols-3 md:gap-5">
+        <div className="grid gap-4 pt-12 md:grid-cols-3 md:gap-5 md:pt-16">
           {doors.map((d, i) => (
             <Rise key={d.to} delay={i * 0.08}>
               <Link
@@ -331,17 +313,12 @@ function About() {
             <p className="mt-6 text-[1.05rem] leading-relaxed text-ink/72">{ORG.positioning}</p>
             <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {[
-                { icon: MapPin, k: "Based in", v: ORG.shortLocation },
-                { icon: BookOpen, k: "Registered", v: "Incorporated Trustee, March 2015" },
-              ].map(({ icon: Icon, k, v }) => (
-                <li key={k} className="flex gap-4 rounded-2xl bg-blush/70 p-4">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-wine text-paper">
-                    <Icon aria-hidden className="h-[18px] w-[18px]" strokeWidth={1.8} />
-                  </span>
-                  <span>
-                    <span className="eyebrow block text-plum">{k}</span>
-                    <span className="mt-1 block text-[0.95rem] leading-snug">{v}</span>
-                  </span>
+                { k: "Based in", v: ORG.shortLocation },
+                { k: "Registered", v: "Incorporated Trustee, March 2015" },
+              ].map(({ k, v }) => (
+                <li key={k} className="rounded-2xl border-l-4 border-plum bg-blush/70 p-4 pl-5">
+                  <span className="eyebrow block text-plum">{k}</span>
+                  <span className="mt-1 block text-[0.95rem] leading-snug">{v}</span>
                 </li>
               ))}
             </ul>
@@ -382,7 +359,6 @@ function About() {
 function Vision() {
   const vision = usePageItems("vision");
   if (vision.length === 0) return null;
-  const icons = [Sparkles, HandHeart, BookOpen];
   return (
     <section className="section-pad bg-blush">
       <div className="wrap">
@@ -392,21 +368,12 @@ function Vision() {
           action={{ to: "/about", hash: "vision", label: "Read the vision" }}
         />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {vision.map((v, i) => {
-            const Icon = icons[i % icons.length]!;
-            return (
-              <Rise key={v.id} delay={i * 0.08} className="card p-8 md:p-9">
-                <div className="flex items-center justify-between">
-                  <span className="grid h-12 w-12 place-items-center rounded-2xl bg-wine text-paper">
-                    <Icon aria-hidden className="h-5 w-5" strokeWidth={1.7} />
-                  </span>
-                  <span className="numeral text-5xl text-plum/30">{pad2(i + 1)}</span>
-                </div>
-                <h3 className="h-sub mt-8">{v.label}</h3>
-                <p className="mt-3 leading-relaxed text-ink/70">{v.body}</p>
-              </Rise>
-            );
-          })}
+          {vision.map((v, i) => (
+            <Rise key={v.id} delay={i * 0.08} className="card border-t-4 border-plum p-8 md:p-9">
+              <h3 className="h-sub">{v.label}</h3>
+              <p className="mt-3 leading-relaxed text-ink/70">{v.body}</p>
+            </Rise>
+          ))}
         </div>
       </div>
     </section>
@@ -433,16 +400,14 @@ function Mission() {
               as="li"
               key={m.id}
               delay={(i % 5) * 0.06}
-              className="card card-dark flex flex-col p-6"
+              className="card card-sky flex flex-col p-6"
             >
-              <span className="numeral text-4xl text-sky">{pad2(i + 1)}</span>
+              <span aria-hidden className="block h-1 w-8 rounded-full bg-sky" />
               <h3 className="mt-5 font-serif text-[1.25rem] font-medium leading-tight">
                 {m.label}
               </h3>
               <p className="mt-2 flex-1 text-[0.92rem] leading-relaxed text-paper/72">{m.body}</p>
-              {m.scripture && (
-                <p className="eyebrow mt-5 text-[0.65rem] text-rose">{m.scripture}</p>
-              )}
+              {m.scripture && <p className="eyebrow mt-5 text-[0.65rem] text-sky">{m.scripture}</p>}
             </Rise>
           ))}
         </ol>
@@ -479,7 +444,6 @@ function Work() {
               to="/our-work"
               hash={`area-${i + 1}`}
               photo={photos[i % photos.length]!}
-              badge={pad2(i + 1)}
               title={a.label}
               text={a.body}
               meta={a.scripture}
@@ -643,13 +607,7 @@ function Latest() {
                 },
               ].map((c, i) => (
                 <Rise key={c.to} delay={i * 0.08} className="h-full">
-                  <Link
-                    to={c.to as "/"}
-                    className="card group h-full !flex-row items-start gap-6 p-7"
-                  >
-                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-blush text-wine">
-                      <BookOpen aria-hidden className="h-6 w-6" strokeWidth={1.6} />
-                    </span>
+                  <Link to={c.to as "/"} className="card group h-full border-t-4 border-plum p-7">
                     <span>
                       <span className="h-sub block">{c.title}</span>
                       <span className="mt-2 block text-ink/70">{c.text}</span>
@@ -751,22 +709,15 @@ function GiveAndContact() {
           <p className="pill self-start bg-plum/10 text-plum">Contact</p>
           <h2 className="h-section mt-5">Visit or write to us</h2>
           <dl className="mt-8 space-y-5">
-            <div className="flex gap-4">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-blush text-wine">
-                <MapPin aria-hidden className="h-5 w-5" strokeWidth={1.7} />
-              </span>
+            <div className="border-b border-ink/10 pb-5">
               <div>
                 <dt className="eyebrow text-plum">Office</dt>
                 <dd className="mt-1 whitespace-pre-line leading-relaxed">{t("contact_address")}</dd>
               </div>
             </div>
             {channels.map((c) => {
-              const Icon = c.label === "Email" ? Mail : Phone;
               return (
-                <div key={c.label} className="flex gap-4">
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-blush text-wine">
-                    <Icon aria-hidden className="h-5 w-5" strokeWidth={1.7} />
-                  </span>
+                <div key={c.label} className="border-b border-ink/10 pb-5 last:border-0">
                   <div>
                     <dt className="eyebrow text-plum">{c.label}</dt>
                     <dd className="mt-1">

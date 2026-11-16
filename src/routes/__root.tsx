@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#6a1b45" },
-      { title: "Yendel Ocha Kpeling Ministry (YOKM) — Awake Oh Ye Widows" },
+      { title: "Yendel Ocha Kpeling Ministry (YOKM) | Awake Oh Ye Widows" },
       {
         name: "description",
         content:
@@ -95,7 +95,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:description",
         content:
-          "Awake Oh Ye Widows — a Christian ministry in Jos, Nigeria, equipping widows to discover purpose and become independent.",
+          "Awake Oh Ye Widows. A Christian ministry in Jos, Nigeria, equipping widows to discover purpose and become independent.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -153,18 +153,7 @@ function RootComponent() {
         {!isAdmin && <Header />}
         <main id="main" tabIndex={-1} className="outline-none">
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          {isAdmin ? (
-            <Outlet />
-          ) : (
-            <motion.div
-              key={pathname}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <Outlet />
-            </motion.div>
-          )}
+          <Outlet />
         </main>
         {!isAdmin && <Footer />}
         <Toaster richColors position="top-center" />

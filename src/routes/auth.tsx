@@ -10,12 +10,12 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Admin sign in — YOKM" },
+      { title: "Admin sign in | YOKM" },
       {
         name: "description",
         content: "Private sign in for Yendel Ocha Kpeling Ministry website administrators.",
       },
-      { property: "og:title", content: "Admin sign in — YOKM" },
+      { property: "og:title", content: "Admin sign in | YOKM" },
       { property: "og:description", content: "Private sign in for YOKM website administrators." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

@@ -8,12 +8,12 @@ export const Route = createFileRoute("/privacy")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Privacy Policy — Yendel Ocha Kpeling Ministry" },
+      { title: "Privacy Policy | Yendel Ocha Kpeling Ministry" },
       {
         name: "description",
         content: "Privacy policy for the Yendel Ocha Kpeling Ministry website.",
       },
-      { property: "og:title", content: "Privacy Policy — Yendel Ocha Kpeling Ministry" },
+      { property: "og:title", content: "Privacy Policy | Yendel Ocha Kpeling Ministry" },
       {
         property: "og:description",
         content: "Privacy policy for the YOKM website.",

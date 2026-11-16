@@ -437,7 +437,7 @@ function FieldInput({
           value={value ?? ""}
           onChange={(e) => onChange(e.target.value)}
         >
-          <option value="">—</option>
+          <option value="">None</option>
           {options.map((o) => (
             <option key={o} value={o}>
               {o}

@@ -16,8 +16,15 @@ export function Footer() {
       <div className="wrap pt-16 md:pt-20">
         <div className="grid gap-12 pb-14 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-4">
-            <Link to="/" className="inline-flex items-center gap-4" aria-label="Home">
-              <img src={logo} alt="" width={56} height={56} loading="lazy" className="h-14 w-14" />
+            <Link to="/" className="group inline-flex items-center gap-4" aria-label="Home">
+              <img
+                src={logo}
+                alt=""
+                width={56}
+                height={56}
+                loading="lazy"
+                className="logo-spin h-14 w-14"
+              />
               <span className="font-serif text-2xl tracking-[0.04em]">{ORG.abbr}</span>
             </Link>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-paper/65">

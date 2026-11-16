@@ -20,13 +20,13 @@ export const Route = createFileRoute("/our-work")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Our Work — Yendel Ocha Kpeling Ministry" },
+      { title: "Our Work | Yendel Ocha Kpeling Ministry" },
       {
         name: "description",
         content:
           "Areas of YOKM's work with widows in Jos, Nigeria: spiritual growth, independence, skills and talents, resource management, community support, and family, church and society.",
       },
-      { property: "og:title", content: "Our Work — Yendel Ocha Kpeling Ministry" },
+      { property: "og:title", content: "Our Work | Yendel Ocha Kpeling Ministry" },
       {
         property: "og:description",
         content:
@@ -36,8 +36,6 @@ export const Route = createFileRoute("/our-work")({
   }),
   component: OurWork,
 });
-
-const pad2 = (n: number) => String(n).padStart(2, "0");
 
 function OurWork() {
   const t = useSiteText();
@@ -114,8 +112,7 @@ function Areas() {
                   }`}
                 />
                 <div className="p-8 md:p-12">
-                  <span className="pill bg-wine text-paper">Area {pad2(i + 1)}</span>
-                  <h2 className="h-section mt-5">{a.label}</h2>
+                  <h2 className="h-section">{a.label}</h2>
                   <p className="mt-4 text-[1.05rem] leading-relaxed text-ink/72">{a.body}</p>
                   {a.scripture && (
                     <p className="eyebrow mt-6 flex items-center gap-3 text-plum">

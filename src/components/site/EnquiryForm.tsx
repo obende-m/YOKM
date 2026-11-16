@@ -16,7 +16,7 @@ export function EnquiryForm({
   fields,
   messageLabel = "Message",
   submitLabel = "Send",
-  successText = "Thank you — your message has been received by the ministry.",
+  successText = "Thank you. Your message has been received by the ministry.",
   variant = "solid",
 }: {
   kind: SubmissionInput["kind"];

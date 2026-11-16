@@ -8,12 +8,12 @@ export const Route = createFileRoute("/terms")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Terms of Use — Yendel Ocha Kpeling Ministry" },
+      { title: "Terms of Use | Yendel Ocha Kpeling Ministry" },
       {
         name: "description",
         content: "Terms of use for the Yendel Ocha Kpeling Ministry website.",
       },
-      { property: "og:title", content: "Terms of Use — Yendel Ocha Kpeling Ministry" },
+      { property: "og:title", content: "Terms of Use | Yendel Ocha Kpeling Ministry" },
       {
         property: "og:description",
         content: "Terms of use for the YOKM website.",

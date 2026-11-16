@@ -30,7 +30,7 @@ export const Route = createFileRoute("/post/$slug")({
     return post;
   },
   head: ({ loaderData: p }) => {
-    const title = p ? `${p.seo_title || p.title} — YOKM` : "YOKM";
+    const title = p ? `${p.seo_title || p.title} | YOKM` : "YOKM";
     const desc = p ? p.seo_description || p.excerpt || "From Yendel Ocha Kpeling Ministry." : "";
     return {
       meta: [

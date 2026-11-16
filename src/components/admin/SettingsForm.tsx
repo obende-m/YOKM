@@ -68,7 +68,7 @@ export function SettingsForm({
     setSaving(false);
     if (error) return void toast.error(error.message);
     setDirty(false);
-    toast.success("Saved — the website is updated");
+    toast.success("Saved. The website is updated");
     qc.invalidateQueries({ queryKey: ["site_settings"] });
     qc.invalidateQueries({ queryKey: ["admin-settings"] });
   }
@@ -121,7 +121,7 @@ export function SettingsForm({
                     {f.help && <p className="text-xs text-muted-foreground">{f.help}</p>}
                     {f.default && !(vals[f.key] ?? "").trim() && (
                       <p className="text-xs text-muted-foreground">
-                        Empty — the website shows the standard wording shown in grey.
+                        Empty: the website shows the standard wording shown in grey.
                       </p>
                     )}
                   </div>

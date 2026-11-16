@@ -17,13 +17,13 @@ export const Route = createFileRoute("/gallery")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Gallery — Yendel Ocha Kpeling Ministry" },
+      { title: "Gallery | Yendel Ocha Kpeling Ministry" },
       {
         name: "description",
         content:
           "Photographs from the work of Yendel Ocha Kpeling Ministry among widows in Jos, Plateau State, Nigeria.",
       },
-      { property: "og:title", content: "Gallery — Yendel Ocha Kpeling Ministry" },
+      { property: "og:title", content: "Gallery | Yendel Ocha Kpeling Ministry" },
       {
         property: "og:description",
         content: "Photographs from YOKM's work among widows in Jos, Nigeria.",

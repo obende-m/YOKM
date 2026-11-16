@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Rise } from "@/components/motion";
@@ -70,8 +70,8 @@ export function PostGrid({
                 {p.cover_url ? (
                   <img src={p.cover_url} alt="" loading="lazy" className="absolute inset-0" />
                 ) : (
-                  <span className="absolute inset-0 grid place-items-center text-wine/40">
-                    <BookOpen aria-hidden className="h-10 w-10" strokeWidth={1.3} />
+                  <span className="absolute inset-0 grid place-items-center font-serif text-2xl text-wine/35">
+                    YOKM
                   </span>
                 )}
               </div>

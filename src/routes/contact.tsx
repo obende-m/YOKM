@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { Rise } from "@/components/motion";
 import { PageBanner } from "@/components/site/Blocks";
@@ -13,7 +12,7 @@ export const Route = createFileRoute("/contact")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Contact — Yendel Ocha Kpeling Ministry" },
+      { title: "Contact | Yendel Ocha Kpeling Ministry" },
       {
         name: "description",
         content:
@@ -28,8 +27,6 @@ export const Route = createFileRoute("/contact")({
   }),
   component: Contact,
 });
-
-const ICONS: Record<string, typeof Mail> = { Email: Mail, Phone: Phone, WhatsApp: MessageCircle };
 
 function Contact() {
   const { data: settings = {} } = useSettings();
@@ -50,16 +47,13 @@ function Contact() {
         <div className="wrap">
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             <Rise className="card p-7">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-wine text-paper">
-                <MapPin aria-hidden className="h-5 w-5" strokeWidth={1.7} />
-              </span>
+              <span aria-hidden className="block h-1 w-10 rounded-full bg-plum" />
               <p className="eyebrow mt-6 text-plum">Office</p>
               <address className="mt-2 whitespace-pre-line not-italic leading-relaxed">
                 {t("contact_address")}
               </address>
             </Rise>
             {channels.map((c, i) => {
-              const Icon = ICONS[c.label] ?? Mail;
               return (
                 <Rise key={c.label} delay={(i + 1) * 0.06}>
                   <a
@@ -69,9 +63,7 @@ function Contact() {
                       ? { target: "_blank", rel: "noopener noreferrer" }
                       : {})}
                   >
-                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-wine text-paper transition-colors group-hover:bg-sky-deep">
-                      <Icon aria-hidden className="h-5 w-5" strokeWidth={1.7} />
-                    </span>
+                    <span aria-hidden className="block h-1 w-10 rounded-full bg-plum" />
                     <p className="eyebrow mt-6 text-plum">{c.label}</p>
                     <p className="mt-2 break-words leading-relaxed group-hover:text-wine">
                       {c.value}

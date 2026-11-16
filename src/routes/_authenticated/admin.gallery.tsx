@@ -258,7 +258,7 @@ function GalleryAdmin() {
           <div className="min-w-0 flex-1">
             <p className="font-medium">{currentAlbum.title}</p>
             <p className="text-xs text-muted-foreground">
-              {currentAlbum.published ? "Published album" : "Draft album — hidden on the website"}
+              {currentAlbum.published ? "Published album" : "Draft album, hidden on the website"}
               {currentAlbum.album_date ? ` · ${currentAlbum.album_date}` : ""}
             </p>
           </div>
@@ -275,7 +275,7 @@ function GalleryAdmin() {
         <p className="mt-8 text-sm text-muted-foreground">Loading…</p>
       ) : shown.length === 0 ? (
         <div className="mt-8 border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
-          No photographs here yet. Use “Add photos” — you can select several at once.
+          No photographs here yet. Use “Add photos”. You can select several at once.
         </div>
       ) : (
         <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -375,10 +375,10 @@ function PhotoCard({
           type="button"
           onClick={() => onPatch({ featured: !p.featured }, false)}
           aria-label={p.featured ? "Remove from featured" : "Feature this photograph"}
-          title={p.featured ? "Featured — click to remove" : "Feature this photograph"}
+          title={p.featured ? "Featured. Click to remove" : "Feature this photograph"}
           className={`absolute right-2 top-2 rounded-full px-2.5 py-1 text-sm shadow ${p.featured ? "bg-accent text-accent-foreground" : "bg-background/90 text-muted-foreground"}`}
         >
-          {p.featured ? "★ Featured" : "☆"}
+          {p.featured ? "Featured" : "Feature"}
         </button>
         {isCover && (
           <span className="absolute left-2 top-2 rounded bg-background/90 px-2 py-0.5 text-xs">

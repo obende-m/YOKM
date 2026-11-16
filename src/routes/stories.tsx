@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FileCheck2, MessageCircleHeart, PenLine } from "lucide-react";
 
 import { Rise } from "@/components/motion";
 import { PageBanner, SectionHead } from "@/components/site/Blocks";
@@ -14,13 +13,13 @@ export const Route = createFileRoute("/stories")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Stories — Yendel Ocha Kpeling Ministry" },
+      { title: "Stories | Yendel Ocha Kpeling Ministry" },
       {
         name: "description",
         content:
           "Stories from the widows, volunteers and community members connected with Yendel Ocha Kpeling Ministry in Jos, Plateau State, Nigeria.",
       },
-      { property: "og:title", content: "Stories — Yendel Ocha Kpeling Ministry" },
+      { property: "og:title", content: "Stories | Yendel Ocha Kpeling Ministry" },
       {
         property: "og:description",
         content: "Accounts shared by the widows and community YOKM serves in Jos, Nigeria.",
@@ -70,25 +69,20 @@ function Stories() {
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {[
               {
-                icon: MessageCircleHeart,
                 k: "Shared by choice",
                 v: "Stories appear only when the person chooses to share them.",
               },
               {
-                icon: PenLine,
                 k: "In her own words",
                 v: "Nothing here is written on anyone’s behalf.",
               },
               {
-                icon: FileCheck2,
                 k: "Consent on record",
                 v: "A story cannot be published without recorded consent.",
               },
-            ].map(({ icon: Icon, k, v }, i) => (
+            ].map(({ k, v }, i) => (
               <Rise key={k} delay={i * 0.08} className="card p-8 text-center">
-                <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-wine text-paper">
-                  <Icon aria-hidden className="h-6 w-6" strokeWidth={1.6} />
-                </span>
+                <span aria-hidden className="mx-auto block h-1 w-10 rounded-full bg-plum" />
                 <h3 className="h-sub mt-6">{k}</h3>
                 <p className="mt-3 leading-relaxed text-ink/70">{v}</p>
               </Rise>

@@ -51,7 +51,7 @@ export const SETTING_FIELDS: SettingField[] = [
     label: "Bank details",
     group: "Giving",
     multiline: true,
-    help: "Account name, bank and account number — one per line.",
+    help: "Account name, bank and account number, one per line.",
   },
   { key: "donation_instructions", label: "Giving instructions", group: "Giving", multiline: true },
   {
@@ -86,7 +86,7 @@ export const PAGE_TEXT_FIELDS: SettingField[] = [
     group: "Home page",
     multiline: true,
     default:
-      "A Christian ministry in Jos, Plateau State, reaching widows in every aspect of life — so that they discover God’s purpose, develop their gifts and stand independent.",
+      "A Christian ministry in Jos, Plateau State, reaching widows in every aspect of life, so that they discover God’s purpose, develop their gifts and stand independent.",
   },
   {
     key: "home_heart_tagline",
@@ -134,7 +134,7 @@ export const PAGE_TEXT_FIELDS: SettingField[] = [
     group: "Home page",
     multiline: true,
     default:
-      "Giving to YOKM is participation in the mission — standing with widows as they grow in faith, discover their gifts and become independent.",
+      "Giving to YOKM is participation in the mission: standing with widows as they grow in faith, discover their gifts and become independent.",
   },
 
   { key: "about_image", label: "Photograph", group: "About page", image: true },
@@ -151,7 +151,7 @@ export const PAGE_TEXT_FIELDS: SettingField[] = [
     group: "About page",
     multiline: true,
     default:
-      "YOKM exists for widows — reaching them in all aspects of life, presenting the Gospel of Jesus, and building them into pillars at home, in the Church and in society.",
+      "YOKM exists for widows, reaching them in all aspects of life, presenting the Gospel of Jesus, and building them into pillars at home, in the Church and in society.",
   },
   { key: "leader_photo", label: "Visioner photograph", group: "About page", image: true },
   {
@@ -183,7 +183,7 @@ export const PAGE_TEXT_FIELDS: SettingField[] = [
     group: "Other pages",
     multiline: true,
     default:
-      "Give, volunteer, partner, pray or share — every kind of help strengthens the work among widows in Jos.",
+      "Give, volunteer, partner, pray or share. Every kind of help strengthens the work among widows in Jos.",
   },
   {
     key: "donate_intro",
@@ -191,7 +191,7 @@ export const PAGE_TEXT_FIELDS: SettingField[] = [
     group: "Other pages",
     multiline: true,
     default:
-      "Giving to YOKM is participation in the mission — standing with widows as they grow in faith, discover their gifts and become independent.",
+      "Giving to YOKM is participation in the mission: standing with widows as they grow in faith, discover their gifts and become independent.",
   },
   {
     key: "stories_intro",

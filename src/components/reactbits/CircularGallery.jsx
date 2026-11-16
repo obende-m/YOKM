@@ -1,22 +1,22 @@
 // CircularGallery from React Bits (reactbits.dev), MIT licence. Adapted: no sample
 // images, and no default web-font download (the site's own fonts are already loaded).
-import { useEffect, useRef, useState } from 'react';
-import './CircularGallery.css';
+import { useEffect, useRef, useState } from "react";
+import "./CircularGallery.css";
 
-const DEFAULT_FONT = 'bold 30px sans-serif';
+const DEFAULT_FONT = "bold 30px sans-serif";
 const SEGMENTS_X = 32;
 const SEGMENTS_Y = 24;
 const INTRO_SECONDS = 1.4;
 const WORLD_HEIGHT = 16.57;
 const CLASSES = {
-  root: 'circular-gallery',
-  canvas: 'circular-gallery-canvas',
-  labels: 'circular-gallery-labels',
-  label: 'circular-gallery-label',
-  caption: 'circular-gallery-caption',
-  captionText: 'circular-gallery-caption-text',
-  close: 'circular-gallery-close',
-  hidden: 'circular-gallery-hidden'
+  root: "circular-gallery",
+  canvas: "circular-gallery-canvas",
+  labels: "circular-gallery-labels",
+  label: "circular-gallery-label",
+  caption: "circular-gallery-caption",
+  captionText: "circular-gallery-caption-text",
+  close: "circular-gallery-close",
+  hidden: "circular-gallery-hidden",
 };
 const STEPS = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
 
@@ -110,10 +110,10 @@ void main() {
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const mix = (a, b, t) => a + (b - a) * t;
-const ease = value => value * value * (3 - 2 * value);
+const ease = (value) => value * value * (3 - 2 * value);
 const wrap = (value, length) => ((value % length) + length) % length;
 
-const fontScale = font => {
+const fontScale = (font) => {
   const match = String(font).match(/(\d+(?:\.\d+)?)px/);
   return match ? parseFloat(match[1]) / 30 : 1;
 };
@@ -128,14 +128,14 @@ const compile = (gl, type, source) => {
   return null;
 };
 
-const link = gl => {
+const link = (gl) => {
   const vertex = compile(gl, gl.VERTEX_SHADER, VERTEX);
   const fragment = compile(gl, gl.FRAGMENT_SHADER, FRAGMENT);
   const program = gl.createProgram();
   if (!vertex || !fragment || !program) return null;
   gl.attachShader(program, vertex);
   gl.attachShader(program, fragment);
-  gl.bindAttribLocation(program, 0, 'aPosition');
+  gl.bindAttribLocation(program, 0, "aPosition");
   gl.linkProgram(program);
   gl.deleteShader(vertex);
   gl.deleteShader(fragment);
@@ -155,7 +155,7 @@ const link = gl => {
 const CircularGallery = ({
   items,
   bend = 3,
-  textColor = '#ffffff',
+  textColor = "#ffffff",
   borderRadius = 0.05,
   font = DEFAULT_FONT,
   scrollSpeed = 2,
@@ -175,7 +175,7 @@ const CircularGallery = ({
   onItemClick,
   onActiveChange,
   dpr,
-  className = '',
+  className = "",
   style,
   ...rest
 }) => {
@@ -210,7 +210,7 @@ const CircularGallery = ({
     intro,
     onItemClick,
     onActiveChange,
-    dpr
+    dpr,
   };
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -225,14 +225,22 @@ const CircularGallery = ({
     const canvas = canvasRef.current;
     const labelLayer = labelsRef.current;
     const caption = captionRef.current;
-    const gl = canvas?.getContext('webgl2', {
+    const gl = canvas?.getContext("webgl2", {
       alpha: true,
       premultipliedAlpha: true,
       antialias: false,
       depth: false,
-      stencil: false
+      stencil: false,
     });
-    if (!container || !canvas || !labelLayer || !caption || !gl || !settingsRef.current.items.length) return undefined;
+    if (
+      !container ||
+      !canvas ||
+      !labelLayer ||
+      !caption ||
+      !gl ||
+      !settingsRef.current.items.length
+    )
+      return undefined;
 
     const program = link(gl);
     if (!program) return undefined;
@@ -240,7 +248,8 @@ const CircularGallery = ({
 
     const vertices = [];
     for (let y = 0; y <= SEGMENTS_Y; y++) {
-      for (let x = 0; x <= SEGMENTS_X; x++) vertices.push(x / SEGMENTS_X - 0.5, y / SEGMENTS_Y - 0.5);
+      for (let x = 0; x <= SEGMENTS_X; x++)
+        vertices.push(x / SEGMENTS_X - 0.5, y / SEGMENTS_Y - 0.5);
     }
     const indices = [];
     for (let y = 0; y < SEGMENTS_Y; y++) {
@@ -263,20 +272,30 @@ const CircularGallery = ({
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-    const anisotropy = gl.getExtension('EXT_texture_filter_anisotropic');
+    const anisotropy = gl.getExtension("EXT_texture_filter_anisotropic");
     const blank = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, blank);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 0]));
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      1,
+      1,
+      0,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      new Uint8Array([0, 0, 0, 0]),
+    );
 
-    const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    const probe = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
     const colorCache = new Map();
-    const parse = value => {
+    const parse = (value) => {
       const key = String(value);
       if (colorCache.has(key)) return colorCache.get(key);
       let rgb = [1, 1, 1];
       if (probe) {
         probe.clearRect(0, 0, 1, 1);
-        probe.fillStyle = '#ffffff';
+        probe.fillStyle = "#ffffff";
         probe.fillStyle = key;
         probe.fillRect(0, 0, 1, 1);
         const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
@@ -286,7 +305,7 @@ const CircularGallery = ({
       return rgb;
     };
 
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     const textures = new Map();
     const view = { width: 1, height: 1, ratio: 1 };
     const state = {
@@ -305,7 +324,7 @@ const CircularGallery = ({
       drag: null,
       lastInput: 0,
       active: 0,
-      spacing: 1
+      spacing: 1,
     };
     let cards = [];
     let pool = [];
@@ -316,14 +335,14 @@ const CircularGallery = ({
     let lastItems = null;
     let typing = false;
 
-    const textureFor = url => {
+    const textureFor = (url) => {
       const existing = textures.get(url);
       if (existing) return existing;
       const entry = { texture: null, aspect: 1, ready: 0, loaded: false };
       textures.set(url, entry);
       const image = new Image();
-      image.crossOrigin = 'anonymous';
-      image.decoding = 'async';
+      image.crossOrigin = "anonymous";
+      image.decoding = "async";
       image.onload = () => {
         if (!textures.has(url)) return;
         const texture = gl.createTexture();
@@ -349,8 +368,8 @@ const CircularGallery = ({
       return entry;
     };
 
-    const prune = items => {
-      const keep = new Set(items.map(item => item.image));
+    const prune = (items) => {
+      const keep = new Set(items.map((item) => item.image));
       textures.forEach((entry, url) => {
         if (keep.has(url)) return;
         if (entry.texture) gl.deleteTexture(entry.texture);
@@ -366,7 +385,7 @@ const CircularGallery = ({
       return { w: width * scale, h: height * scale, spacing: width * scale * (1 + s.gap) };
     };
 
-    const arcOf = x => {
+    const arcOf = (x) => {
       const s = settingsRef.current;
       if (!s.bend) return { y: 0, angle: 0 };
       const depth = (Math.abs(s.bend) * view.height) / WORLD_HEIGHT;
@@ -380,16 +399,16 @@ const CircularGallery = ({
 
     const captionSize = () => clamp(view.height * 0.045, 15, 22);
 
-    const ensurePool = spacing => {
+    const ensurePool = (spacing) => {
       const size = Math.ceil(view.width / Math.max(spacing, 1)) + 8;
       if (pool.length === size) return;
       labelLayer.replaceChildren();
       pool = Array.from({ length: size }, () => {
-        const el = document.createElement('span');
+        const el = document.createElement("span");
         el.className = CLASSES.label;
-        el.style.opacity = '0';
+        el.style.opacity = "0";
         labelLayer.appendChild(el);
-        return { el, slot: null, font: '', text: '' };
+        return { el, slot: null, font: "", text: "" };
       });
     };
 
@@ -403,11 +422,14 @@ const CircularGallery = ({
       const scroll = state.scroll + (1 - introEase) * spacing * 1.6;
       const margin = Math.max(20, Math.min(view.width, view.height) * 0.06);
       const baseLabel = h * 0.072 * fontScale(fontRef.current);
-      const openFrame = item => {
+      const openFrame = (item) => {
         const aspect = textureFor(item.image).aspect || w / h;
         const titleSpace = item.text && s.showTitles ? captionSize() * 2.4 : 0;
         const captionSpace = titleSpace + (item.description ? 52 : 0);
-        const width = Math.min(view.width - margin * 2, (view.height - margin * 2 - captionSpace) * aspect);
+        const width = Math.min(
+          view.width - margin * 2,
+          (view.height - margin * 2 - captionSpace) * aspect,
+        );
         return { width, height: width / aspect, y: captionSpace / 2, titleSpace };
       };
       const activeFrame = openFrame(items[wrap(state.active, count)]);
@@ -443,11 +465,13 @@ const CircularGallery = ({
           radius: s.borderRadius * Math.min(w, h),
           alpha: shown * mix(1, 0.12, state.open * (1 - focus)),
           dim: state.open * (1 - focus) * 0.4,
-          gray: s.grayscale ? 1 - Math.max(hover, focus, slot === state.active ? state.ring : 0) : 0,
+          gray: s.grayscale
+            ? 1 - Math.max(hover, focus, slot === state.active ? state.ring : 0)
+            : 0,
           focus,
           labelAlpha: mix(1 - state.open, 1, focus),
           labelSize: mix(baseLabel, captionSize(), focus),
-          frame
+          frame,
         };
         if (!lead || focus > lead.focus) lead = card;
         next.push(card);
@@ -458,7 +482,7 @@ const CircularGallery = ({
       return { w, h, spacing, openH: frame.height, openY: frame.y, titleSpace: frame.titleSpace };
     };
 
-    const draw = metrics => {
+    const draw = (metrics) => {
       const s = settingsRef.current;
       const ratio = view.ratio;
       const speed = Math.min(Math.abs(state.velocity) / Math.max(metrics.spacing * 4, 1), 1);
@@ -482,7 +506,7 @@ const CircularGallery = ({
       gl.uniform1i(u.uTexture, 0);
       const count = SEGMENTS_X * SEGMENTS_Y * 6;
       const blur = Math.max(10, metrics.h * 0.09) * ratio;
-      const place = card => {
+      const place = (card) => {
         gl.uniform2f(u.uCenter, card.x * ratio, card.y * ratio);
         gl.uniform2f(u.uSize, card.w * ratio, card.h * ratio);
         gl.uniform1f(u.uAngle, card.angle);
@@ -496,14 +520,14 @@ const CircularGallery = ({
         gl.uniform2f(u.uShadowOffset, 0, -blur * 0.45);
         gl.uniform1f(u.uPad, blur * 1.6);
         gl.bindTexture(gl.TEXTURE_2D, blank);
-        cards.forEach(card => {
+        cards.forEach((card) => {
           place(card);
           gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);
         });
       }
       gl.uniform1f(u.uShadow, 0);
       gl.uniform1f(u.uPad, 10 * ratio);
-      cards.forEach(card => {
+      cards.forEach((card) => {
         place(card);
         const entry = card.entry;
         gl.bindTexture(gl.TEXTURE_2D, entry.texture || blank);
@@ -516,18 +540,18 @@ const CircularGallery = ({
       });
     };
 
-    const placeLabels = metrics => {
+    const placeLabels = (metrics) => {
       const s = settingsRef.current;
       ensurePool(metrics.spacing);
       const used = new Set();
       const font = fontRef.current;
-      const fade = value => {
+      const fade = (value) => {
         if (s.fadeEdges <= 0) return 1;
         const t = clamp(value / s.fadeEdges, 0, 1);
         return t * t * t * (t * (t * 6 - 15) + 10);
       };
       if (s.showTitles) {
-        cards.forEach(card => {
+        cards.forEach((card) => {
           if (!card.item.text) return;
           const entry = pool[wrap(card.slot, pool.length)];
           used.add(entry);
@@ -553,9 +577,9 @@ const CircularGallery = ({
           entry.el.style.opacity = String(card.alpha * card.labelAlpha * mix(edge, 1, card.focus));
         });
       }
-      pool.forEach(entry => {
+      pool.forEach((entry) => {
         if (used.has(entry)) return;
-        if (entry.el.style.opacity !== '0') entry.el.style.opacity = '0';
+        if (entry.el.style.opacity !== "0") entry.el.style.opacity = "0";
       });
       const top = view.height / 2 - (metrics.openY - metrics.openH / 2) + metrics.titleSpace + 4;
       caption.style.transform = `translate(-50%, ${top}px)`;
@@ -564,7 +588,7 @@ const CircularGallery = ({
       if (caption.dataset.font !== font) {
         caption.dataset.font = font;
         caption.style.font = font;
-        caption.style.fontWeight = '400';
+        caption.style.fontWeight = "400";
       }
       caption.style.fontSize = `${captionSize() * 0.8}px`;
     };
@@ -583,7 +607,7 @@ const CircularGallery = ({
       wake();
     };
 
-    const openSlot = slot => {
+    const openSlot = (slot) => {
       setSlot(slot);
       state.openTarget = 1;
       setOpen(true);
@@ -598,7 +622,7 @@ const CircularGallery = ({
 
     let resizePending = false;
 
-    const frame = now => {
+    const frame = (now) => {
       raf = 0;
       if (resizePending) {
         resizePending = false;
@@ -611,11 +635,17 @@ const CircularGallery = ({
       if (s.items !== lastItems) {
         lastItems = s.items;
         prune(s.items);
-        s.items.forEach(item => textureFor(item.image));
+        s.items.forEach((item) => textureFor(item.image));
       }
       const idle = now - state.lastInput > 1800;
       const auto =
-        s.autoScroll && !reduce && !state.drag && state.open < 0.01 && state.hovered === null && !state.keyboard && idle;
+        s.autoScroll &&
+        !reduce &&
+        !state.drag &&
+        state.open < 0.01 &&
+        state.hovered === null &&
+        !state.keyboard &&
+        idle;
       if (auto) state.target += s.autoScroll * state.spacing * 0.25 * dt;
       const follow = reduce ? 1 : 1 - Math.pow(1 - s.scrollEase, dt * 60);
       const before = state.scroll;
@@ -629,7 +659,8 @@ const CircularGallery = ({
       state.open += (state.openTarget - state.open) * openFollow;
       if (Math.abs(state.openTarget - state.open) < 0.001) state.open = state.openTarget;
       state.ring += ((state.keyboard ? 1 : 0) - state.ring) * (1 - Math.exp(-dt / 0.1));
-      if (Math.abs((state.keyboard ? 1 : 0) - state.ring) < 0.002) state.ring = state.keyboard ? 1 : 0;
+      if (Math.abs((state.keyboard ? 1 : 0) - state.ring) < 0.002)
+        state.ring = state.keyboard ? 1 : 0;
       if (state.intro < 1) state.intro = Math.min(1, state.intro + dt / INTRO_SECONDS);
       let settling = false;
       state.hover.forEach((value, slot) => {
@@ -655,7 +686,7 @@ const CircularGallery = ({
           settling = true;
         }
       });
-      textures.forEach(entry => {
+      textures.forEach((entry) => {
         if (!entry.loaded || entry.ready >= 1) return;
         entry.ready = reduce ? 1 : Math.min(1, entry.ready + dt / 0.45);
         settling = true;
@@ -707,9 +738,12 @@ const CircularGallery = ({
       wake();
     };
 
-    const point = event => {
+    const point = (event) => {
       const rect = container.getBoundingClientRect();
-      return { x: event.clientX - rect.left - rect.width / 2, y: rect.height / 2 - (event.clientY - rect.top) };
+      return {
+        x: event.clientX - rect.left - rect.width / 2,
+        y: rect.height / 2 - (event.clientY - rect.top),
+      };
     };
 
     const hit = ({ x, y }) => {
@@ -727,15 +761,15 @@ const CircularGallery = ({
       return null;
     };
 
-    const setPointer = card => {
+    const setPointer = (card) => {
       const slot = card ? card.slot : null;
       if (slot !== state.hovered) {
         state.hovered = slot;
         if (slot !== null && !state.hover.has(slot)) state.hover.set(slot, 0);
         wake();
       }
-      if (card) container.setAttribute('data-pointer', '');
-      else container.removeAttribute('data-pointer');
+      if (card) container.setAttribute("data-pointer", "");
+      else container.removeAttribute("data-pointer");
     };
 
     const snapNow = () => {
@@ -744,27 +778,35 @@ const CircularGallery = ({
       setSlot(nearest());
     };
 
-    const onPointerDown = event => {
-      if (event.button !== 0 || event.target.closest('[data-gallery-close]')) return;
+    const onPointerDown = (event) => {
+      if (event.button !== 0 || event.target.closest("[data-gallery-close]")) return;
       const p = point(event);
-      state.drag = { id: event.pointerId, x0: event.clientX, y0: event.clientY, start: state.target, moved: false, samples: [], p };
+      state.drag = {
+        id: event.pointerId,
+        x0: event.clientX,
+        y0: event.clientY,
+        start: state.target,
+        moved: false,
+        samples: [],
+        p,
+      };
       state.lastInput = performance.now();
       wake();
     };
 
-    const onPointerMove = event => {
+    const onPointerMove = (event) => {
       const drag = state.drag;
       if (drag && drag.id === event.pointerId) {
         const dx = event.clientX - drag.x0;
         const dy = event.clientY - drag.y0;
         if (!drag.moved && Math.hypot(dx, dy) > 6) {
-          if (Math.abs(dy) > Math.abs(dx) && event.pointerType !== 'mouse') {
+          if (Math.abs(dy) > Math.abs(dx) && event.pointerType !== "mouse") {
             state.drag = null;
             return;
           }
           drag.moved = true;
           container.setPointerCapture?.(event.pointerId);
-          container.setAttribute('data-dragging', '');
+          container.setAttribute("data-dragging", "");
           setPointer(null);
         }
         if (drag.moved) {
@@ -776,15 +818,16 @@ const CircularGallery = ({
         }
         return;
       }
-      if (event.pointerType === 'mouse') setPointer(hit(point(event)));
+      if (event.pointerType === "mouse") setPointer(hit(point(event)));
     };
 
-    const onPointerUp = event => {
+    const onPointerUp = (event) => {
       const drag = state.drag;
       if (!drag || drag.id !== event.pointerId) return;
       state.drag = null;
-      container.removeAttribute('data-dragging');
-      if (container.hasPointerCapture?.(event.pointerId)) container.releasePointerCapture(event.pointerId);
+      container.removeAttribute("data-dragging");
+      if (container.hasPointerCapture?.(event.pointerId))
+        container.releasePointerCapture(event.pointerId);
       if (drag.moved) {
         const samples = drag.samples;
         if (samples.length > 1) {
@@ -812,17 +855,17 @@ const CircularGallery = ({
       else openSlot(card.slot);
     };
 
-    const onPointerCancel = event => {
+    const onPointerCancel = (event) => {
       if (state.drag && state.drag.id === event.pointerId) {
         state.drag = null;
-        container.removeAttribute('data-dragging');
+        container.removeAttribute("data-dragging");
         snapNow();
       }
     };
 
     const onPointerLeave = () => setPointer(null);
 
-    const onWheel = event => {
+    const onWheel = (event) => {
       const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? view.height : 1;
       // Only horizontal wheel/trackpad movement turns the gallery, so the page keeps scrolling.
       const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : 0;
@@ -835,45 +878,47 @@ const CircularGallery = ({
       wake();
     };
 
-    const onKeyDown = event => {
+    const onKeyDown = (event) => {
       const s = settingsRef.current;
       const step = STEPS[event.key];
       state.lastInput = performance.now();
       if (step) {
         event.preventDefault();
-        if (container.contains(document.activeElement) && document.activeElement !== container) state.keyboard = true;
+        if (container.contains(document.activeElement) && document.activeElement !== container)
+          state.keyboard = true;
         setSlot(nearest() + step);
         const index = wrap(state.active, s.items.length);
-        if (container.contains(document.activeElement)) buttonsRef.current[index]?.focus({ preventScroll: true });
+        if (container.contains(document.activeElement))
+          buttonsRef.current[index]?.focus({ preventScroll: true });
         return;
       }
-      if (event.key === 'Home' || event.key === 'End') {
+      if (event.key === "Home" || event.key === "End") {
         event.preventDefault();
         const base = nearest() - wrap(nearest(), s.items.length);
-        setSlot(event.key === 'Home' ? base : base + s.items.length - 1);
+        setSlot(event.key === "Home" ? base : base + s.items.length - 1);
         return;
       }
-      if (event.key === 'Escape' && state.openTarget > 0) {
+      if (event.key === "Escape" && state.openTarget > 0) {
         event.preventDefault();
         close();
       }
     };
 
-    const onFocusIn = event => {
-      if (!event.target.closest('[data-gallery-list]')) return;
-      state.keyboard = typing || event.target.matches(':focus-visible');
+    const onFocusIn = (event) => {
+      if (!event.target.closest("[data-gallery-list]")) return;
+      state.keyboard = typing || event.target.matches(":focus-visible");
       wake();
     };
 
-    const onAnyKey = event => {
-      if (event.key === 'Tab' || event.key.startsWith('Arrow')) typing = true;
+    const onAnyKey = (event) => {
+      if (event.key === "Tab" || event.key.startsWith("Arrow")) typing = true;
     };
 
     const onAnyPointer = () => {
       typing = false;
     };
 
-    const onFocusOut = event => {
+    const onFocusOut = (event) => {
       if (container.contains(event.relatedTarget)) return;
       state.keyboard = false;
       wake();
@@ -886,44 +931,44 @@ const CircularGallery = ({
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
-    const intersection = new IntersectionObserver(entries => {
-      visible = entries.some(entry => entry.isIntersecting);
+    const intersection = new IntersectionObserver((entries) => {
+      visible = entries.some((entry) => entry.isIntersecting);
       if (visible) {
         last = 0;
         wake();
       }
     });
     intersection.observe(container);
-    container.addEventListener('pointerdown', onPointerDown);
-    container.addEventListener('pointermove', onPointerMove);
-    container.addEventListener('pointerup', onPointerUp);
-    container.addEventListener('pointercancel', onPointerCancel);
-    container.addEventListener('pointerleave', onPointerLeave);
-    container.addEventListener('wheel', onWheel, { passive: false });
-    container.addEventListener('keydown', onKeyDown);
-    container.addEventListener('focusin', onFocusIn);
-    container.addEventListener('focusout', onFocusOut);
-    document.addEventListener('visibilitychange', onVisibility);
-    document.addEventListener('keydown', onAnyKey, true);
-    document.addEventListener('pointerdown', onAnyPointer, true);
+    container.addEventListener("pointerdown", onPointerDown);
+    container.addEventListener("pointermove", onPointerMove);
+    container.addEventListener("pointerup", onPointerUp);
+    container.addEventListener("pointercancel", onPointerCancel);
+    container.addEventListener("pointerleave", onPointerLeave);
+    container.addEventListener("wheel", onWheel, { passive: false });
+    container.addEventListener("keydown", onKeyDown);
+    container.addEventListener("focusin", onFocusIn);
+    container.addEventListener("focusout", onFocusOut);
+    document.addEventListener("visibilitychange", onVisibility);
+    document.addEventListener("keydown", onAnyKey, true);
+    document.addEventListener("pointerdown", onAnyPointer, true);
     lastItems = settingsRef.current.items;
-    lastItems.forEach(item => textureFor(item.image));
+    lastItems.forEach((item) => textureFor(item.image));
     resize();
 
-    const slotFor = index => {
+    const slotFor = (index) => {
       const count = settingsRef.current.items.length;
       const slot = nearest();
       const base = slot - wrap(slot, count) + index;
       return [base - count, base, base + count].reduce((best, value) =>
-        Math.abs(value - slot) < Math.abs(best - slot) ? value : best
+        Math.abs(value - slot) < Math.abs(best - slot) ? value : best,
       );
     };
 
     engineRef.current = {
       wake,
-      open: index => openSlot(slotFor(index)),
-      focus: index => setSlot(slotFor(index), false),
-      close
+      open: (index) => openSlot(slotFor(index)),
+      focus: (index) => setSlot(slotFor(index), false),
+      close,
     };
 
     return () => {
@@ -932,26 +977,26 @@ const CircularGallery = ({
       engineRef.current = null;
       resizeObserver.disconnect();
       intersection.disconnect();
-      container.removeEventListener('pointerdown', onPointerDown);
-      container.removeEventListener('pointermove', onPointerMove);
-      container.removeEventListener('pointerup', onPointerUp);
-      container.removeEventListener('pointercancel', onPointerCancel);
-      container.removeEventListener('pointerleave', onPointerLeave);
-      container.removeEventListener('wheel', onWheel);
-      container.removeEventListener('keydown', onKeyDown);
-      container.removeEventListener('focusin', onFocusIn);
-      container.removeEventListener('focusout', onFocusOut);
-      document.removeEventListener('visibilitychange', onVisibility);
-      document.removeEventListener('keydown', onAnyKey, true);
-      document.removeEventListener('pointerdown', onAnyPointer, true);
+      container.removeEventListener("pointerdown", onPointerDown);
+      container.removeEventListener("pointermove", onPointerMove);
+      container.removeEventListener("pointerup", onPointerUp);
+      container.removeEventListener("pointercancel", onPointerCancel);
+      container.removeEventListener("pointerleave", onPointerLeave);
+      container.removeEventListener("wheel", onWheel);
+      container.removeEventListener("keydown", onKeyDown);
+      container.removeEventListener("focusin", onFocusIn);
+      container.removeEventListener("focusout", onFocusOut);
+      document.removeEventListener("visibilitychange", onVisibility);
+      document.removeEventListener("keydown", onAnyKey, true);
+      document.removeEventListener("pointerdown", onAnyPointer, true);
       labelLayer.replaceChildren();
-      textures.forEach(entry => entry.texture && gl.deleteTexture(entry.texture));
+      textures.forEach((entry) => entry.texture && gl.deleteTexture(entry.texture));
       gl.deleteTexture(blank);
       gl.deleteProgram(program.program);
       gl.deleteBuffer(vertexBuffer);
       gl.deleteBuffer(indexBuffer);
       gl.deleteVertexArray(vao);
-      if (!canvas.isConnected) gl.getExtension('WEBGL_lose_context')?.loseContext();
+      if (!canvas.isConnected) gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [list.length]);
 
@@ -965,7 +1010,7 @@ const CircularGallery = ({
   return (
     <div
       ref={containerRef}
-      className={`${CLASSES.root}${className ? ` ${className}` : ''}`}
+      className={`${CLASSES.root}${className ? ` ${className}` : ""}`}
       style={{ color: textColor, ...style }}
       role="region"
       aria-roledescription="carousel"
@@ -981,13 +1026,18 @@ const CircularGallery = ({
         type="button"
         className={CLASSES.close}
         data-gallery-close=""
-        data-visible={open ? '' : undefined}
+        data-visible={open ? "" : undefined}
         tabIndex={open ? 0 : -1}
         aria-label="Close"
         onClick={() => engineRef.current?.close()}
       >
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <path
+            d="M4 4l10 10M14 4L4 14"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
         </svg>
       </button>
       <ul className={CLASSES.hidden} data-gallery-list="">
@@ -995,12 +1045,12 @@ const CircularGallery = ({
           <li key={`${item.image}-${index}`}>
             <button
               type="button"
-              ref={el => {
+              ref={(el) => {
                 buttonsRef.current[index] = el;
               }}
               tabIndex={index === active ? 0 : -1}
-              aria-label={`${item.text || item.alt || 'Photograph'}, ${index + 1} of ${count}`}
-              aria-current={index === active ? 'true' : undefined}
+              aria-label={`${item.text || item.alt || "Photograph"}, ${index + 1} of ${count}`}
+              aria-current={index === active ? "true" : undefined}
               onFocus={() => engineRef.current?.focus(index)}
               onClick={() => engineRef.current?.open(index)}
             >
@@ -1010,7 +1060,7 @@ const CircularGallery = ({
         ))}
       </ul>
       <div className={CLASSES.hidden} aria-live="polite">
-        {open && current ? `${current.text || current.alt || 'Photograph'} opened` : ''}
+        {open && current ? `${current.text || current.alt || "Photograph"} opened` : ""}
       </div>
     </div>
   );

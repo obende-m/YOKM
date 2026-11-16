@@ -9,9 +9,9 @@ import { SECTIONS } from "@/lib/admin-sections";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Admin — YOKM" },
+      { title: "Admin | YOKM" },
       { name: "description", content: "Manage the Yendel Ocha Kpeling Ministry website." },
-      { property: "og:title", content: "Admin — YOKM" },
+      { property: "og:title", content: "Admin | YOKM" },
       { property: "og:description", content: "Manage the YOKM website." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

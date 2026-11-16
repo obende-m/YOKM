@@ -118,7 +118,8 @@ export function Header() {
               alt=""
               width={52}
               height={52}
-              className="h-12 w-12 transition-transform duration-700 group-hover:rotate-[-8deg]"
+              key={pathname}
+              className="logo-spin logo-intro h-12 w-12"
             />
             <span className="leading-none">
               <span className="block font-serif text-[1.3rem] font-semibold tracking-[0.02em]">
@@ -132,7 +133,10 @@ export function Header() {
 
           <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
             {NAV.map((item) => {
-              const active = pathname === item.to || pathname.startsWith(`${item.to}/`);
+              const active =
+                item.to === "/"
+                  ? pathname === "/"
+                  : pathname === item.to || pathname.startsWith(`${item.to}/`);
               return (
                 <Link
                   key={item.to}
@@ -195,7 +199,7 @@ export function Header() {
               className="wrap flex h-full flex-col overflow-y-auto pb-8 pt-24"
             >
               <ul className="flex-1">
-                {[{ to: "/", label: "Home" }, ...NAV].map((item, i) => (
+                {NAV.map((item, i) => (
                   <li key={item.to} className="overflow-hidden border-b border-paper/12">
                     <motion.div
                       initial={{ y: "100%" }}
@@ -207,9 +211,6 @@ export function Header() {
                         onClick={() => setOpen(false)}
                         className="group flex items-baseline gap-4 py-3.5"
                       >
-                        <span className="eyebrow w-6 text-sky/80 tabular-nums">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
                         <span className="font-serif text-[clamp(1.9rem,8vw,3rem)] leading-none transition-[transform,color] duration-500 group-hover:translate-x-2 group-hover:text-sky">
                           {item.label}
                         </span>

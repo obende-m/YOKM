@@ -17,7 +17,7 @@ export const ORG = {
   registrationDate: "Registered in March 2015",
   coverScriptures: ["Ephesians 5:14–15", "Isaiah 52:1"],
   positioning:
-    "A Christian ministry dedicated to reaching, equipping and strengthening widows — helping them discover their God-given purpose, develop their abilities, become independent and become a positive influence in their homes, churches and society.",
+    "A Christian ministry dedicated to reaching, equipping and strengthening widows, helping them discover their God-given purpose, develop their abilities, become independent and become a positive influence in their homes, churches and society.",
 };
 
 export const VISION = [
@@ -142,6 +142,7 @@ export const WORK_AREAS = [
 ];
 
 export const NAV = [
+  { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/our-work", label: "Our Work" },
   { to: "/stories", label: "Stories" },

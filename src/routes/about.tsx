@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BookOpen, Building2, CalendarDays, HandHeart, MapPin, Sparkles } from "lucide-react";
 
 import { RevealImage, Rise, SplitText } from "@/components/motion";
 import { PageBanner, SectionHead } from "@/components/site/Blocks";
@@ -13,7 +12,7 @@ export const Route = createFileRoute("/about")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "About YOKM — Yendel Ocha Kpeling Ministry, Jos, Nigeria" },
+      { title: "About YOKM | Yendel Ocha Kpeling Ministry, Jos, Nigeria" },
       {
         name: "description",
         content:
@@ -23,14 +22,12 @@ export const Route = createFileRoute("/about")({
       {
         property: "og:description",
         content:
-          "A Christian ministry for widows in Jos, Plateau State, Nigeria — our vision, mission and foundation.",
+          "A Christian ministry for widows in Jos, Plateau State, Nigeria: our vision, mission and foundation.",
       },
     ],
   }),
   component: About,
 });
-
-const pad2 = (n: number) => String(n).padStart(2, "0");
 
 function About() {
   const t = useSiteText();
@@ -110,19 +107,15 @@ function Focus() {
 function Vision() {
   const vision = usePageItems("vision");
   if (vision.length === 0) return null;
-  const icons = [Sparkles, HandHeart, BookOpen];
   return (
     <section id="vision" className="section-pad scroll-mt-28 bg-blush">
       <div className="wrap">
         <SectionHead eyebrow="Our vision" title="Three hopes for *every* widow" center />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {vision.map((v, i) => {
-            const Icon = icons[i % icons.length]!;
             return (
               <Rise key={v.id} delay={i * 0.08} className="card p-8 text-center md:p-10">
-                <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-wine text-paper">
-                  <Icon aria-hidden className="h-6 w-6" strokeWidth={1.6} />
-                </span>
+                <span aria-hidden className="mx-auto block h-1 w-10 rounded-full bg-plum" />
                 <h3 className="h-sub mt-6">{v.label}</h3>
                 <p className="mt-3 leading-relaxed text-ink/70">{v.body}</p>
               </Rise>
@@ -147,10 +140,12 @@ function Mission() {
         />
         <ol className="mt-12 grid gap-4 md:grid-cols-2">
           {mission.map((m, i) => (
-            <Rise as="li" key={m.id} delay={(i % 2) * 0.06} className="card !flex-row gap-5 p-6">
-              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-blush font-serif text-lg text-wine">
-                {pad2(i + 1)}
-              </span>
+            <Rise
+              as="li"
+              key={m.id}
+              delay={(i % 2) * 0.06}
+              className="card border-l-4 border-plum p-6"
+            >
               <span className="flex-1">
                 <span className="block font-serif text-[1.3rem] font-medium leading-tight">
                   {m.label}
@@ -259,13 +254,12 @@ function People() {
 function Record() {
   const t = useSiteText();
   const items = [
-    { icon: Building2, k: "Registered as", v: ORG.registration },
+    { k: "Registered as", v: ORG.registration },
     {
-      icon: CalendarDays,
       k: "Registration",
       v: `${ORG.registrationNumber} · ${ORG.registrationDate}`,
     },
-    { icon: MapPin, k: "Where we work", v: t("contact_address") },
+    { k: "Where we work", v: t("contact_address") },
   ];
   return (
     <section className="section-pad bg-blush">
@@ -276,11 +270,9 @@ function Record() {
           action={{ to: "/contact", label: "Contact the ministry" }}
         />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {items.map(({ icon: Icon, k, v }, i) => (
+          {items.map(({ k, v }, i) => (
             <Rise key={k} delay={i * 0.08} className="card p-7">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-wine text-paper">
-                <Icon aria-hidden className="h-5 w-5" strokeWidth={1.7} />
-              </span>
+              <span aria-hidden className="block h-1 w-10 rounded-full bg-plum" />
               <p className="eyebrow mt-6 text-plum">{k}</p>
               <p className="mt-2 whitespace-pre-line leading-relaxed">{v}</p>
             </Rise>

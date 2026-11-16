@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { RevealImage, Rise, SplitText } from "@/components/motion";
+import { Rise, SplitText } from "@/components/motion";
 import type { Photo } from "@/lib/photos";
 
 type Tone = "light" | "dark";
@@ -89,12 +89,15 @@ export function PageBanner({
         <div className="relative isolate flex min-h-[22rem] items-end overflow-hidden rounded-[var(--r-panel)] bg-wine text-paper md:min-h-[min(60svh,34rem)]">
           {photo && (
             <>
-              <RevealImage
-                photo={photo}
-                priority
-                square
+              <img
+                src={photo.src}
+                srcSet={photo.srcSet}
                 sizes="(min-width: 1440px) 1340px, 100vw"
-                className="!absolute inset-0 -z-10"
+                alt={photo.alt}
+                width={photo.width}
+                height={photo.height}
+                fetchPriority="high"
+                className="absolute inset-0 -z-10 h-full w-full object-cover"
               />
               <div
                 aria-hidden
@@ -103,7 +106,7 @@ export function PageBanner({
             </>
           )}
           <div className="w-full p-7 md:p-12 lg:p-16">
-            <nav aria-label="Breadcrumb" className="enter-fade">
+            <nav aria-label="Breadcrumb">
               <ol className="flex items-center gap-2 text-sm text-paper/70">
                 <li>
                   <Link to="/" className="hover:text-paper">
@@ -118,27 +121,11 @@ export function PageBanner({
                 </li>
               </ol>
             </nav>
-            <SplitText
-              as="h1"
-              text={title}
-              trigger="mount"
-              delay={0.1}
-              accentClass="accent-word text-sky"
-              className="display mt-6 max-w-[16ch]"
-            />
-            {intro && (
-              <p
-                className="lede enter-up mt-6 max-w-2xl text-paper/85"
-                style={{ animationDelay: "0.45s" }}
-              >
-                {intro}
-              </p>
-            )}
-            {children && (
-              <div className="enter-up mt-8" style={{ animationDelay: "0.6s" }}>
-                {children}
-              </div>
-            )}
+            <h1 className="display mt-6 max-w-[16ch]">
+              <Accented text={title} />
+            </h1>
+            {intro && <p className="lede mt-6 max-w-2xl text-paper/85">{intro}</p>}
+            {children && <div className="mt-8">{children}</div>}
           </div>
         </div>
       </div>
@@ -205,5 +192,23 @@ export function PhotoCard({
         </div>
       </Link>
     </Rise>
+  );
+}
+
+/** Renders a title, setting words wrapped in *asterisks* in the italic accent. */
+function Accented({ text }: { text: string }) {
+  const parts = text.split(/(\*[^*]+\*)/g).filter(Boolean);
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.startsWith("*") ? (
+          <span key={i} className="accent-word text-sky">
+            {part.slice(1, -1)}
+          </span>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
   );
 }

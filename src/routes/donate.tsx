@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Building2, Check, Copy, CreditCard, HandHeart, MapPin } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/donate")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Support YOKM — Yendel Ocha Kpeling Ministry" },
+      { title: "Support YOKM | Yendel Ocha Kpeling Ministry" },
       {
         name: "description",
         content:
@@ -63,9 +63,7 @@ function Donate() {
             <div className="mt-12 grid gap-6 lg:grid-cols-3">
               {url && (
                 <Rise className="card p-8">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-wine text-paper">
-                    <CreditCard aria-hidden className="h-6 w-6" strokeWidth={1.6} />
-                  </span>
+                  <span aria-hidden className="block h-1 w-10 rounded-full bg-plum" />
                   <h3 className="h-sub mt-6">Give online</h3>
                   <p className="mt-3 flex-1 leading-relaxed text-ink/70">
                     The ministry&rsquo;s secure giving page opens in a new tab, where you can
@@ -80,17 +78,13 @@ function Donate() {
               )}
               {bank && (
                 <Rise delay={0.08} className="card p-8">
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-wine text-paper">
-                    <Building2 aria-hidden className="h-6 w-6" strokeWidth={1.6} />
-                  </span>
+                  <span aria-hidden className="block h-1 w-10 rounded-full bg-plum" />
                   <h3 className="h-sub mt-6">Bank transfer</h3>
                   <BankDetails text={bank} />
                 </Rise>
               )}
               <Rise delay={0.16} className="card p-8">
-                <span className="grid h-14 w-14 place-items-center rounded-2xl bg-wine text-paper">
-                  <MapPin aria-hidden className="h-6 w-6" strokeWidth={1.6} />
-                </span>
+                <span aria-hidden className="block h-1 w-10 rounded-full bg-plum" />
                 <h3 className="h-sub mt-6">Give in person</h3>
                 <address className="mt-3 flex-1 whitespace-pre-line not-italic leading-relaxed text-ink/75">
                   {t("contact_address")}
@@ -130,9 +124,7 @@ function Donate() {
         <div className="wrap">
           <div className="flex flex-col items-start gap-8 rounded-[var(--r-panel)] bg-wine p-8 text-paper md:flex-row md:items-center md:justify-between md:p-12">
             <div className="flex gap-5">
-              <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-paper/10 text-sky">
-                <HandHeart aria-hidden className="h-6 w-6" strokeWidth={1.6} />
-              </span>
+              <span aria-hidden className="block h-1 w-10 rounded-full bg-sky" />
               <div>
                 <h2 className="h-sub">Other ways to help</h2>
                 <p className="mt-2 max-w-lg text-paper/78">

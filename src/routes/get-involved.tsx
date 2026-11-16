@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Gift, Handshake, HeartHandshake, Share2, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -16,13 +16,13 @@ export const Route = createFileRoute("/get-involved")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { title: "Get Involved — Yendel Ocha Kpeling Ministry" },
+      { title: "Get Involved | Yendel Ocha Kpeling Ministry" },
       {
         name: "description",
         content:
           "Ways to participate in the work of Yendel Ocha Kpeling Ministry among widows in Jos, Nigeria: give, volunteer, partner, pray and share.",
       },
-      { property: "og:title", content: "Get Involved — Yendel Ocha Kpeling Ministry" },
+      { property: "og:title", content: "Get Involved | Yendel Ocha Kpeling Ministry" },
       {
         property: "og:description",
         content: "Give, volunteer, partner, pray or share the work of YOKM in Jos, Nigeria.",
@@ -58,35 +58,30 @@ function GetInvolved() {
 
   const ways = [
     {
-      icon: Gift,
       title: "Give",
       text: "Support the ministry’s work with widows in Jos.",
       label: "See ways to give",
       to: "/donate",
     },
     {
-      icon: Sparkles,
       title: "Volunteer",
       text: "Offer time, teaching or a practical skill alongside the ministry.",
       label: "Offer to volunteer",
       onClick: () => openForm("volunteer"),
     },
     {
-      icon: Handshake,
       title: "Partner",
       text: "Churches and organisations can walk with YOKM in shared work.",
       label: "Send a partnership enquiry",
       onClick: () => openForm("partner"),
     },
     {
-      icon: HeartHandshake,
       title: "Pray",
       text: "Stand with the widows and the ministry in prayer.",
       label: "Send a prayer request",
       to: "/contact",
     },
     {
-      icon: Share2,
       title: "Share",
       text: "Tell others about the ministry and its work.",
       label: "Copy the website link",
@@ -118,9 +113,7 @@ function GetInvolved() {
             {ways.map((w, i) => {
               const inner = (
                 <>
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-wine text-paper">
-                    <w.icon aria-hidden className="h-6 w-6" strokeWidth={1.6} />
-                  </span>
+                  <span aria-hidden className="block h-1 w-10 rounded-full bg-plum" />
                   <h3 className="h-sub mt-6">{w.title}</h3>
                   <p className="mt-3 flex-1 leading-relaxed text-ink/70">{w.text}</p>
                   <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-wine">
