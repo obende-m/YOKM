@@ -19,6 +19,8 @@ export function Header() {
   const socials = socialLinks(settings);
 
   useEffect(() => setOpen(false), [pathname]);
+  // On the home page the bar sits on the hero photograph until the page scrolls.
+  const overlay = pathname === "/" && !scrolled && !open;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -98,7 +100,7 @@ export function Header() {
 
       <div
         className={`transition-[background-color,box-shadow] duration-500 ${
-          open
+          open || overlay
             ? "bg-transparent text-paper"
             : scrolled
               ? "bg-paper/95 text-ink shadow-[0_8px_30px_-18px_rgb(59_15_40_/_0.35)] backdrop-blur-md"
@@ -137,14 +139,24 @@ export function Header() {
                   to={item.to}
                   aria-current={active ? "page" : undefined}
                   className={`rounded-full px-3.5 py-2 text-[0.9rem] font-medium transition-colors xl:px-4 ${
-                    active ? "bg-wine/10 text-wine" : "hover:bg-wine/5 hover:text-wine"
+                    overlay
+                      ? active
+                        ? "bg-paper/15"
+                        : "hover:bg-paper/10"
+                      : active
+                        ? "bg-wine/10 text-wine"
+                        : "hover:bg-wine/5 hover:text-wine"
                   }`}
                 >
                   {item.label}
                 </Link>
               );
             })}
-            <Link to="/donate" data-variant="solid" className="btn ml-3 !min-h-[2.75rem] !px-6">
+            <Link
+              to="/donate"
+              data-variant={overlay ? "accent" : "solid"}
+              className="btn ml-3 !min-h-[2.75rem] !px-6"
+            >
               <span>Donate</span>
             </Link>
           </nav>
@@ -156,7 +168,7 @@ export function Header() {
             aria-controls="mobile-navigation"
             aria-label={open ? "Close menu" : "Open menu"}
             className={`menu-trigger -mr-1 flex h-12 items-center gap-3 rounded-full px-4 lg:hidden ${
-              open ? "bg-paper/10" : "bg-wine/8"
+              open || overlay ? "bg-paper/12" : "bg-wine/8"
             }`}
           >
             <span className="eyebrow">{open ? "Close" : "Menu"}</span>

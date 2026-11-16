@@ -15,15 +15,22 @@ export function Cta({
   variant = "solid",
   className = "",
   arrow = true,
+  orb = false,
   ...target
 }: {
   children: ReactNode;
   variant?: Variant;
   className?: string;
   arrow?: boolean;
+  /** Puts the arrow inside a small circle at the end of the button. */
+  orb?: boolean;
 } & Target) {
   const external = "href" in target && target.href && /^https?:/i.test(target.href);
-  const icon = arrow ? (
+  const icon = orb ? (
+    <span className="btn-orb" aria-hidden>
+      <ArrowRight className="btn-arrow h-4 w-4" strokeWidth={2} />
+    </span>
+  ) : arrow ? (
     external ? (
       <ArrowUpRight aria-hidden className="btn-arrow h-4 w-4" strokeWidth={1.6} />
     ) : (
@@ -36,6 +43,7 @@ export function Cta({
       <a
         href={target.href}
         data-variant={variant}
+        data-orb={orb || undefined}
         className={`btn ${className}`}
         {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       >
@@ -49,6 +57,7 @@ export function Cta({
       to={target.to as "/"}
       hash={"hash" in target ? target.hash : undefined}
       data-variant={variant}
+      data-orb={orb || undefined}
       className={`btn ${className}`}
     >
       <span>{children}</span>

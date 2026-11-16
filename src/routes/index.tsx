@@ -1,5 +1,17 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, HandHeart, Mail, MapPin, Phone, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  HandHeart,
+  Mail,
+  MapPin,
+  Pause,
+  Phone,
+  Play,
+  Sparkles,
+} from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useEffect, useState } from "react";
 
 import { RevealImage, Rise, SplitText } from "@/components/motion";
 import AccordionGallery from "@/components/reactbits/AccordionGallery.jsx";
@@ -8,6 +20,7 @@ import { Cta } from "@/components/site/Cta";
 import {
   contactChannels,
   formatDate,
+  socialLinks,
   usePageItems,
   usePosts,
   usePublished,
@@ -44,110 +57,256 @@ export const Route = createFileRoute("/")({
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
 
-/* 1. Hero: a rounded panel, words on the left and a photograph on the right. */
+/* 1. Hero: a full-bleed slideshow of the ministry's own photographs. */
 function Hero() {
   const t = useSiteText();
-  const photo = pick(t("home_hero_image"), PHOTOS.giftSmiles);
+  const { data: settings = {} } = useSettings();
+  const { data: media = [] } = usePublished<MediaRow>("media");
+  const socials = socialLinks(settings);
+  const reduced = useReducedMotion();
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  const custom = t("home_hero_image");
+  const featured = media.filter((m) => m.featured && m.url);
+  // Hand-picked, high-resolution frames; a photograph set in Page Text leads the set.
+  const slides: { src: string; srcSet?: string; alt: string }[] = [
+    ...(custom ? [{ src: custom, alt: "" }] : []),
+    PHOTOS.giftSmiles,
+    PHOTOS.crowdTrees,
+    PHOTOS.biblesRaised,
+    PHOTOS.groupTrees,
+  ].slice(0, 4);
+  const count = slides.length;
+  const thumbs = (featured.length >= 3 ? featured.slice(0, 3) : []).map((m) => m.url);
+  const proof =
+    thumbs.length === 3
+      ? thumbs
+      : [PHOTOS.seatedRow.src, PHOTOS.twoWomen.src, PHOTOS.addressing.src];
+
+  useEffect(() => {
+    if (reduced || paused || count < 2) return;
+    const id = window.setInterval(() => setIndex((i) => (i + 1) % count), 7000);
+    return () => window.clearInterval(id);
+  }, [reduced, paused, count]);
+
+  const slide = slides[index % count]!;
+
   return (
-    <section className="bg-paper pt-[6.5rem] md:pt-[8.5rem]">
-      <div className="wrap">
-        <div className="relative grid overflow-hidden rounded-[var(--r-panel)] bg-wine text-paper lg:grid-cols-12">
-          <div className="relative z-10 flex flex-col justify-center p-7 pb-28 sm:p-10 sm:pb-32 lg:col-span-7 lg:p-14 lg:pb-36 xl:p-16 xl:pb-40">
-            <p className="pill enter-fade self-start bg-paper/10 text-sky">
-              <MapPin aria-hidden className="h-3.5 w-3.5" />
-              {ORG.shortLocation}
-            </p>
-            <SplitText
-              as="h1"
-              text={t("home_hero_title")}
-              trigger="mount"
-              accentLast
-              accentClass="accent-word text-sky"
-              delay={0.2}
-              stagger={0.08}
-              className="display-xl mt-7 max-w-[10ch]"
-            />
-            <p
-              className="lede enter-up mt-7 max-w-xl text-paper/85"
-              style={{ animationDelay: "0.7s" }}
-            >
-              {t("home_hero_intro")}
-            </p>
-            <div
-              className="enter-up mt-9 flex flex-col gap-3 sm:flex-row"
-              style={{ animationDelay: "0.85s" }}
-            >
-              <Cta to="/about" variant="accent">
-                Read our story
-              </Cta>
-              <Cta to="/donate" variant="outline-light">
-                Donate to YOKM
-              </Cta>
-            </div>
-            <p
-              className="enter-fade mt-10 font-serif text-lg italic text-paper/75"
+    <section
+      className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-wine-deep text-paper"
+      aria-roledescription="carousel"
+      aria-label="Photographs from the ministry"
+    >
+      <AnimatePresence initial={false}>
+        <motion.img
+          key={slide.src}
+          src={slide.src}
+          srcSet={slide.srcSet}
+          sizes="100vw"
+          alt={slide.alt}
+          {...(index === 0 ? { fetchPriority: "high" as const } : {})}
+          initial={{ opacity: 0, scale: reduced ? 1 : 1.08 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ opacity: { duration: 1.4 }, scale: { duration: 8, ease: "linear" } }}
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-[60%_center]"
+        />
+      </AnimatePresence>
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,color-mix(in_srgb,var(--wine-deep)_92%,transparent)_0%,color-mix(in_srgb,var(--wine-deep)_60%,transparent)_40%,transparent_75%)]"
+      />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-wine-deep/55 sm:hidden" />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 -z-10 h-56 bg-[linear-gradient(to_bottom,color-mix(in_srgb,var(--wine-deep)_75%,transparent),transparent)]"
+      />
+
+      <div className="wrap relative pb-44 pt-36 md:pb-52 md:pt-44">
+        <div className="max-w-3xl">
+          <p className="pill enter-fade bg-paper/12 text-paper backdrop-blur-sm">
+            <span className="grid h-5 w-5 place-items-center rounded-full bg-sky text-wine-deep">
+              <MapPin aria-hidden className="h-3 w-3" strokeWidth={2.4} />
+            </span>
+            {ORG.shortLocation}
+          </p>
+          <SplitText
+            as="h1"
+            text={t("home_hero_title")}
+            trigger="mount"
+            accentLast
+            accentClass="accent-word text-sky"
+            delay={0.2}
+            stagger={0.08}
+            className="display-xl mt-7 max-w-[11ch]"
+          />
+          <p
+            className="lede enter-up mt-7 max-w-xl text-paper/88"
+            style={{ animationDelay: "0.7s" }}
+          >
+            {t("home_hero_intro")}
+          </p>
+          <div
+            className="enter-up mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
+            style={{ animationDelay: "0.85s" }}
+          >
+            <Cta to="/about" variant="accent" orb>
+              Read our story
+            </Cta>
+            <Cta to="/donate" variant="outline-light">
+              Donate to YOKM
+            </Cta>
+          </div>
+          {media.length > 0 && (
+            <Link
+              to="/gallery"
+              className="enter-fade group mt-10 hidden items-center gap-4 sm:inline-flex"
               style={{ animationDelay: "1.1s" }}
             >
-              &ldquo;{ORG.motto}&rdquo;
-            </p>
-          </div>
-          <div className="relative min-h-[22rem] lg:col-span-5 lg:min-h-[40rem]">
-            <RevealImage
-              photo={photo}
-              priority
-              square
-              delay={0.1}
-              sizes="(min-width: 1024px) 40vw, 100vw"
-              className="!absolute inset-0"
-              imgClassName="object-[30%_center]"
-            />
-          </div>
+              <span className="flex -space-x-3">
+                {proof.map((src) => (
+                  <img
+                    key={src}
+                    src={src}
+                    alt=""
+                    loading="lazy"
+                    className="h-11 w-11 rounded-full border-2 border-wine-deep object-cover"
+                  />
+                ))}
+              </span>
+              <span className="text-sm leading-tight text-paper/85">
+                <span className="block font-serif text-xl text-paper">{media.length}</span>
+                <span className="group-hover:underline">
+                  photographs from the ministry&rsquo;s work
+                </span>
+              </span>
+            </Link>
+          )}
         </div>
       </div>
+
+      {socials.length > 0 && (
+        <ul className="absolute right-6 top-1/2 hidden -translate-y-1/2 flex-col items-center gap-5 xl:flex">
+          {socials.map((s) => (
+            <li key={s.label}>
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="eyebrow block py-1 text-paper/70 [writing-mode:vertical-rl] hover:text-sky"
+              >
+                {s.label}
+              </a>
+            </li>
+          ))}
+          <li aria-hidden className="h-16 w-px bg-paper/30" />
+        </ul>
+      )}
+
+      {count > 1 && (
+        <div className="absolute bottom-36 right-5 flex items-center gap-1 md:bottom-44 md:right-10 xl:right-16">
+          {slides.map((s, i) => (
+            <button
+              key={s.src}
+              type="button"
+              aria-label={`Show photograph ${i + 1} of ${count}`}
+              aria-current={i === index % count ? "true" : undefined}
+              onClick={() => setIndex(i)}
+              className="grid h-11 w-9 place-items-center"
+            >
+              <span
+                className={`block h-2 rounded-full transition-all duration-500 ${
+                  i === index % count ? "w-7 bg-sky" : "w-2 bg-paper/50 hover:bg-paper"
+                }`}
+              />
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setPaused((p) => !p)}
+            aria-label={paused ? "Play the slideshow" : "Pause the slideshow"}
+            className="ml-1 grid h-11 w-11 place-items-center rounded-full bg-paper/12 text-paper hover:bg-paper/20"
+          >
+            {paused ? (
+              <Play aria-hidden className="h-4 w-4" />
+            ) : (
+              <Pause aria-hidden className="h-4 w-4" />
+            )}
+          </button>
+        </div>
+      )}
+
+      <svg
+        aria-hidden
+        viewBox="0 0 1440 120"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 -bottom-px h-[60px] w-full text-paper md:h-[110px]"
+      >
+        <path
+          d="M0 120V60C240 108 480 120 720 96C960 72 1200 18 1440 30V120Z"
+          fill="currentColor"
+        />
+      </svg>
     </section>
   );
 }
 
-/* 2. Three doors into the site, overlapping the bottom of the hero. */
+/* 2. Three doors into the site: photograph cards overlapping the hero's curve. */
 function Doors() {
   const doors = [
     {
       to: "/our-work",
       photo: PHOTOS.handingGift,
-      title: "Our work",
-      text: "Six areas of care, from faith and skills to family and community.",
+      title: "Reaching widows in every part of life",
       cta: "See our work",
     },
     {
       to: "/stories",
       photo: PHOTOS.twoWomen,
-      title: "Stories",
-      text: "Accounts shared by widows in their own words, with their consent.",
+      title: "Stories told in their own words",
       cta: "Read the stories",
     },
     {
       to: "/get-involved",
       photo: PHOTOS.standingPortrait,
-      title: "Get involved",
-      text: "Give, volunteer, partner or pray with the ministry.",
-      cta: "Find your place",
+      title: "Give, volunteer, partner or pray",
+      cta: "Get involved",
     },
   ];
   return (
     <section className="relative z-10 bg-paper">
       <div className="wrap">
-        <div className="-mt-20 grid gap-5 sm:px-4 md:-mt-24 md:grid-cols-3 lg:px-10">
+        <div className="-mt-24 grid gap-4 md:-mt-32 md:grid-cols-3 md:gap-5">
           {doors.map((d, i) => (
-            <PhotoCard
-              key={d.to}
-              to={d.to}
-              photo={d.photo}
-              title={d.title}
-              text={d.text}
-              cta={d.cta}
-              delay={i * 0.08}
-              aspect="aspect-[16/10]"
-            />
+            <Rise key={d.to} delay={i * 0.08}>
+              <Link
+                to={d.to as "/"}
+                className="card group relative aspect-[16/11] justify-end text-paper md:aspect-[4/3.4]"
+              >
+                <img
+                  src={d.photo.src}
+                  srcSet={d.photo.srcSet}
+                  sizes="(min-width: 768px) 30vw, 100vw"
+                  alt=""
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
+                />
+                <span
+                  aria-hidden
+                  className="absolute inset-0 bg-[linear-gradient(to_top,color-mix(in_srgb,var(--wine-deep)_92%,transparent)_10%,color-mix(in_srgb,var(--wine-deep)_35%,transparent)_60%,transparent)]"
+                />
+                <span className="relative p-6 md:p-7">
+                  <span className="block font-serif text-[1.55rem] leading-tight md:text-[1.7rem]">
+                    {d.title}
+                  </span>
+                  <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-paper px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-wine transition-colors group-hover:bg-sky group-hover:text-wine-deep">
+                    {d.cta}
+                    <ArrowRight aria-hidden className="h-3.5 w-3.5" />
+                  </span>
+                </span>
+              </Link>
+            </Rise>
           ))}
         </div>
       </div>

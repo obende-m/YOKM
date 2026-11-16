@@ -399,6 +399,23 @@
     --btn-sweep: var(--paper);
     --btn-sweep-fg: var(--ink);
   }
+  .btn[data-orb] {
+    padding-right: 0.4rem;
+    gap: 1rem;
+  }
+  .btn-orb {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--wine);
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+  .btn:hover .btn-orb {
+    transform: rotate(-45deg);
+  }
   .btn:disabled {
     opacity: 0.55;
     pointer-events: none;
