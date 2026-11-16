@@ -67,6 +67,14 @@ export const SETTING_FIELDS: SettingField[] = [
 export const PAGE_TEXT_FIELDS: SettingField[] = [
   { key: "home_hero_image", label: "Main photograph", group: "Home page", image: true },
   {
+    key: "home_vision_image",
+    label: "Vision photograph",
+    group: "Home page",
+    image: true,
+  },
+  { key: "home_work_image", label: "Our work photograph", group: "Home page", image: true },
+  { key: "home_give_image", label: "Giving photograph", group: "Home page", image: true },
+  {
     key: "home_hero_title",
     label: "Main heading",
     group: "Home page",
@@ -154,6 +162,13 @@ export const PAGE_TEXT_FIELDS: SettingField[] = [
     help: "Leave empty until a verified biography is supplied. Leave an empty line between paragraphs.",
   },
 
+  { key: "work_image", label: "Our Work photograph", group: "Other pages", image: true },
+  {
+    key: "involved_image",
+    label: "Get Involved photograph",
+    group: "Other pages",
+    image: true,
+  },
   {
     key: "work_intro",
     label: "Our Work introduction",

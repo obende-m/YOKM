@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
+import { Rise } from "@/components/motion";
+import { PageBanner } from "@/components/site/Blocks";
 import { EnquiryForm } from "@/components/site/EnquiryForm";
-import { PageHero } from "@/components/site/PageHero";
-import { Pending } from "@/components/site/Placeholder";
-import { Reveal } from "@/components/site/Reveal";
 import { contactChannels, socialLinks, useSettings, useSiteText } from "@/lib/cms";
+import { PHOTOS } from "@/lib/photos";
+import { ORG } from "@/lib/yokm";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -27,6 +29,8 @@ export const Route = createFileRoute("/contact")({
   component: Contact,
 });
 
+const ICONS: Record<string, typeof Mail> = { Email: Mail, Phone: Phone, WhatsApp: MessageCircle };
+
 function Contact() {
   const { data: settings = {} } = useSettings();
   const t = useSiteText();
@@ -35,83 +39,101 @@ function Contact() {
 
   return (
     <>
-      <PageHero eyebrow="Contact" title="Reach the ministry" />
+      <PageBanner
+        eyebrow="Contact"
+        title="Write to the *ministry*"
+        intro="Questions, prayer requests and enquiries are all welcome."
+        photo={PHOTOS.addressing}
+      />
 
-      <section className="mx-auto max-w-[1400px] px-5 py-20 md:px-10 md:py-28">
-        <div className="grid gap-14 lg:grid-cols-2 lg:gap-24">
-          <Reveal>
-            <p className="eyebrow text-muted-foreground">Office</p>
-            <address className="mt-4 max-w-sm whitespace-pre-line text-xl not-italic leading-relaxed">
-              {t("contact_address")}
-            </address>
+      <section className="section-pad bg-paper">
+        <div className="wrap">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            <Rise className="card p-7">
+              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-wine text-paper">
+                <MapPin aria-hidden className="h-5 w-5" strokeWidth={1.7} />
+              </span>
+              <p className="eyebrow mt-6 text-plum">Office</p>
+              <address className="mt-2 whitespace-pre-line not-italic leading-relaxed">
+                {t("contact_address")}
+              </address>
+            </Rise>
+            {channels.map((c, i) => {
+              const Icon = ICONS[c.label] ?? Mail;
+              return (
+                <Rise key={c.label} delay={(i + 1) * 0.06}>
+                  <a
+                    href={c.href}
+                    className="card group h-full p-7"
+                    {...(c.href?.startsWith("https")
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                  >
+                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-wine text-paper transition-colors group-hover:bg-sky-deep">
+                      <Icon aria-hidden className="h-5 w-5" strokeWidth={1.7} />
+                    </span>
+                    <p className="eyebrow mt-6 text-plum">{c.label}</p>
+                    <p className="mt-2 break-words leading-relaxed group-hover:text-wine">
+                      {c.value}
+                    </p>
+                  </a>
+                </Rise>
+              );
+            })}
+          </div>
 
-            {channels.length > 0 ? (
-              <ul className="mt-10 space-y-3">
-                {channels.map((c) => (
-                  <li key={c.label} className="text-sm">
-                    <span className="eyebrow mr-3 text-muted-foreground">{c.label}</span>
-                    {c.href ? (
-                      <a
-                        href={c.href}
-                        className="rule-link"
-                        {...(c.href.startsWith("https")
-                          ? { target: "_blank", rel: "noopener noreferrer" }
-                          : {})}
-                      >
-                        {c.value}
-                      </a>
-                    ) : (
-                      c.value
-                    )}
-                  </li>
-                ))}
+          <div className="mt-6 grid gap-6 lg:grid-cols-12">
+            <div className="rounded-[var(--r-panel)] bg-wine p-8 text-paper md:p-10 lg:col-span-4">
+              <p className="pill bg-paper/10 text-sky">Before you write</p>
+              <h2 className="h-sub mt-5">What to include</h2>
+              <ul className="mt-5 space-y-3 leading-relaxed text-paper/80">
+                <li>Your name and a way to reach you.</li>
+                <li>What your message is about: a question, a prayer request or an enquiry.</li>
+                <li>Anything the ministry should know before replying.</li>
               </ul>
-            ) : (
-              <div className="mt-10">
-                <Pending label="Email, phone and WhatsApp">
-                  These will be shown here once the ministry supplies verified contact details. You
-                  can still send a message using the form.
-                </Pending>
-              </div>
-            )}
+              {socials.length > 0 && (
+                <>
+                  <p className="eyebrow mt-10 text-sky">Follow the ministry</p>
+                  <ul className="mt-3 flex flex-wrap gap-2">
+                    {socials.map((s) => (
+                      <li key={s.label}>
+                        <a
+                          href={s.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex min-h-11 items-center rounded-full bg-paper/10 px-4 text-sm hover:bg-paper/20"
+                        >
+                          {s.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              <p className="mt-10 font-serif text-xl italic text-paper/75">{ORG.motto}</p>
+            </div>
 
-            {socials.length > 0 && (
-              <ul className="mt-8 flex flex-wrap gap-5 text-sm">
-                {socials.map((s) => (
-                  <li key={s.label}>
-                    <a
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rule-link"
-                    >
-                      {s.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <p className="eyebrow text-muted-foreground">Send a message</p>
-            <EnquiryForm
-              kind="contact"
-              submitLabel="Send message"
-              fields={[
-                { label: "Full name", name: "name", required: true, autoComplete: "name" },
-                {
-                  label: "Email",
-                  name: "email",
-                  type: "email",
-                  required: true,
-                  autoComplete: "email",
-                },
-                { label: "Phone", name: "phone", type: "tel", autoComplete: "tel" },
-                { label: "Subject", name: "subject" },
-              ]}
-            />
-          </Reveal>
+            <div className="card p-7 md:p-10 lg:col-span-8">
+              <p className="pill self-start bg-plum/10 text-plum">Send a message</p>
+              <h2 className="h-section mt-5">How can we help?</h2>
+              <EnquiryForm
+                kind="contact"
+                submitLabel="Send the message"
+                fields={[
+                  { label: "Full name", name: "name", required: true, autoComplete: "name" },
+                  {
+                    label: "Email",
+                    name: "email",
+                    type: "email",
+                    required: true,
+                    autoComplete: "email",
+                  },
+                  { label: "Phone", name: "phone", type: "tel", autoComplete: "tel" },
+                  { label: "Subject", name: "subject" },
+                ]}
+              />
+            </div>
+          </div>
         </div>
       </section>
     </>

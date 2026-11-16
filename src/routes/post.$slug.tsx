@@ -1,7 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
+import { motion, useScroll } from "motion/react";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+import { RevealImage, SplitText } from "@/components/motion";
+import { Cta } from "@/components/site/Cta";
 import { createPublicServerClient } from "@/integrations/supabase/client";
 import { formatDate, renderRichText, type Post } from "@/lib/cms";
 
@@ -44,57 +48,101 @@ export const Route = createFileRoute("/post/$slug")({
   },
   component: PostPage,
   notFoundComponent: () => (
-    <div className="mx-auto max-w-2xl px-5 pt-40 pb-24">
-      <h1 className="text-4xl">Not found</h1>
-      <p className="mt-4 text-muted-foreground">This page is not published.</p>
-      <Link to="/journal" className="rule-link mt-6 inline-block eyebrow">
-        Back to the Journal →
-      </Link>
-    </div>
+    <section className="flex min-h-[100svh] items-end bg-paper">
+      <div className="wrap pb-24 pt-40">
+        <p className="eyebrow text-plum">Not published</p>
+        <h1 className="display mt-8 max-w-[12ch]">
+          This article is <span className="accent-word">not available</span>
+        </h1>
+        <p className="lede mt-8 max-w-lg text-ink/70">
+          It may have been moved or taken down. The rest of the journal is still here.
+        </p>
+        <div className="mt-10">
+          <Cta to="/journal" variant="solid">
+            Read the journal
+          </Cta>
+        </div>
+      </div>
+    </section>
   ),
   errorComponent: () => (
-    <div className="mx-auto max-w-2xl px-5 pt-40 pb-24">
-      <p className="text-muted-foreground">
-        This page could not be loaded. Please refresh to try again.
-      </p>
-    </div>
+    <section className="flex min-h-[80svh] items-end bg-paper">
+      <div className="wrap pb-24 pt-40">
+        <h1 className="h-section max-w-[16ch]">This article could not be loaded</h1>
+        <p className="mt-6 text-ink/70">Please refresh the page to try again.</p>
+      </div>
+    </section>
   ),
 });
 
 function PostPage() {
   const p = Route.useLoaderData();
   const isStory = p.kind === "story";
+  const { scrollYProgress } = useScroll();
+  const meta = [
+    isStory ? p.person : p.category,
+    isStory ? p.location : p.author,
+    formatDate(p.published_at),
+  ].filter(Boolean);
+
   return (
-    <article className="pb-24">
-      <header className="bg-secondary px-5 pt-32 pb-12 md:px-10 md:pt-40">
-        <div className="mx-auto max-w-3xl">
-          <Link
-            to={isStory ? "/stories" : "/journal"}
-            className="eyebrow text-muted-foreground hover:text-foreground"
-          >
-            ← {isStory ? "Stories" : "Journal"}
+    <article>
+      <motion.div
+        aria-hidden
+        style={{ scaleX: scrollYProgress }}
+        className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-sky"
+      />
+      <header className="bg-paper text-ink">
+        <div className="wrap pb-16 pt-32 md:pb-20 md:pt-44">
+          <Link to={isStory ? "/stories" : "/journal"} className="text-link text-ink/60">
+            <span>{isStory ? "All stories" : "The journal"}</span>
+            <ArrowLeft aria-hidden className="order-first h-4 w-4" strokeWidth={1.6} />
           </Link>
-          <h1 className="mt-6 text-4xl md:text-6xl">{p.title}</h1>
-          <p className="eyebrow mt-6 text-accent">
-            {[
-              isStory ? p.person : p.author,
-              isStory ? p.location : p.category,
-              formatDate(p.published_at),
-            ]
-              .filter(Boolean)
-              .join(" · ")}
-          </p>
+          <div className="mx-auto mt-12 max-w-4xl text-center md:mt-16">
+            {meta.length > 0 && <p className="eyebrow enter-fade text-plum">{meta.join(" · ")}</p>}
+            <SplitText
+              as="h1"
+              text={p.title}
+              trigger="mount"
+              delay={0.1}
+              stagger={0.05}
+              className="mt-8 font-serif text-[clamp(2.6rem,6vw,5.6rem)] font-light leading-[0.98] tracking-[-0.02em]"
+            />
+            {p.excerpt && (
+              <p
+                className="lede enter-up mx-auto mt-8 max-w-2xl text-ink/70"
+                style={{ animationDelay: "0.5s" }}
+              >
+                {p.excerpt}
+              </p>
+            )}
+          </div>
         </div>
       </header>
       {p.cover_url && (
-        <div className="mx-auto mt-10 max-w-4xl px-5">
-          <img src={p.cover_url} alt={p.title} className="w-full object-cover" />
+        <div className="bg-paper">
+          <div className="wrap">
+            <RevealImage
+              photo={{ src: p.cover_url, width: 1600, height: 1000, alt: p.title }}
+              priority
+              className="aspect-[16/10] w-full md:aspect-[2/1]"
+            />
+          </div>
         </div>
       )}
-      <div
-        className="prose-yokm mx-auto mt-12 max-w-2xl px-5"
-        dangerouslySetInnerHTML={{ __html: renderRichText(p.body) }}
-      />
+      <div className="bg-paper pb-28 pt-16 md:pb-40 md:pt-24">
+        <div
+          className="prose-yokm mx-auto max-w-[44rem] px-5"
+          data-dropcap
+          dangerouslySetInnerHTML={{ __html: renderRichText(p.body) }}
+        />
+        <div className="mx-auto mt-20 flex max-w-[44rem] flex-col gap-6 border-t border-ink/15 px-5 pt-10 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-serif text-xl italic text-ink/70">Yendel Ocha Kpeling Ministry</p>
+          <Cta to={isStory ? "/stories" : "/journal"} variant="outline">
+            {isStory ? "Read more stories" : "Read more articles"}
+          </Cta>
+        </div>
+      </div>
     </article>
   );
 }

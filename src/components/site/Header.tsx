@@ -1,15 +1,22 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-import logo from "@/assets/yokm-logo.png";
-import { Button } from "@/components/ui/button";
+import logo from "@/assets/photos/yokm-logo-160.webp";
+import { EASE } from "@/components/motion";
+import { contactChannels, socialLinks, useSettings } from "@/lib/cms";
 import { NAV, ORG } from "@/lib/yokm";
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { data: settings = {} } = useSettings();
+  const channels = contactChannels(settings);
+  const email = channels.find((c) => c.label === "Email");
+  const phone = channels.find((c) => c.label === "Phone");
+  const socials = socialLinks(settings);
 
   useEffect(() => setOpen(false), [pathname]);
 
@@ -21,88 +28,144 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  useEffect(() => {
+    document.documentElement.style.overflow = open ? "hidden" : "";
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.documentElement.style.overflow = "";
+    };
   }, [open]);
 
-  const onHome = pathname === "/";
-  const transparent = onHome && !scrolled && !open;
-
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-        open
-          ? "bg-primary text-primary-foreground"
-          : transparent
-            ? "bg-transparent text-ink-foreground"
-            : "bg-background/95 text-foreground border-b border-border"
-      }`}
-    >
-      <div className="relative z-50 mx-auto grid max-w-[1400px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 md:px-10 lg:py-4">
-        <Link to="/" className="flex items-center gap-3" aria-label={`${ORG.name} home`}>
-          <img
-            src={logo}
-            alt={`${ORG.abbr} logo`}
-            width={44}
-            height={44}
-            className="no-photo h-10 w-10 md:h-11 md:w-11"
-          />
-          <span className="hidden leading-tight sm:block">
-            <span className="block font-serif text-sm tracking-tight">{ORG.abbr}</span>
-            <span className="eyebrow block opacity-70">{ORG.focus}</span>
-          </span>
-        </Link>
+    <header className="fixed inset-x-0 top-0 z-50">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[70] focus:rounded-full focus:bg-sky-deep focus:px-4 focus:py-3 focus:text-white"
+      >
+        Skip to content
+      </a>
 
-        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
-          {NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="rule-link text-sm"
-              data-active={pathname === item.to}
-            >
-              {item.label}
+      {/* Utility bar: contact details at a glance; folds away once the page scrolls. */}
+      <div
+        className={`hidden overflow-hidden bg-wine-deep text-paper/80 transition-[max-height,opacity] duration-500 md:block ${
+          scrolled || open ? "max-h-0 opacity-0" : "max-h-10 opacity-100"
+        }`}
+      >
+        <div className="wrap flex h-10 items-center justify-between gap-6 text-[0.8rem]">
+          <div className="flex items-center gap-6">
+            <span className="inline-flex items-center gap-2">
+              <MapPin aria-hidden className="h-3.5 w-3.5 text-sky" />
+              {ORG.shortLocation}
+            </span>
+            {email && (
+              <a href={email.href} className="inline-flex items-center gap-2 hover:text-paper">
+                <Mail aria-hidden className="h-3.5 w-3.5 text-sky" />
+                {email.value}
+              </a>
+            )}
+            {phone && (
+              <a
+                href={phone.href}
+                className="hidden items-center gap-2 hover:text-paper lg:inline-flex"
+              >
+                <Phone aria-hidden className="h-3.5 w-3.5 text-sky" />
+                {phone.value}
+              </a>
+            )}
+          </div>
+          {socials.length > 0 && (
+            <ul className="flex items-center gap-5">
+              {socials.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-paper"
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+
+      <div
+        className={`transition-[background-color,box-shadow] duration-500 ${
+          open
+            ? "bg-transparent text-paper"
+            : scrolled
+              ? "bg-paper/95 text-ink shadow-[0_8px_30px_-18px_rgb(59_15_40_/_0.35)] backdrop-blur-md"
+              : "bg-paper text-ink"
+        }`}
+      >
+        <div
+          className={`wrap relative z-50 flex items-center justify-between gap-6 transition-[padding] duration-500 ${
+            scrolled ? "py-2.5" : "py-3.5"
+          }`}
+        >
+          <Link to="/" className="group flex items-center gap-3" aria-label={`${ORG.name}, home`}>
+            <img
+              src={logo}
+              alt=""
+              width={52}
+              height={52}
+              className="h-12 w-12 transition-transform duration-700 group-hover:rotate-[-8deg]"
+            />
+            <span className="leading-none">
+              <span className="block font-serif text-[1.3rem] font-semibold tracking-[0.02em]">
+                {ORG.abbr}
+              </span>
+              <span className="mt-1 hidden text-[0.72rem] font-medium opacity-70 sm:block">
+                {ORG.name}
+              </span>
+            </span>
+          </Link>
+
+          <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+            {NAV.map((item) => {
+              const active = pathname === item.to || pathname.startsWith(`${item.to}/`);
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  aria-current={active ? "page" : undefined}
+                  className={`rounded-full px-3.5 py-2 text-[0.9rem] font-medium transition-colors xl:px-4 ${
+                    active ? "bg-wine/10 text-wine" : "hover:bg-wine/5 hover:text-wine"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+            <Link to="/donate" data-variant="solid" className="btn ml-3 !min-h-[2.75rem] !px-6">
+              <span>Donate</span>
             </Link>
-          ))}
-          <Link
-            to="/donate"
-            className={`border px-5 py-2.5 text-xs uppercase tracking-[0.18em] transition-colors ${
-              transparent
-                ? "border-ink-foreground/50 hover:bg-ink-foreground hover:text-ink"
-                : "border-primary bg-primary text-primary-foreground hover:bg-primary/90"
+          </nav>
+
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            aria-label={open ? "Close menu" : "Open menu"}
+            className={`menu-trigger -mr-1 flex h-12 items-center gap-3 rounded-full px-4 lg:hidden ${
+              open ? "bg-paper/10" : "bg-wine/8"
             }`}
           >
-            Support YOKM
-          </Link>
-        </nav>
-
-        <Button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
-          aria-label={open ? "Close menu" : "Open menu"}
-          variant="ghost"
-          size="icon"
-          className="menu-trigger relative z-50 h-11 w-11 shrink-0 rounded-none border border-current/45 bg-transparent text-current hover:bg-current/10 hover:text-current lg:hidden"
-        >
-          <span className={`menu-icon ${open ? "is-open" : ""}`} aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </span>
-        </Button>
+            <span className="eyebrow">{open ? "Close" : "Menu"}</span>
+            <span className={`menu-icon ${open ? "is-open" : ""}`} aria-hidden="true">
+              <span />
+              <span />
+            </span>
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -112,49 +175,54 @@ export function Header() {
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-x-0 top-0 z-40 h-[100dvh] overflow-hidden bg-primary text-primary-foreground lg:hidden"
+            transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 z-40 h-[100dvh] bg-wine-deep text-paper lg:hidden"
           >
             <nav
-              aria-label="Mobile navigation"
-              className="mx-auto flex h-full max-w-[1400px] flex-col overflow-y-auto px-6 pb-8 pt-24 md:px-10"
+              aria-label="Mobile"
+              className="wrap flex h-full flex-col overflow-y-auto pb-8 pt-24"
             >
-              <p className="eyebrow mb-5 border-b border-primary-foreground/30 pb-4 text-primary-foreground/70">
-                Explore YOKM
-              </p>
               <ul className="flex-1">
-                {NAV.map((item, i) => (
-                  <motion.li
-                    key={item.to}
-                    initial={{ opacity: 0, x: -24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      delay: 0.12 + 0.055 * i,
-                      duration: 0.45,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                    className="border-b border-primary-foreground/25"
-                  >
-                    <Link
-                      to={item.to}
-                      onClick={() => setOpen(false)}
-                      className="block py-3 font-serif text-[clamp(1.75rem,5vh,2.8rem)] leading-none transition-colors hover:text-accent"
+                {[{ to: "/", label: "Home" }, ...NAV].map((item, i) => (
+                  <li key={item.to} className="overflow-hidden border-b border-paper/12">
+                    <motion.div
+                      initial={{ y: "100%" }}
+                      animate={{ y: "0%" }}
+                      transition={{ delay: 0.22 + 0.05 * i, duration: 0.8, ease: EASE }}
                     >
-                      {item.label}
-                    </Link>
-                  </motion.li>
+                      <Link
+                        to={item.to}
+                        onClick={() => setOpen(false)}
+                        className="group flex items-baseline gap-4 py-3.5"
+                      >
+                        <span className="eyebrow w-6 text-sky/80 tabular-nums">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="font-serif text-[clamp(1.9rem,8vw,3rem)] leading-none transition-[transform,color] duration-500 group-hover:translate-x-2 group-hover:text-sky">
+                          {item.label}
+                        </span>
+                      </Link>
+                    </motion.div>
+                  </li>
                 ))}
               </ul>
-              <div className="space-y-4 pt-6">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.65, duration: 0.6 }}
+                className="space-y-5 pt-8"
+              >
                 <Link
                   to="/donate"
                   onClick={() => setOpen(false)}
-                  className="block bg-accent px-6 py-4 text-center text-xs uppercase tracking-[0.16em] text-accent-foreground"
+                  data-variant="accent"
+                  className="btn w-full"
                 >
-                  Support YOKM
+                  <span>Donate to YOKM</span>
                 </Link>
-                <p className="text-xs text-primary-foreground/70">{ORG.shortLocation}</p>
-              </div>
+                <p className="font-serif text-xl italic text-paper/80">{ORG.motto}</p>
+                <p className="meta text-paper/55">{ORG.shortLocation}</p>
+              </motion.div>
             </nav>
           </motion.div>
         )}

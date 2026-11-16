@@ -1,9 +1,16 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowRight, BookOpen } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { Rise } from "@/components/motion";
 import { formatDate, type Post } from "@/lib/cms";
-import { Reveal } from "./Reveal";
 
+const metaFor = (kind: "journal" | "story", p: Post) =>
+  kind === "story"
+    ? [p.person, p.location].filter(Boolean).join(" · ")
+    : [p.category, formatDate(p.published_at)].filter(Boolean).join(" · ");
+
+/** Posts as cards: the newest one wide, the rest in a grid. */
 export function PostGrid({
   kind,
   posts,
@@ -19,51 +26,77 @@ export function PostGrid({
 }) {
   if (loading) {
     return (
-      <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+      <div className="grid gap-6 md:grid-cols-3" aria-busy="true" aria-label="Loading">
         {[0, 1, 2].map((i) => (
-          <li key={i} className="animate-pulse">
-            <div className="aspect-[4/3] bg-muted" />
-            <div className="mt-5 h-3 w-24 bg-muted" />
-            <div className="mt-3 h-6 w-3/4 bg-muted" />
-          </li>
+          <div key={i} className="card animate-pulse">
+            <div className="aspect-[16/10] bg-blush" />
+            <div className="space-y-3 p-7">
+              <div className="h-3 w-24 rounded bg-blush" />
+              <div className="h-6 w-3/4 rounded bg-blush" />
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     );
   }
   if (error)
     return (
-      <p className="text-muted-foreground">
+      <p className="text-ink/65">
         This list could not be loaded. Please refresh the page to try again.
       </p>
     );
   if (!posts?.length) return <>{empty}</>;
+
+  const cta = kind === "story" ? "Read the story" : "Read the article";
+
   return (
-    <ul className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-      {posts.map((p) => (
-        <Reveal as="li" key={p.id}>
-          <Link to="/post/$slug" params={{ slug: p.slug }} className="group block">
-            {p.cover_url && (
-              <div className="aspect-[4/3] overflow-hidden rounded-[calc(var(--radius)+2px)]">
-                <img
-                  src={p.cover_url}
-                  alt={p.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {posts.map((p, i) => {
+        const lead = i === 0;
+        return (
+          <Rise
+            key={p.id}
+            delay={lead ? 0 : ((i - 1) % 3) * 0.08}
+            className={lead ? "md:col-span-2 lg:col-span-3" : "h-full"}
+          >
+            <Link
+              to="/post/$slug"
+              params={{ slug: p.slug }}
+              className={`card group h-full ${lead ? "lg:!grid lg:grid-cols-2" : ""}`}
+            >
+              <div
+                className={`card-media bg-blush ${lead ? "aspect-[16/10] lg:aspect-auto lg:min-h-[24rem]" : "aspect-[16/10]"}`}
+              >
+                {p.cover_url ? (
+                  <img src={p.cover_url} alt="" loading="lazy" className="absolute inset-0" />
+                ) : (
+                  <span className="absolute inset-0 grid place-items-center text-wine/40">
+                    <BookOpen aria-hidden className="h-10 w-10" strokeWidth={1.3} />
+                  </span>
+                )}
               </div>
-            )}
-            <p className="eyebrow mt-5 text-accent">
-              {kind === "story"
-                ? [p.person, p.location].filter(Boolean).join(" · ")
-                : [p.category, formatDate(p.published_at)].filter(Boolean).join(" · ")}
-            </p>
-            <h2 className="mt-3 text-2xl group-hover:text-primary">{p.title}</h2>
-            {p.excerpt && (
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.excerpt}</p>
-            )}
-          </Link>
-        </Reveal>
-      ))}
-    </ul>
+              <div className={`flex flex-1 flex-col ${lead ? "p-8 md:p-12" : "p-6 md:p-7"}`}>
+                {metaFor(kind, p) && <p className="eyebrow text-plum">{metaFor(kind, p)}</p>}
+                <h2 className={`mt-3 ${lead ? "h-section" : "h-sub"}`}>{p.title}</h2>
+                {p.excerpt && (
+                  <p
+                    className={`mt-3 flex-1 leading-relaxed text-ink/70 ${lead ? "text-[1.05rem]" : ""}`}
+                  >
+                    {p.excerpt}
+                  </p>
+                )}
+                <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-wine">
+                  {cta}
+                  <ArrowRight
+                    aria-hidden
+                    className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1"
+                  />
+                </span>
+              </div>
+            </Link>
+          </Rise>
+        );
+      })}
+    </div>
   );
 }

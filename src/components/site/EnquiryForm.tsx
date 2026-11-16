@@ -59,44 +59,49 @@ export function EnquiryForm({
     form.reset();
   }
 
+  const field =
+    "mt-2 w-full border-0 border-b border-ink/30 bg-transparent px-0 py-3 text-[1.05rem] outline-none transition-colors placeholder:text-ink/35 focus:border-wine focus-visible:outline-none disabled:opacity-60";
+
   if (sent) {
     return (
-      <div className="mt-6 border border-primary/30 bg-card p-6" role="status">
-        <p className="font-serif text-xl">{successText}</p>
-        <button
-          type="button"
-          className="mt-4 text-xs uppercase tracking-[0.16em] text-primary underline-offset-4 hover:underline"
-          onClick={() => setSent(false)}
-        >
-          Send another
+      <div className="mt-8 border-l border-wine pl-8" role="status">
+        <p className="eyebrow text-plum">Message received</p>
+        <p className="mt-4 font-serif text-[clamp(1.8rem,2.6vw,2.4rem)] italic leading-tight">
+          {successText}
+        </p>
+        <button type="button" className="text-link mt-6 text-wine" onClick={() => setSent(false)}>
+          <span>Send another message</span>
         </button>
       </div>
     );
   }
 
   return (
-    <form className="mt-6 space-y-5" onSubmit={onSubmit} noValidate={false}>
-      {fields.map((f) => (
-        <div key={f.name}>
-          <label htmlFor={id(f.name)} className="eyebrow text-muted-foreground">
-            {f.label}
-            {f.required ? " *" : ""}
-          </label>
-          <input
-            id={id(f.name)}
-            name={f.name}
-            type={f.type ?? "text"}
-            required={f.required}
-            autoComplete={f.autoComplete}
-            maxLength={f.name === "email" ? 255 : f.name === "phone" ? 50 : 200}
-            disabled={sending}
-            className="mt-2 w-full border border-input bg-card px-4 py-3 text-sm disabled:opacity-60"
-          />
-        </div>
-      ))}
+    <form className="mt-8 space-y-8" onSubmit={onSubmit} noValidate={false}>
+      <div className="grid gap-8 sm:grid-cols-2">
+        {fields.map((f) => (
+          <div key={f.name}>
+            <label htmlFor={id(f.name)} className="eyebrow text-ink/60">
+              {f.label}
+              {f.required ? <span className="text-clay"> *</span> : ""}
+            </label>
+            <input
+              id={id(f.name)}
+              name={f.name}
+              type={f.type ?? "text"}
+              required={f.required}
+              autoComplete={f.autoComplete}
+              maxLength={f.name === "email" ? 255 : f.name === "phone" ? 50 : 200}
+              disabled={sending}
+              className={field}
+            />
+          </div>
+        ))}
+      </div>
       <div>
-        <label htmlFor={id("message")} className="eyebrow text-muted-foreground">
-          {messageLabel} *
+        <label htmlFor={id("message")} className="eyebrow text-ink/60">
+          {messageLabel}
+          <span className="text-clay"> *</span>
         </label>
         <textarea
           id={id("message")}
@@ -105,36 +110,35 @@ export function EnquiryForm({
           required
           maxLength={5000}
           disabled={sending}
-          className="mt-2 w-full border border-input bg-card px-4 py-3 text-sm disabled:opacity-60"
+          className={`${field} resize-y`}
         />
       </div>
       <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
         <label htmlFor={id("website")}>Leave this empty</label>
         <input id={id("website")} name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
-      <button
-        type="submit"
-        disabled={sending}
-        className={`w-full px-6 py-4 text-xs uppercase tracking-[0.18em] disabled:opacity-50 ${
-          variant === "solid"
-            ? "bg-primary text-primary-foreground"
-            : "border border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-        }`}
-      >
-        {sending ? "Sending…" : submitLabel}
-      </button>
       {error && (
-        <p className="text-sm text-destructive" role="alert">
+        <p className="border-l-2 border-destructive pl-4 text-sm text-destructive" role="alert">
           {error}
         </p>
       )}
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        Your details are used only to reply to you. See our{" "}
-        <a href="/privacy" className="underline">
-          privacy policy
-        </a>
-        .
-      </p>
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <p className="max-w-xs text-xs leading-relaxed text-ink/55">
+          Your details are used only to reply to you. See the{" "}
+          <a href="/privacy" className="underline underline-offset-2">
+            privacy policy
+          </a>
+          .
+        </p>
+        <button
+          type="submit"
+          disabled={sending}
+          data-variant={variant === "solid" ? "solid" : "outline"}
+          className="btn shrink-0"
+        >
+          <span>{sending ? "Sending…" : submitLabel}</span>
+        </button>
+      </div>
     </form>
   );
 }

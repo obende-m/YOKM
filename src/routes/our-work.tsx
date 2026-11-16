@@ -1,10 +1,9 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { ArrowUpRight, CalendarDays, MapPin } from "lucide-react";
 
-import community from "@/assets/community-gathering.jpg";
-import hero from "@/assets/hero-widow-portrait.jpg";
-import skills from "@/assets/skills-hands.jpg";
-import { PageHero } from "@/components/site/PageHero";
-import { Reveal } from "@/components/site/Reveal";
+import { RevealImage, Rise, SplitText } from "@/components/motion";
+import { PageBanner, SectionHead } from "@/components/site/Blocks";
+import { Cta } from "@/components/site/Cta";
 import {
   formatDate,
   renderRichText,
@@ -14,8 +13,7 @@ import {
   useUpcomingEvents,
   type ProgramRow,
 } from "@/lib/cms";
-
-const IMAGES = [skills, community, hero];
+import { PHOTOS, pick } from "@/lib/photos";
 
 export const Route = createFileRoute("/our-work")({
   head: () => ({
@@ -39,158 +37,215 @@ export const Route = createFileRoute("/our-work")({
   component: OurWork,
 });
 
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
 function OurWork() {
   const t = useSiteText();
-  const areas = usePageItems("work_area");
-  const { data: rawPrograms = [] } = usePublished<ProgramRow>("programs");
-  const programs = [...rawPrograms].sort((a, b) => Number(b.featured) - Number(a.featured));
-  const { data: events = [] } = useUpcomingEvents();
   return (
     <>
-      <PageHero
+      <PageBanner
         eyebrow="Our work"
-        title="Reaching widows in all aspects of life"
+        title="Reaching widows in *all aspects* of life"
         intro={t("work_intro")}
+        photo={pick(t("work_image"), PHOTOS.teachingCircle)}
       />
-
-      <div>
-        {areas.map((w, i) => {
-          const flip = i % 2 === 1;
-          return (
-            <section
-              key={w.id}
-              className={`border-b border-border ${i % 3 === 1 ? "bg-cream" : ""}`}
-            >
-              <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-5 py-16 md:px-10 md:py-24 lg:grid-cols-2 lg:gap-20">
-                <Reveal className={flip ? "lg:order-2" : ""}>
-                  <span className="eyebrow text-accent">{String(i + 1).padStart(2, "0")}</span>
-                  <h2 className="mt-5 text-[clamp(1.7rem,3.4vw,2.8rem)] leading-tight">
-                    {w.label}
-                  </h2>
-                  <p className="mt-5 max-w-lg leading-relaxed text-muted-foreground">{w.body}</p>
-                  {w.scripture && (
-                    <p className="mt-6 eyebrow text-muted-foreground">{w.scripture}</p>
-                  )}
-                </Reveal>
-                {i < 3 && (
-                  <Reveal delay={0.1} className={`img-zoom ${flip ? "lg:order-1" : ""}`}>
-                    <img
-                      src={IMAGES[i]}
-                      alt=""
-                      loading="lazy"
-                      className="aspect-[4/3] w-full object-cover"
-                    />
-                  </Reveal>
-                )}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-
-      {programs.length > 0 && (
-        <section id="programs" className="scroll-mt-24 border-b border-border bg-cream">
-          <div className="mx-auto max-w-[1400px] px-5 py-16 md:px-10 md:py-24">
-            <p className="eyebrow text-muted-foreground">Programs</p>
-            <h2 className="mt-4 text-3xl md:text-4xl">Current programs</h2>
-            <div className="mt-10 grid gap-12 md:grid-cols-2">
-              {programs.map((p) => (
-                <Reveal key={p.id}>
-                  <article>
-                    {p.cover_url && (
-                      <img
-                        src={p.cover_url}
-                        alt=""
-                        loading="lazy"
-                        className="aspect-[4/3] w-full object-cover"
-                      />
-                    )}
-                    <div className="mt-5 flex items-center gap-3">
-                      <h3 className="font-serif text-2xl">{p.name}</h3>
-                      {p.status !== "active" && (
-                        <span className="eyebrow text-muted-foreground">{p.status}</span>
-                      )}
-                    </div>
-                    {p.short_description && (
-                      <p className="mt-3 leading-relaxed text-muted-foreground">
-                        {p.short_description}
-                      </p>
-                    )}
-                    {p.full_description && (
-                      <div
-                        className="prose-yokm mt-4 text-sm"
-                        dangerouslySetInnerHTML={{ __html: renderRichText(p.full_description) }}
-                      />
-                    )}
-                    {p.donation_cta && (
-                      <Link to="/donate" className="mt-5 inline-block eyebrow text-accent">
-                        {p.donation_cta} →
-                      </Link>
-                    )}
-                  </article>
-                </Reveal>
-              ))}
+      <Areas />
+      <Programs />
+      <Events />
+      <section className="bg-paper pb-20 md:pb-28">
+        <div className="wrap">
+          <div className="flex flex-col items-start gap-8 rounded-[var(--r-panel)] bg-wine p-8 text-paper md:flex-row md:items-center md:justify-between md:p-12">
+            <SplitText
+              text="Stand with the *widows* of Jos"
+              accentClass="accent-word text-sky"
+              className="h-section max-w-[14ch]"
+            />
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Cta to="/donate" variant="accent">
+                Donate to YOKM
+              </Cta>
+              <Cta to="/get-involved" variant="outline-light">
+                Other ways to help
+              </Cta>
             </div>
           </div>
-        </section>
-      )}
-
-      {events.length > 0 && (
-        <section
-          id="events"
-          className="mx-auto max-w-[1400px] scroll-mt-24 px-5 py-16 md:px-10 md:py-20"
-        >
-          <p className="eyebrow text-muted-foreground">Events</p>
-          <h2 className="mt-4 text-3xl md:text-4xl">Upcoming gatherings</h2>
-          <ul className="mt-8 divide-y divide-border">
-            {events.map((e) => (
-              <li
-                key={e.id}
-                className="grid gap-4 py-6 md:grid-cols-[200px_1fr_auto] md:items-start"
-              >
-                <span className="eyebrow text-accent">
-                  {formatDate(e.event_date)}
-                  {e.event_time ? ` · ${e.event_time}` : ""}
-                </span>
-                <div>
-                  <p className="font-serif text-xl">{e.title}</p>
-                  {e.location && <p className="mt-1 text-sm text-muted-foreground">{e.location}</p>}
-                  {e.description && (
-                    <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                      {e.description}
-                    </p>
-                  )}
-                </div>
-                {e.link && /^(https?:\/\/|mailto:|tel:)/i.test(e.link) && (
-                  <a
-                    href={e.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="eyebrow text-primary underline-offset-4 hover:underline"
-                  >
-                    Details →
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <section className="bg-primary text-primary-foreground">
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-8 px-5 py-20 md:flex-row md:items-center md:justify-between md:px-10">
-          <h2 className="max-w-[16ch] text-[clamp(1.7rem,3.4vw,2.8rem)] leading-tight">
-            Stand with the widows of Jos.
-          </h2>
-          <Link
-            to="/donate"
-            className="group inline-flex items-center gap-3 self-start bg-primary-foreground px-7 py-4 text-xs uppercase tracking-[0.18em] text-primary"
-          >
-            Support the mission
-            <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
-          </Link>
         </div>
       </section>
     </>
+  );
+}
+
+/** The six areas as alternating rows: a rounded photograph beside the words. */
+function Areas() {
+  const areas = usePageItems("work_area");
+  if (areas.length === 0) return null;
+  const photos = [
+    PHOTOS.worship,
+    PHOTOS.biblesRaised,
+    PHOTOS.addressing,
+    PHOTOS.seatedHall,
+    PHOTOS.groupTrees,
+    PHOTOS.giftGiven,
+  ];
+  return (
+    <section className="section-pad bg-paper">
+      <div className="wrap">
+        <SectionHead
+          eyebrow="Six areas of work"
+          title="Drawn directly from the ministry’s *mission*"
+          center
+        />
+        <div className="mt-14 space-y-6 md:mt-16">
+          {areas.map((a, i) => {
+            const flip = i % 2 === 1;
+            return (
+              <article
+                key={a.id}
+                id={`area-${i + 1}`}
+                className="card scroll-mt-32 grid items-center gap-0 md:grid-cols-2"
+              >
+                <RevealImage
+                  photo={photos[i % photos.length]!}
+                  square
+                  sizes="(min-width: 768px) 45vw, 100vw"
+                  from={flip ? "right" : "left"}
+                  className={`aspect-[4/3] h-full w-full md:aspect-auto md:min-h-[22rem] ${
+                    flip ? "md:order-2" : ""
+                  }`}
+                />
+                <div className="p-8 md:p-12">
+                  <span className="pill bg-wine text-paper">Area {pad2(i + 1)}</span>
+                  <h2 className="h-section mt-5">{a.label}</h2>
+                  <p className="mt-4 text-[1.05rem] leading-relaxed text-ink/72">{a.body}</p>
+                  {a.scripture && (
+                    <p className="eyebrow mt-6 flex items-center gap-3 text-plum">
+                      <span aria-hidden className="h-px w-8 bg-current" />
+                      {a.scripture}
+                    </p>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Programs() {
+  const { data: raw = [] } = usePublished<ProgramRow>("programs");
+  if (raw.length === 0) return null;
+  const programs = [...raw].sort((a, b) => Number(b.featured) - Number(a.featured));
+  return (
+    <section id="programs" className="section-pad scroll-mt-28 bg-blush">
+      <div className="wrap">
+        <SectionHead eyebrow="Programmes" title="Current *programmes*" />
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {programs.map((p, i) => (
+            <Rise key={p.id} delay={(i % 2) * 0.08} className="card h-full">
+              {p.cover_url && (
+                <div className="card-media aspect-[16/9]">
+                  <img src={p.cover_url} alt="" loading="lazy" />
+                </div>
+              )}
+              <div className="flex flex-1 flex-col p-7 md:p-9">
+                <div className="flex flex-wrap gap-2">
+                  {p.featured && <span className="pill bg-wine text-paper">Featured</span>}
+                  {p.status !== "active" && (
+                    <span className="pill bg-plum/10 text-plum">{p.status}</span>
+                  )}
+                </div>
+                <h3 className="h-section mt-4 text-[clamp(1.6rem,2.4vw,2.2rem)]">{p.name}</h3>
+                {p.short_description && (
+                  <p className="mt-3 text-[1.05rem] leading-relaxed text-ink/72">
+                    {p.short_description}
+                  </p>
+                )}
+                {p.full_description && (
+                  <div
+                    className="prose-yokm mt-4 text-base"
+                    dangerouslySetInnerHTML={{ __html: renderRichText(p.full_description) }}
+                  />
+                )}
+                {p.donation_cta && (
+                  <div className="mt-auto pt-8">
+                    <Cta to="/donate" variant="solid">
+                      {p.donation_cta}
+                    </Cta>
+                  </div>
+                )}
+              </div>
+            </Rise>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Events() {
+  const { data: events = [] } = useUpcomingEvents();
+  if (events.length === 0) return null;
+  return (
+    <section id="events" className="section-pad scroll-mt-28 bg-paper">
+      <div className="wrap">
+        <SectionHead eyebrow="Events" title="Upcoming *gatherings*" />
+        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {events.map((e, i) => {
+            const d = e.event_date ? new Date(`${e.event_date}T00:00:00Z`) : null;
+            const link = e.link && /^(https?:\/\/|mailto:|tel:)/i.test(e.link) ? e.link : "";
+            return (
+              <Rise key={e.id} delay={(i % 3) * 0.08} className="card h-full p-7">
+                <div className="flex items-center gap-4">
+                  <span className="grid h-16 w-16 shrink-0 place-content-center rounded-2xl bg-wine text-center text-paper">
+                    <span className="font-serif text-2xl leading-none">
+                      {d ? d.getUTCDate() : ""}
+                    </span>
+                    <span className="eyebrow mt-1 text-[0.58rem] text-sky">
+                      {d ? d.toLocaleDateString("en-GB", { month: "short", timeZone: "UTC" }) : ""}
+                    </span>
+                  </span>
+                  <h3 className="h-sub text-[1.35rem]">{e.title}</h3>
+                </div>
+                <ul className="mt-5 space-y-2 text-sm text-ink/70">
+                  <li className="flex items-center gap-2">
+                    <CalendarDays aria-hidden className="h-4 w-4 text-plum" />
+                    {[formatDate(e.event_date), e.event_time].filter(Boolean).join(" · ")}
+                  </li>
+                  {e.location && (
+                    <li className="flex items-center gap-2">
+                      <MapPin aria-hidden className="h-4 w-4 text-plum" />
+                      {e.location}
+                    </li>
+                  )}
+                </ul>
+                {e.description && (
+                  <p className="mt-4 flex-1 leading-relaxed text-ink/72">{e.description}</p>
+                )}
+                {link && (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-wine"
+                  >
+                    Event details
+                    <ArrowUpRight aria-hidden className="h-4 w-4" />
+                  </a>
+                )}
+              </Rise>
+            );
+          })}
+        </div>
+        <p className="mt-10 text-center text-sm text-ink/60">
+          Questions about an event?{" "}
+          <Link to="/contact" className="font-semibold text-wine underline underline-offset-4">
+            Contact the ministry
+          </Link>
+          .
+        </p>
+      </div>
+    </section>
   );
 }

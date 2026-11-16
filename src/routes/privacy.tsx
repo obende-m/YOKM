@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { PageHero } from "@/components/site/PageHero";
+import { PageBanner } from "@/components/site/Blocks";
 import { Pending } from "@/components/site/Placeholder";
-import { Reveal } from "@/components/site/Reveal";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -27,14 +26,14 @@ export const Route = createFileRoute("/privacy")({
 function Privacy() {
   return (
     <>
-      <PageHero eyebrow="Legal" title="Privacy Policy" />
-      <section className="mx-auto max-w-3xl px-5 py-20 md:px-10">
-        <Reveal>
-          <Pending label="Official privacy policy text pending">
-            This page will carry YOKM&rsquo;s own privacy policy. No policy text has been written on
-            the ministry&rsquo;s behalf.
+      <PageBanner eyebrow="Legal" title="Privacy Policy" />
+      <section className="section-pad bg-paper">
+        <div className="wrap">
+          <Pending label="The ministry’s privacy policy will be published here">
+            This page will carry YOKM’s own privacy policy. No policy text has been written on the
+            ministry’s behalf.
           </Pending>
-        </Reveal>
+        </div>
       </section>
     </>
   );

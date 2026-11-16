@@ -1,12 +1,14 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { Building2, Check, Copy, CreditCard, HandHeart, MapPin } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { PageHero } from "@/components/site/PageHero";
+import { Rise } from "@/components/motion";
+import { PageBanner, SectionHead } from "@/components/site/Blocks";
+import { Cta } from "@/components/site/Cta";
 import { Pending } from "@/components/site/Placeholder";
-import { Reveal } from "@/components/site/Reveal";
 import { isHttpUrl, useSettings, useSiteText } from "@/lib/cms";
-import { ORG } from "@/lib/yokm";
+import { PHOTOS } from "@/lib/photos";
 
 export const Route = createFileRoute("/donate")({
   head: () => ({
@@ -39,73 +41,110 @@ function Donate() {
 
   return (
     <>
-      <PageHero eyebrow="Support YOKM" title="Help carry hope further" intro={t("donate_intro")} />
+      <PageBanner
+        eyebrow="Donate"
+        title="Help carry hope *further*"
+        intro={t("donate_intro")}
+        photo={PHOTOS.giftGiven}
+      >
+        {url && (
+          <Cta href={url} variant="accent">
+            Give online
+          </Cta>
+        )}
+      </PageBanner>
 
-      <section className="mx-auto max-w-[1400px] px-5 py-20 md:px-10 md:py-28">
-        <div className="grid gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-24">
-          <Reveal className="space-y-10">
-            {isLoading ? (
-              <div className="h-40" aria-busy="true" />
-            ) : configured ? (
-              <>
-                {url && (
-                  <div>
-                    <p className="eyebrow text-muted-foreground">Give online</p>
-                    <p className="mt-3 max-w-md leading-relaxed text-muted-foreground">
-                      You will be taken to the ministry&rsquo;s secure giving page to complete your
-                      gift.
-                    </p>
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group mt-6 inline-flex items-center gap-3 bg-primary px-7 py-5 text-xs uppercase tracking-[0.18em] text-primary-foreground"
-                    >
+      <section className="section-pad bg-paper">
+        <div className="wrap">
+          <SectionHead eyebrow="Ways to give" title="Choose how you would like to *give*" center />
+          {isLoading ? (
+            <div className="mt-12 h-64 animate-pulse rounded-[var(--r-card)] bg-blush" />
+          ) : configured ? (
+            <div className="mt-12 grid gap-6 lg:grid-cols-3">
+              {url && (
+                <Rise className="card p-8">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-wine text-paper">
+                    <CreditCard aria-hidden className="h-6 w-6" strokeWidth={1.6} />
+                  </span>
+                  <h3 className="h-sub mt-6">Give online</h3>
+                  <p className="mt-3 flex-1 leading-relaxed text-ink/70">
+                    The ministry&rsquo;s secure giving page opens in a new tab, where you can
+                    complete your gift.
+                  </p>
+                  <div className="mt-8">
+                    <Cta href={url} variant="solid">
                       Give online
-                      <span className="transition-transform duration-500 group-hover:translate-x-1">
-                        ↗
-                      </span>
-                    </a>
+                    </Cta>
                   </div>
-                )}
-                {bank && <BankDetails text={bank} />}
-                {instructions && (
-                  <div>
-                    <p className="eyebrow text-muted-foreground">How to give</p>
-                    <p className="mt-3 max-w-xl whitespace-pre-line leading-relaxed">
-                      {instructions}
-                    </p>
-                  </div>
-                )}
-              </>
-            ) : (
-              <Pending label="Giving details">
-                Bank account details or an online giving link will be published here once the
-                ministry provides them. In the meantime, please{" "}
-                <Link to="/contact" className="underline">
-                  contact the ministry
-                </Link>{" "}
-                to arrange a gift.
+                </Rise>
+              )}
+              {bank && (
+                <Rise delay={0.08} className="card p-8">
+                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-wine text-paper">
+                    <Building2 aria-hidden className="h-6 w-6" strokeWidth={1.6} />
+                  </span>
+                  <h3 className="h-sub mt-6">Bank transfer</h3>
+                  <BankDetails text={bank} />
+                </Rise>
+              )}
+              <Rise delay={0.16} className="card p-8">
+                <span className="grid h-14 w-14 place-items-center rounded-2xl bg-wine text-paper">
+                  <MapPin aria-hidden className="h-6 w-6" strokeWidth={1.6} />
+                </span>
+                <h3 className="h-sub mt-6">Give in person</h3>
+                <address className="mt-3 flex-1 whitespace-pre-line not-italic leading-relaxed text-ink/75">
+                  {t("contact_address")}
+                </address>
+                <div className="mt-8">
+                  <Cta to="/contact" variant="outline">
+                    Contact the ministry
+                  </Cta>
+                </div>
+              </Rise>
+            </div>
+          ) : (
+            <div className="mt-12">
+              <Pending
+                label="Giving details will be published here"
+                action={
+                  <Cta to="/contact" variant="solid">
+                    Contact the ministry
+                  </Cta>
+                }
+              >
+                Until then, please contact the ministry to arrange a gift.
               </Pending>
-            )}
-          </Reveal>
+            </div>
+          )}
 
-          <Reveal delay={0.1} className="space-y-8">
-            <div>
-              <p className="eyebrow text-muted-foreground">Give in person</p>
-              <address className="mt-3 not-italic leading-relaxed">{t("contact_address")}</address>
+          {instructions && (
+            <Rise className="mt-6 rounded-[var(--r-card)] bg-blush p-7 md:p-9">
+              <p className="eyebrow text-plum">Please note</p>
+              <p className="mt-3 max-w-3xl whitespace-pre-line leading-relaxed">{instructions}</p>
+            </Rise>
+          )}
+        </div>
+      </section>
+
+      <section className="bg-paper pb-20 md:pb-28">
+        <div className="wrap">
+          <div className="flex flex-col items-start gap-8 rounded-[var(--r-panel)] bg-wine p-8 text-paper md:flex-row md:items-center md:justify-between md:p-12">
+            <div className="flex gap-5">
+              <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-paper/10 text-sky">
+                <HandHeart aria-hidden className="h-6 w-6" strokeWidth={1.6} />
+              </span>
+              <div>
+                <h2 className="h-sub">Other ways to help</h2>
+                <p className="mt-2 max-w-lg text-paper/78">
+                  Volunteer your time, partner with the ministry, or stand with the widows in
+                  prayer.
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="eyebrow text-muted-foreground">Other ways to help</p>
-              <p className="mt-3 max-w-md leading-relaxed text-muted-foreground">
-                Volunteer your time, partner with the ministry, or stand with the widows in prayer.
-              </p>
-              <Link to="/get-involved" className="rule-link mt-4 inline-block eyebrow">
-                Get involved →
-              </Link>
-            </div>
-            <p className="font-serif text-xl">&ldquo;{ORG.motto}&rdquo;</p>
-          </Reveal>
+            <Cta to="/get-involved" variant="accent">
+              See other ways to help
+            </Cta>
+          </div>
         </div>
       </section>
     </>
@@ -114,24 +153,46 @@ function Donate() {
 
 function BankDetails({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
+  const lines = text.split("\n").filter((l) => l.trim());
   return (
-    <div className="border border-border bg-cream p-6 md:p-8">
-      <p className="eyebrow text-muted-foreground">Bank transfer</p>
-      <p className="mt-4 whitespace-pre-line font-serif text-xl leading-relaxed">{text}</p>
+    <div className="mt-4 flex flex-1 flex-col">
+      <dl className="flex-1 divide-y divide-ink/10 overflow-hidden rounded-2xl bg-blush/60">
+        {lines.map((line, i) => {
+          const m = line.match(/^([^:]{2,30}):\s*(.+)$/);
+          return (
+            <div key={i} className="px-4 py-3">
+              {m ? (
+                <>
+                  <dt className="eyebrow text-[0.65rem] text-ink/50">{m[1]}</dt>
+                  <dd className="mt-0.5 font-medium">{m[2]}</dd>
+                </>
+              ) : (
+                <dd className="font-semibold">{line}</dd>
+              )}
+            </div>
+          );
+        })}
+      </dl>
       <button
         type="button"
-        className="mt-5 text-xs uppercase tracking-[0.16em] text-primary underline-offset-4 hover:underline"
+        className="btn mt-6 self-start"
+        data-variant="outline"
         onClick={async () => {
           try {
             await navigator.clipboard.writeText(text);
             setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
+            setTimeout(() => setCopied(false), 2200);
           } catch {
-            toast.error("Could not copy — please select the details instead.");
+            toast.error("Could not copy. Please select the details instead.");
           }
         }}
       >
-        {copied ? "Copied" : "Copy details"}
+        {copied ? (
+          <Check aria-hidden className="h-4 w-4" />
+        ) : (
+          <Copy aria-hidden className="h-4 w-4" strokeWidth={1.6} />
+        )}
+        <span>{copied ? "Copied" : "Copy the details"}</span>
       </button>
     </div>
   );

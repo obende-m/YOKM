@@ -1,29 +1,30 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef, useState } from "react";
+import { ArrowRight, BookOpen, HandHeart, Mail, MapPin, Phone, Sparkles } from "lucide-react";
 
-import community from "@/assets/community-gathering.jpg";
-import hero from "@/assets/hero-widow-portrait.jpg";
-import skills from "@/assets/skills-hands.jpg";
-import { BounceCards } from "@/components/site/BounceCards";
-import { MorphingCardStack } from "@/components/site/MorphingCardStack";
-import { Reveal } from "@/components/site/Reveal";
+import { RevealImage, Rise, SplitText } from "@/components/motion";
+import AccordionGallery from "@/components/reactbits/AccordionGallery.jsx";
+import { PhotoCard, SectionHead } from "@/components/site/Blocks";
+import { Cta } from "@/components/site/Cta";
 import {
+  contactChannels,
   formatDate,
   usePageItems,
   usePosts,
   usePublished,
+  useSettings,
   useSiteText,
   useUpcomingEvents,
+  type MediaRow,
   type MetricRow,
 } from "@/lib/cms";
+import { PHOTOS, pick } from "@/lib/photos";
 import { ORG } from "@/lib/yokm";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Yendel Ocha Kpeling Ministry (YOKM) — Awake Oh Ye Widows" },
       {
         name: "description",
@@ -41,407 +42,595 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
+/* 1. Hero: a rounded panel, words on the left and a photograph on the right. */
 function Hero() {
   const t = useSiteText();
-  const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
-  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
+  const photo = pick(t("home_hero_image"), PHOTOS.giftSmiles);
   return (
-    <section
-      ref={ref}
-      className="relative h-[min(85svh,760px)] min-h-[550px] overflow-hidden bg-ink max-[380px]:min-h-[590px]"
-    >
-      <motion.img
-        src={t("home_hero_image") || hero}
-        alt="A widow in Jos, Plateau State, standing in the late afternoon light"
-        width={1920}
-        height={1280}
-        fetchPriority="high"
-        style={reduced ? undefined : { scale }}
-        className="absolute inset-0 h-full w-full object-cover object-[48%_center] md:object-[60%_center]"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(to_top,var(--ink)_0%,transparent_78%)] opacity-90" />
-
-      <div className="relative mx-auto flex h-full max-w-[1400px] flex-col justify-end px-5 pb-10 text-ink-foreground md:px-10 md:pb-16">
-        <motion.p
-          initial={reduced ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="eyebrow text-ink-foreground/75"
-        >
-          {ORG.name}
-        </motion.p>
-
-        <motion.h1
-          initial={reduced ? false : { opacity: 0, y: 26 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-3 max-w-[16ch] text-[clamp(2.6rem,8vw,6rem)] leading-[0.95]"
-        >
-          {t("home_hero_title")}
-        </motion.h1>
-
-        <motion.p
-          initial={reduced ? false : { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-4 max-w-xl text-sm leading-relaxed text-ink-foreground/90 md:mt-6 md:text-lg"
-        >
-          {t("home_hero_intro")}
-        </motion.p>
-
-        <motion.div
-          initial={reduced ? false : { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 flex flex-wrap gap-3 sm:flex-row md:mt-8"
-        >
-          <Link
-            to="/our-work"
-            className="group inline-flex items-center justify-center gap-3 bg-accent px-5 py-3.5 text-xs uppercase tracking-[0.12em] text-accent-foreground md:px-7 md:py-4"
-          >
-            Discover our work
-            <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
-          </Link>
-          <Link
-            to="/donate"
-            className="inline-flex items-center justify-center border border-ink-foreground/75 px-5 py-3.5 text-xs uppercase tracking-[0.12em] transition-colors hover:bg-ink-foreground/10 md:px-7 md:py-4"
-          >
-            Support the mission
-          </Link>
-        </motion.div>
-      </div>
-
-      <motion.div
-        style={reduced ? undefined : { opacity: fade }}
-        className="pointer-events-none absolute bottom-6 right-5 hidden items-center gap-3 text-ink-foreground/60 md:right-10 md:flex"
-      >
-        <span className="eyebrow">Scroll</span>
-        <span className="block h-10 w-px bg-ink-foreground/40" />
-      </motion.div>
-    </section>
-  );
-}
-
-function Philosophy() {
-  const t = useSiteText();
-  return (
-    <section className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-24">
-      <div className="grid gap-6 md:grid-cols-12 md:gap-12">
-        <Reveal className="md:col-span-4">
-          <p className="eyebrow text-muted-foreground">The heart of YOKM</p>
-          <p className="mt-4 font-serif text-lg text-primary">{t("home_heart_tagline")}</p>
-        </Reveal>
-        <Reveal delay={0.1} className="md:col-span-8">
-          <h2 className="text-[clamp(1.9rem,4.4vw,3.6rem)] leading-[1.06]">
-            {t("home_heart_heading")}
-          </h2>
-          <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-            {ORG.positioning}
-          </p>
-          <p className="mt-8 font-serif text-base text-foreground">&ldquo;{ORG.motto}&rdquo;</p>
-          <p className="mt-2 eyebrow text-muted-foreground">{ORG.coverScriptures.join(" · ")}</p>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function Vision() {
-  const vision = usePageItems("vision");
-  if (vision.length === 0) return null;
-  return (
-    <section className="border-y border-border bg-cream">
-      <div className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-20">
-        <Reveal>
-          <p className="eyebrow text-muted-foreground">Our vision</p>
-        </Reveal>
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_0.85fr] lg:gap-16">
-          <div>
-            <ol className="divide-y divide-border">
-              {vision.map((v, i) => (
-                <Reveal as="li" key={v.id} delay={i * 0.08}>
-                  <div className="grid grid-cols-[auto_1fr] gap-6 py-8 md:gap-10">
-                    <span className="eyebrow pt-2 text-accent">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div>
-                      <h3 className="text-2xl md:text-3xl">{v.label}</h3>
-                      <p className="mt-3 max-w-xl leading-relaxed text-muted-foreground">
-                        {v.body}
-                      </p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </ol>
-          </div>
-          <Reveal delay={0.15} className="img-zoom self-start">
-            <img
-              src={community}
-              alt="Women gathered in prayer and encouragement"
-              width={1280}
-              height={1600}
-              loading="lazy"
-              className="h-full w-full object-cover"
+    <section className="bg-paper pt-[6.5rem] md:pt-[8.5rem]">
+      <div className="wrap">
+        <div className="relative grid overflow-hidden rounded-[var(--r-panel)] bg-wine text-paper lg:grid-cols-12">
+          <div className="relative z-10 flex flex-col justify-center p-7 pb-28 sm:p-10 sm:pb-32 lg:col-span-7 lg:p-14 lg:pb-36 xl:p-16 xl:pb-40">
+            <p className="pill enter-fade self-start bg-paper/10 text-sky">
+              <MapPin aria-hidden className="h-3.5 w-3.5" />
+              {ORG.shortLocation}
+            </p>
+            <SplitText
+              as="h1"
+              text={t("home_hero_title")}
+              trigger="mount"
+              accentLast
+              accentClass="accent-word text-sky"
+              delay={0.2}
+              stagger={0.08}
+              className="display-xl mt-7 max-w-[10ch]"
             />
-          </Reveal>
+            <p
+              className="lede enter-up mt-7 max-w-xl text-paper/85"
+              style={{ animationDelay: "0.7s" }}
+            >
+              {t("home_hero_intro")}
+            </p>
+            <div
+              className="enter-up mt-9 flex flex-col gap-3 sm:flex-row"
+              style={{ animationDelay: "0.85s" }}
+            >
+              <Cta to="/about" variant="accent">
+                Read our story
+              </Cta>
+              <Cta to="/donate" variant="outline-light">
+                Donate to YOKM
+              </Cta>
+            </div>
+            <p
+              className="enter-fade mt-10 font-serif text-lg italic text-paper/75"
+              style={{ animationDelay: "1.1s" }}
+            >
+              &ldquo;{ORG.motto}&rdquo;
+            </p>
+          </div>
+          <div className="relative min-h-[22rem] lg:col-span-5 lg:min-h-[40rem]">
+            <RevealImage
+              photo={photo}
+              priority
+              square
+              delay={0.1}
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="!absolute inset-0"
+              imgClassName="object-[30%_center]"
+            />
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function Mission() {
-  const mission = usePageItems("mission");
-  const [open, setOpen] = useState<number | null>(0);
-  if (mission.length === 0) return null;
-
+/* 2. Three doors into the site, overlapping the bottom of the hero. */
+function Doors() {
+  const doors = [
+    {
+      to: "/our-work",
+      photo: PHOTOS.handingGift,
+      title: "Our work",
+      text: "Six areas of care, from faith and skills to family and community.",
+      cta: "See our work",
+    },
+    {
+      to: "/stories",
+      photo: PHOTOS.twoWomen,
+      title: "Stories",
+      text: "Accounts shared by widows in their own words, with their consent.",
+      cta: "Read the stories",
+    },
+    {
+      to: "/get-involved",
+      photo: PHOTOS.standingPortrait,
+      title: "Get involved",
+      text: "Give, volunteer, partner or pray with the ministry.",
+      cta: "Find your place",
+    },
+  ];
   return (
-    <section className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-24">
-      <div className="grid gap-10 md:grid-cols-12">
-        <Reveal className="md:col-span-4">
-          <p className="eyebrow text-muted-foreground">Our mission</p>
-          <h2 className="mt-4 text-[clamp(1.8rem,3.6vw,3rem)] leading-[1.08]">
-            {mission.length === 10 ? "Ten commitments" : "Our commitments"}, held in Scripture.
-          </h2>
-          <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            These are the ministry&rsquo;s own words. Select any commitment to read it in full with
-            the Scripture it rests on.
-          </p>
-        </Reveal>
-
-        <div className="md:col-span-8">
-          <ul className="border-t border-border">
-            {mission.map((m, i) => {
-              const active = open === i;
-              return (
-                <Reveal as="li" key={m.id} delay={Math.min(i * 0.04, 0.24)}>
-                  <div className="border-b border-border">
-                    <button
-                      type="button"
-                      onClick={() => setOpen(active ? null : i)}
-                      aria-expanded={active}
-                      className="group flex w-full items-baseline gap-5 py-6 text-left md:gap-8"
-                    >
-                      <span className="eyebrow text-accent">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="flex-1 font-serif text-xl md:text-2xl">{m.label}</span>
-                      <span
-                        className={`text-muted-foreground transition-transform duration-500 ${active ? "rotate-45" : ""}`}
-                        aria-hidden
-                      >
-                        +
-                      </span>
-                    </button>
-                    <div
-                      className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        active ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                      }`}
-                    >
-                      <div className="overflow-hidden">
-                        <div className="pb-8 pl-[3.1rem] md:pl-[4.4rem]">
-                          <p className="max-w-2xl text-base leading-relaxed text-foreground md:text-lg">
-                            {m.body}
-                          </p>
-                          {m.scripture && (
-                            <p className="mt-3 eyebrow text-muted-foreground">{m.scripture}</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </ul>
+    <section className="relative z-10 bg-paper">
+      <div className="wrap">
+        <div className="-mt-20 grid gap-5 sm:px-4 md:-mt-24 md:grid-cols-3 lg:px-10">
+          {doors.map((d, i) => (
+            <PhotoCard
+              key={d.to}
+              to={d.to}
+              photo={d.photo}
+              title={d.title}
+              text={d.text}
+              cta={d.cta}
+              delay={i * 0.08}
+              aspect="aspect-[16/10]"
+            />
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function HumanStory() {
+/* 3. Who we are: words beside a pair of overlapping photographs. */
+function About() {
   const t = useSiteText();
-  const { data: stories = [], isSuccess } = usePosts("story", 3);
-  const covers = stories
-    .filter((s) => s.cover_url)
-    .map((s) => ({ src: s.cover_url!, alt: s.title }));
-  const images =
-    covers.length >= 3
-      ? covers
-      : [
-          { src: community, alt: "Women praying together" },
-          { src: skills, alt: "A widow working at a sewing machine" },
-          { src: hero, alt: "A widow in Jos in the late afternoon light" },
-          { src: skills, alt: "Hands at work on fabric" },
-          { src: community, alt: "Women gathered in encouragement" },
-        ];
-
   return (
-    <section className="bg-ink text-ink-foreground">
-      <div className="mx-auto grid max-w-[1400px] gap-6 px-5 py-14 md:px-10 md:py-20 lg:grid-cols-2 lg:items-center lg:gap-16">
+    <section className="section-pad bg-paper">
+      <div className="wrap grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
         <div>
-          <BounceCards images={images} />
-        </div>
-
-        <Reveal delay={0.12}>
-          <p className="eyebrow text-ink-foreground/55">Stories</p>
-          <h2 className="mt-5 text-[clamp(1.9rem,4vw,3.4rem)] leading-[1.06]">
-            {t("home_stories_heading")}
-          </h2>
-          <p className="mt-7 max-w-xl leading-relaxed text-ink-foreground/70">
-            {t("home_stories_intro")}
-          </p>
-          {stories.length > 0 ? (
-            <ul className="mt-8 divide-y divide-ink-foreground/20 border-y border-ink-foreground/20">
-              {stories.map((s) => (
-                <li key={s.id}>
-                  <Link to="/post/$slug" params={{ slug: s.slug }} className="group block py-4">
-                    <p className="font-serif text-xl transition-colors group-hover:text-accent">
-                      {s.title}
-                    </p>
-                    {(s.person || s.location) && (
-                      <p className="mt-1 eyebrow text-ink-foreground/55">
-                        {[s.person, s.location].filter(Boolean).join(" · ")}
-                      </p>
-                    )}
-                  </Link>
+          <p className="pill bg-plum/10 text-plum">About YOKM</p>
+          <SplitText
+            text={t("home_heart_heading")}
+            className="h-section mt-5 max-w-[20ch]"
+            stagger={0.03}
+          />
+          <Rise>
+            <p className="mt-6 text-[1.05rem] leading-relaxed text-ink/72">{ORG.positioning}</p>
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+              {[
+                { icon: MapPin, k: "Based in", v: ORG.shortLocation },
+                { icon: BookOpen, k: "Registered", v: "Incorporated Trustee, March 2015" },
+              ].map(({ icon: Icon, k, v }) => (
+                <li key={k} className="flex gap-4 rounded-2xl bg-blush/70 p-4">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-wine text-paper">
+                    <Icon aria-hidden className="h-[18px] w-[18px]" strokeWidth={1.8} />
+                  </span>
+                  <span>
+                    <span className="eyebrow block text-plum">{k}</span>
+                    <span className="mt-1 block text-[0.95rem] leading-snug">{v}</span>
+                  </span>
                 </li>
               ))}
             </ul>
-          ) : (
-            isSuccess && (
-              <p className="mt-6 text-sm text-ink-foreground/50">
-                No stories have been published yet.
-              </p>
-            )
-          )}
-          <Link
-            to="/stories"
-            className="group mt-9 inline-flex items-center gap-3 border-b border-ink-foreground/40 pb-1 text-xs uppercase tracking-[0.18em]"
+            <div className="mt-9">
+              <Cta to="/about" variant="solid">
+                Read who we are
+              </Cta>
+            </div>
+          </Rise>
+        </div>
+        <div className="relative pb-16 pr-8 sm:pr-16">
+          <RevealImage
+            photo={pick(t("home_vision_image"), PHOTOS.seatedRow)}
+            sizes="(min-width: 1024px) 40vw, 90vw"
+            className="aspect-[5/4] w-full shadow-[0_30px_60px_-30px_rgb(59_15_40_/_0.5)]"
+          />
+          <RevealImage
+            photo={PHOTOS.seatedDrums}
+            sizes="(min-width: 1024px) 22vw, 50vw"
+            delay={0.2}
+            from="left"
+            className="!absolute bottom-0 right-0 aspect-square w-[46%] border-[6px] border-paper shadow-[0_24px_48px_-24px_rgb(59_15_40_/_0.6)]"
+          />
+          <Rise
+            delay={0.3}
+            className="absolute bottom-6 left-4 max-w-[15rem] rounded-2xl bg-wine p-5 text-paper shadow-xl sm:left-6"
           >
-            Read the stories
-            <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
-          </Link>
-        </Reveal>
+            <p className="eyebrow text-sky">Our motto</p>
+            <p className="mt-2 font-serif text-xl italic leading-snug">{ORG.motto}</p>
+          </Rise>
+        </div>
       </div>
     </section>
   );
 }
 
+/* 4. Vision: three numbered cards. */
+function Vision() {
+  const vision = usePageItems("vision");
+  if (vision.length === 0) return null;
+  const icons = [Sparkles, HandHeart, BookOpen];
+  return (
+    <section className="section-pad bg-blush">
+      <div className="wrap">
+        <SectionHead
+          eyebrow="Our vision"
+          title="What the ministry *hopes for* every widow"
+          action={{ to: "/about", hash: "vision", label: "Read the vision" }}
+        />
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {vision.map((v, i) => {
+            const Icon = icons[i % icons.length]!;
+            return (
+              <Rise key={v.id} delay={i * 0.08} className="card p-8 md:p-9">
+                <div className="flex items-center justify-between">
+                  <span className="grid h-12 w-12 place-items-center rounded-2xl bg-wine text-paper">
+                    <Icon aria-hidden className="h-5 w-5" strokeWidth={1.7} />
+                  </span>
+                  <span className="numeral text-5xl text-plum/30">{pad2(i + 1)}</span>
+                </div>
+                <h3 className="h-sub mt-8">{v.label}</h3>
+                <p className="mt-3 leading-relaxed text-ink/70">{v.body}</p>
+              </Rise>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* 5. Mission: ten commitments as a grid of compact cards. */
+function Mission() {
+  const mission = usePageItems("mission");
+  if (mission.length === 0) return null;
+  return (
+    <section className="section-pad bg-wine text-paper">
+      <div className="wrap">
+        <SectionHead
+          tone="dark"
+          eyebrow="Our mission"
+          title={`${mission.length === 10 ? "Ten" : String(mission.length)} commitments, each resting on *Scripture*`}
+          intro="The ministry’s own words, with the passage each one rests on."
+          action={{ to: "/about", hash: "mission", label: "Read the full mission" }}
+        />
+        <ol className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {mission.map((m, i) => (
+            <Rise
+              as="li"
+              key={m.id}
+              delay={(i % 5) * 0.06}
+              className="card card-dark flex flex-col p-6"
+            >
+              <span className="numeral text-4xl text-sky">{pad2(i + 1)}</span>
+              <h3 className="mt-5 font-serif text-[1.25rem] font-medium leading-tight">
+                {m.label}
+              </h3>
+              <p className="mt-2 flex-1 text-[0.92rem] leading-relaxed text-paper/72">{m.body}</p>
+              {m.scripture && (
+                <p className="eyebrow mt-5 text-[0.65rem] text-rose">{m.scripture}</p>
+              )}
+            </Rise>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+/* 6. Areas of work: a photograph card for each. */
 function Work() {
   const t = useSiteText();
   const areas = usePageItems("work_area");
   if (areas.length === 0) return null;
+  const photos = [
+    PHOTOS.worship,
+    PHOTOS.biblesRaised,
+    PHOTOS.addressing,
+    PHOTOS.seatedHall,
+    PHOTOS.groupTrees,
+    PHOTOS.giftGiven,
+  ];
   return (
-    <section className="mx-auto grid max-w-[1400px] gap-8 px-5 py-14 md:px-10 md:py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-      <Reveal>
-        <p className="eyebrow text-muted-foreground">Our work</p>
-        <h2 className="mt-4 max-w-md text-[clamp(2rem,4vw,3.4rem)] leading-[1.04]">
-          {t("home_work_heading")}
-        </h2>
-        <Link to="/our-work" className="rule-link mt-8 inline-block eyebrow">
-          Read about our work →
-        </Link>
-      </Reveal>
-
-      <div>
-        <MorphingCardStack
-          cards={areas.map((w, i) => ({
-            id: w.id,
-            no: String(i + 1).padStart(2, "0"),
-            title: w.label,
-            text: w.body,
-            meta: w.scripture,
-          }))}
+    <section className="section-pad bg-paper">
+      <div className="wrap">
+        <SectionHead
+          eyebrow="Our work"
+          title={t("home_work_heading")}
+          action={{ to: "/our-work", label: "See all our work" }}
         />
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {areas.map((a, i) => (
+            <PhotoCard
+              key={a.id}
+              to="/our-work"
+              hash={`area-${i + 1}`}
+              photo={photos[i % photos.length]!}
+              badge={pad2(i + 1)}
+              title={a.label}
+              text={a.body}
+              meta={a.scripture}
+              delay={(i % 3) * 0.08}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
+/* 7. Moments: the accordion gallery of the ministry's photographs. */
+function Moments() {
+  const { data: media = [] } = usePublished<MediaRow>("media");
+  const cms = media.filter((m) => m.url).slice(0, 6);
+  const items =
+    cms.length >= 4
+      ? cms.map((m) => ({ image: m.url, label: m.caption || "", alt: m.alt || m.caption || "" }))
+      : [
+          { image: PHOTOS.worship.src, label: "Worship", alt: PHOTOS.worship.alt },
+          {
+            image: PHOTOS.biblesRaised.src,
+            label: "Bible distribution",
+            alt: PHOTOS.biblesRaised.alt,
+          },
+          { image: PHOTOS.giftSmiles.src, label: "Christmas giveaway", alt: PHOTOS.giftSmiles.alt },
+          { image: PHOTOS.teachingCircle.src, label: "Teaching", alt: PHOTOS.teachingCircle.alt },
+          { image: PHOTOS.crowdTrees.src, label: "Gathering together", alt: PHOTOS.crowdTrees.alt },
+          { image: PHOTOS.seatedDrums.src, label: "Fellowship", alt: PHOTOS.seatedDrums.alt },
+        ];
+  return (
+    <section className="section-pad overflow-hidden bg-night text-paper">
+      <div className="wrap">
+        <SectionHead
+          tone="dark"
+          eyebrow="Gallery"
+          title="Moments from the *ministry*"
+          intro="Teaching, worship and care among widows in Jos and beyond."
+          action={{ to: "/gallery", label: "View the gallery" }}
+        />
+        <Rise className="mt-12">
+          <AccordionGallery
+            items={items}
+            defaultIndex={2}
+            height={480}
+            radius={20}
+            gap={12}
+            expandRatio={0.5}
+            tilt={6}
+            accentColor="#5cb8ee"
+            overlayColor="#0c2a45"
+            grayscale={false}
+          />
+        </Rise>
+      </div>
+    </section>
+  );
+}
+
+/* 8. A short scripture band. */
+function Scripture() {
+  return (
+    <section className="bg-paper py-20 md:py-24">
+      <div className="wrap">
+        <div className="relative overflow-hidden rounded-[var(--r-panel)] bg-blush px-7 py-14 text-center md:px-16 md:py-20">
+          <p className="pill bg-plum/10 text-plum">The calling behind the name</p>
+          <blockquote className="mx-auto mt-7 max-w-4xl">
+            <SplitText
+              as="p"
+              text="“Awake thou that sleepest, and arise from the dead, and Christ shall give thee *light.*”"
+              accentClass="accent-word text-plum"
+              stagger={0.04}
+              className="font-serif text-[clamp(1.8rem,3.6vw,3.2rem)] leading-[1.15] tracking-[-0.02em]"
+            />
+            <footer className="eyebrow mt-6 text-ink/60">Ephesians 5:14 · also Isaiah 52:1</footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* 9. Numbers the ministry has published (only when there are any). */
 function Impact() {
   const { data = [] } = usePublished<MetricRow>("impact_metrics");
   if (data.length === 0) return null;
   return (
-    <section className="border-y border-border bg-cream">
-      <div className="mx-auto grid max-w-[1400px] gap-10 px-5 py-14 sm:grid-cols-2 md:px-10 md:py-24 lg:grid-cols-3">
-        {data.map((m) => (
-          <Reveal key={m.id}>
-            <p className="font-serif text-5xl text-primary">{m.value}</p>
-            <p className="mt-3 text-sm text-foreground">
+    <section className="bg-paper pb-20">
+      <div className="wrap grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {data.map((m, i) => (
+          <Rise key={m.id} delay={i * 0.06} className="card p-7">
+            <p className="font-serif text-5xl text-wine">{m.value}</p>
+            <p className="mt-3 font-medium">
               {m.title}
               {m.year ? ` (${m.year})` : ""}
             </p>
-            {m.description && <p className="mt-1 text-xs text-muted-foreground">{m.description}</p>}
-          </Reveal>
+            {m.description && <p className="mt-1 text-sm text-ink/60">{m.description}</p>}
+          </Rise>
         ))}
       </div>
     </section>
   );
 }
 
-function Events() {
-  const { data = [] } = useUpcomingEvents(3);
-  if (data.length === 0) return null;
+/* 10. Stories and journal: the latest posts as cards. */
+function Latest() {
+  const stories = usePosts("story", 3);
+  const journal = usePosts("journal", 3);
+  const posts = [...(stories.data ?? []), ...(journal.data ?? [])]
+    .sort((a, b) => (b.published_at ?? "").localeCompare(a.published_at ?? ""))
+    .slice(0, 3);
+  const loaded = stories.isSuccess && journal.isSuccess;
   return (
-    <section className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-20">
-      <Reveal>
-        <p className="eyebrow text-muted-foreground">Upcoming</p>
-        <h2 className="mt-4 text-[clamp(1.8rem,3.6vw,3rem)] leading-[1.08]">
-          Gatherings and events
-        </h2>
-      </Reveal>
-      <ul className="mt-8 divide-y divide-border border-y border-border">
-        {data.map((e) => (
-          <Reveal as="li" key={e.id}>
-            <div className="grid gap-3 py-6 md:grid-cols-[220px_1fr_auto] md:items-baseline">
-              <span className="eyebrow text-accent">
-                {formatDate(e.event_date)}
-                {e.event_time ? ` · ${e.event_time}` : ""}
-              </span>
-              <div>
-                <p className="font-serif text-2xl">{e.title}</p>
-                {e.location && <p className="mt-1 text-sm text-muted-foreground">{e.location}</p>}
-              </div>
-              <Link to="/our-work" hash="events" className="eyebrow rule-link self-start">
-                Details →
-              </Link>
+    <section className="bg-paper pb-20 md:pb-28">
+      <div className="wrap">
+        <SectionHead
+          eyebrow="Stories & news"
+          title="From the *ministry*"
+          action={{ to: "/journal", label: "All articles" }}
+        />
+        {posts.length > 0 ? (
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {posts.map((p, i) => (
+              <Rise key={p.id} delay={i * 0.08} className="h-full">
+                <Link to="/post/$slug" params={{ slug: p.slug }} className="card group h-full">
+                  <div className="card-media aspect-[16/10] bg-blush">
+                    {p.cover_url && <img src={p.cover_url} alt="" loading="lazy" />}
+                  </div>
+                  <div className="flex flex-1 flex-col p-6 md:p-7">
+                    <p className="eyebrow text-plum">
+                      {[
+                        p.kind === "story" ? "Story" : p.category || "Journal",
+                        formatDate(p.published_at),
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                    <h3 className="h-sub mt-3">{p.title}</h3>
+                    {p.excerpt && <p className="mt-3 flex-1 text-ink/70">{p.excerpt}</p>}
+                  </div>
+                </Link>
+              </Rise>
+            ))}
+          </div>
+        ) : (
+          loaded && (
+            <div className="mt-12 grid gap-6 md:grid-cols-2">
+              {[
+                {
+                  to: "/stories",
+                  title: "Stories are being gathered",
+                  text: "Accounts will appear here when the women who give them choose to share them.",
+                  cta: "Visit the stories page",
+                },
+                {
+                  to: "/journal",
+                  title: "The journal is being prepared",
+                  text: "Outreach reports, teachings and announcements will be published here.",
+                  cta: "Visit the journal",
+                },
+              ].map((c, i) => (
+                <Rise key={c.to} delay={i * 0.08} className="h-full">
+                  <Link
+                    to={c.to as "/"}
+                    className="card group h-full !flex-row items-start gap-6 p-7"
+                  >
+                    <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-blush text-wine">
+                      <BookOpen aria-hidden className="h-6 w-6" strokeWidth={1.6} />
+                    </span>
+                    <span>
+                      <span className="h-sub block">{c.title}</span>
+                      <span className="mt-2 block text-ink/70">{c.text}</span>
+                      <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-wine">
+                        {c.cta}
+                        <ArrowRight
+                          aria-hidden
+                          className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                        />
+                      </span>
+                    </span>
+                  </Link>
+                </Rise>
+              ))}
             </div>
-          </Reveal>
-        ))}
-      </ul>
+          )
+        )}
+      </div>
     </section>
   );
 }
 
-function Give() {
-  const t = useSiteText();
+/* 11. Upcoming events (only when there are any). */
+function Events() {
+  const { data = [] } = useUpcomingEvents(3);
+  if (data.length === 0) return null;
   return (
-    <section className="bg-primary text-primary-foreground">
-      <div className="mx-auto max-w-[1400px] px-5 py-14 md:px-10 md:py-20">
-        <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-end">
-          <Reveal>
-            <p className="eyebrow text-primary-foreground/60">Support YOKM</p>
-            <h2 className="mt-5 max-w-[14ch] text-[clamp(2rem,4.6vw,4rem)] leading-[1.02]">
-              {t("home_give_heading")}
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="max-w-md leading-relaxed text-primary-foreground/75">
-              {t("home_give_text")}
-            </p>
-            <Link
-              to="/donate"
-              className="group mt-8 inline-flex items-center gap-3 bg-primary-foreground px-7 py-4 text-xs uppercase tracking-[0.18em] text-primary"
-            >
-              Ways to give
-              <span className="transition-transform duration-500 group-hover:translate-x-1">→</span>
-            </Link>
-          </Reveal>
+    <section className="section-pad bg-blush">
+      <div className="wrap">
+        <SectionHead
+          eyebrow="Events"
+          title="Upcoming *gatherings*"
+          action={{ to: "/our-work", hash: "events", label: "All events" }}
+        />
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {data.map((e, i) => {
+            const d = e.event_date ? new Date(`${e.event_date}T00:00:00Z`) : null;
+            return (
+              <Rise key={e.id} delay={i * 0.08} className="card !flex-row gap-5 p-6">
+                <span className="grid h-20 w-20 shrink-0 place-content-center rounded-2xl bg-wine text-center text-paper">
+                  <span className="font-serif text-3xl leading-none">
+                    {d ? d.getUTCDate() : ""}
+                  </span>
+                  <span className="eyebrow mt-1 text-[0.6rem] text-sky">
+                    {d ? d.toLocaleDateString("en-GB", { month: "short", timeZone: "UTC" }) : ""}
+                  </span>
+                </span>
+                <span>
+                  <span className="h-sub block text-[1.3rem]">{e.title}</span>
+                  <span className="mt-2 block text-sm text-ink/65">
+                    {[e.event_time, e.location].filter(Boolean).join(" · ")}
+                  </span>
+                </span>
+              </Rise>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* 12. Give and get in touch: a call to action beside the contact details. */
+function GiveAndContact() {
+  const t = useSiteText();
+  const { data: settings = {} } = useSettings();
+  const channels = contactChannels(settings);
+  return (
+    <section className="bg-paper pb-20 md:pb-28">
+      <div className="wrap grid gap-6 lg:grid-cols-12">
+        <div className="relative isolate overflow-hidden rounded-[var(--r-panel)] bg-wine p-8 text-paper md:p-12 lg:col-span-7">
+          <RevealImage
+            photo={pick(t("home_give_image"), PHOTOS.crowdTrees, "")}
+            square
+            zoom={false}
+            sizes="60vw"
+            className="!absolute inset-0 -z-10 opacity-25"
+          />
+          <p className="pill bg-paper/10 text-sky">Support YOKM</p>
+          <SplitText
+            text={t("home_give_heading")}
+            accentLast
+            accentClass="accent-word text-sky"
+            className="display mt-6 max-w-[12ch]"
+          />
+          <p className="mt-6 max-w-lg text-[1.05rem] leading-relaxed text-paper/82">
+            {t("home_give_text")}
+          </p>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Cta to="/donate" variant="accent">
+              Donate to YOKM
+            </Cta>
+            <Cta to="/get-involved" variant="outline-light">
+              Other ways to help
+            </Cta>
+          </div>
+        </div>
+        <div className="card p-8 md:p-10 lg:col-span-5">
+          <p className="pill self-start bg-plum/10 text-plum">Contact</p>
+          <h2 className="h-section mt-5">Visit or write to us</h2>
+          <dl className="mt-8 space-y-5">
+            <div className="flex gap-4">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-blush text-wine">
+                <MapPin aria-hidden className="h-5 w-5" strokeWidth={1.7} />
+              </span>
+              <div>
+                <dt className="eyebrow text-plum">Office</dt>
+                <dd className="mt-1 whitespace-pre-line leading-relaxed">{t("contact_address")}</dd>
+              </div>
+            </div>
+            {channels.map((c) => {
+              const Icon = c.label === "Email" ? Mail : Phone;
+              return (
+                <div key={c.label} className="flex gap-4">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-blush text-wine">
+                    <Icon aria-hidden className="h-5 w-5" strokeWidth={1.7} />
+                  </span>
+                  <div>
+                    <dt className="eyebrow text-plum">{c.label}</dt>
+                    <dd className="mt-1">
+                      <a
+                        href={c.href}
+                        className="hover:text-wine hover:underline"
+                        {...(c.href?.startsWith("https")
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
+                      >
+                        {c.value}
+                      </a>
+                    </dd>
+                  </div>
+                </div>
+              );
+            })}
+          </dl>
+          <div className="mt-auto pt-9">
+            <Cta to="/contact" variant="outline">
+              Send a message
+            </Cta>
+          </div>
         </div>
       </div>
     </section>
@@ -452,14 +641,17 @@ function Home() {
   return (
     <>
       <Hero />
-      <Philosophy />
+      <Doors />
+      <About />
       <Vision />
       <Mission />
-      <HumanStory />
       <Work />
+      <Moments />
+      <Scripture />
       <Impact />
+      <Latest />
       <Events />
-      <Give />
+      <GiveAndContact />
     </>
   );
 }
