@@ -97,6 +97,7 @@ export function PageBanner({
                 width={photo.width}
                 height={photo.height}
                 fetchPriority="high"
+                style={{ objectPosition: photo.position ?? "top" }}
                 className="absolute inset-0 -z-10 h-full w-full object-cover"
               />
               <div

@@ -9,6 +9,8 @@ export type Photo = {
   width: number;
   height: number;
   alt: string;
+  /** Where to anchor the crop in wide frames (CSS object-position); defaults to the top. */
+  position?: string;
 };
 
 const files = import.meta.glob<string>("../assets/photos/yokm/*.webp", {
@@ -65,13 +67,19 @@ export const PHOTOS = {
     2003,
     "A large gathering of women stands together under trees in the afternoon sun",
   ),
-  teachingCircle: build(
-    "teaching-circle",
-    4160,
-    3120,
-    "A woman stands to speak in a courtyard while women sit around her in a wide circle",
-  ),
-  biblesRaised: build("bibles-raised", 4160, 3120, "Women stand together holding up new Bibles"),
+  teachingCircle: {
+    ...build(
+      "teaching-circle",
+      4160,
+      3120,
+      "A woman stands to speak in a courtyard while women sit around her in a wide circle",
+    ),
+    position: "50% 50%",
+  },
+  biblesRaised: {
+    ...build("bibles-raised", 4160, 3120, "Women stand together holding up new Bibles"),
+    position: "50% 50%",
+  },
   worship: build("worship", 1920, 1080, "Women raise their hands in worship under a tree"),
   giftGiven: build(
     "gift-given",
@@ -92,12 +100,15 @@ export const PHOTOS = {
     "Women in matching wrappers sit on chairs in a hall, parcels at their feet",
   ),
   twoWomen: build("two-women", 3000, 2143, "An older woman holds a parcel beside a younger woman"),
-  standingPortrait: build(
-    "standing-portrait",
-    3000,
-    4200,
-    "Women stand outdoors beside a car with parcels at their feet",
-  ),
+  standingPortrait: {
+    ...build(
+      "standing-portrait",
+      3000,
+      4200,
+      "Women stand outdoors beside a car with parcels at their feet",
+    ),
+    position: "50% 18%",
+  },
   groupTrees: build(
     "group-trees",
     3000,
