@@ -82,36 +82,41 @@ function Hero() {
 
   return (
     <section
-      className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-wine-deep text-paper"
+      className="relative isolate overflow-hidden bg-wine-deep pt-[4.75rem] text-paper md:flex md:min-h-[100svh] md:items-center md:pt-0"
       aria-roledescription="carousel"
       aria-label="Photographs from the ministry"
     >
-      <AnimatePresence initial={false}>
-        <motion.img
-          key={slide.src}
-          src={slide.src}
-          srcSet={slide.srcSet}
-          sizes="100vw"
-          alt={slide.alt}
-          {...(index === 0 ? { fetchPriority: "high" as const } : {})}
-          initial={{ opacity: 0, scale: reduced ? 1 : 1.08 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ opacity: { duration: 1.4 }, scale: { duration: 8, ease: "linear" } }}
-          className="absolute inset-0 -z-20 h-full w-full object-cover object-[60%_center]"
+      <div className="relative -z-20 aspect-[4/3] w-full overflow-hidden md:absolute md:inset-0 md:aspect-auto">
+        <AnimatePresence initial={false}>
+          <motion.img
+            key={slide.src}
+            src={slide.src}
+            srcSet={slide.srcSet}
+            sizes="100vw"
+            alt={slide.alt}
+            {...(index === 0 ? { fetchPriority: "high" as const } : {})}
+            initial={{ opacity: 0, scale: reduced ? 1 : 1.08 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ opacity: { duration: 1.4 }, scale: { duration: 8, ease: "linear" } }}
+            className="absolute inset-0 h-full w-full object-cover md:object-[60%_center]"
+          />
+        </AnimatePresence>
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(to_top,var(--wine-deep),transparent)] md:hidden"
         />
-      </AnimatePresence>
+      </div>
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,color-mix(in_srgb,var(--wine-deep)_92%,transparent)_0%,color-mix(in_srgb,var(--wine-deep)_60%,transparent)_40%,transparent_75%)]"
+        className="absolute inset-0 -z-10 hidden md:block bg-[linear-gradient(90deg,color-mix(in_srgb,var(--wine-deep)_92%,transparent)_0%,color-mix(in_srgb,var(--wine-deep)_60%,transparent)_40%,transparent_75%)]"
       />
-      <div aria-hidden className="absolute inset-0 -z-10 bg-wine-deep/55 sm:hidden" />
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 -z-10 h-56 bg-[linear-gradient(to_bottom,color-mix(in_srgb,var(--wine-deep)_75%,transparent),transparent)]"
+        className="absolute inset-x-0 top-0 -z-10 hidden md:block h-56 bg-[linear-gradient(to_bottom,color-mix(in_srgb,var(--wine-deep)_75%,transparent),transparent)]"
       />
 
-      <div className="wrap relative pb-44 pt-36 md:pb-52 md:pt-44">
+      <div className="wrap relative pb-6 pt-2 md:pb-52 md:pt-44">
         <div className="max-w-3xl">
           <p className="pill enter-fade bg-paper/12 text-paper backdrop-blur-sm">
             {ORG.shortLocation}
@@ -187,7 +192,7 @@ function Hero() {
       )}
 
       {count > 1 && (
-        <div className="absolute bottom-36 right-5 flex items-center gap-1 md:bottom-44 md:right-10 xl:right-16">
+        <div className="wrap flex items-center gap-1 pb-20 md:absolute md:bottom-44 md:right-10 md:w-auto md:pb-0 xl:right-16">
           {slides.map((s, i) => (
             <button
               key={s.src}
